@@ -532,6 +532,47 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
 .ck-a{display:block;font-size:13px;color:var(--ink2);margin-top:4px}
 .checks-mini{padding:4px 16px 12px;border-color:var(--warm-line)}
 
+/* 自己分析の範囲（過去・現在・未来） */
+.cov{padding:4px 16px 12px}
+.cov li button{display:grid;grid-template-columns:2.6em 1fr 2.8em;grid-template-rows:auto auto;align-items:center;gap:3px 10px;width:100%;padding:10px 0 9px;border-top:1px solid var(--line2);text-align:left;min-height:56px}
+.cov li:first-child button{border-top:0}
+.cov li button:active{background:var(--line2)}
+.cov .k{font-size:13.5px;font-weight:700;color:var(--ink)}
+.cov .pv{text-align:right;font-variant-numeric:tabular-nums;color:var(--muted);font-size:12px}
+.cov small{grid-column:2 / -1;font-size:11.5px;color:var(--muted);line-height:1.5}
+.cov small.ok{color:var(--accent-ink)}
+.cov-note{font-size:12px;color:var(--muted);margin-top:2px}
+
+/* 未来（Will） */
+.mustbox{border-color:var(--accent-line);background:linear-gradient(var(--accent-soft),var(--accent-soft)) top/100% 4px no-repeat,var(--paper);padding:14px 16px 6px}
+.mustbox .eyebrow{color:var(--accent-ink)}
+.mustbox li{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:baseline;padding:9px 0;border-top:1px solid var(--line2);font-size:14.5px;font-weight:700;line-height:1.6}
+.mustbox li:first-of-type{border-top:0}
+.mustbox li small{font-size:11px;font-weight:600;color:var(--muted);white-space:nowrap}
+.fa{padding:13px 16px}
+.fa+.fa{margin-top:10px}
+.fa-h{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+.fa-h b{font-size:13px;font-weight:700;color:var(--accent-ink);letter-spacing:.04em}
+.fa-h small{font-size:11.5px;color:var(--muted)}
+.fi{padding:10px 0 2px;border-top:1px solid var(--line2);margin-top:10px}
+.fa-h+.fi{border-top:0;margin-top:2px;padding-top:6px}
+.fi>b{display:block;font-size:15px;font-weight:700;line-height:1.6}
+.fi p{font-size:13px;color:var(--ink2);margin-top:3px}
+.fi .tags{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:8px}
+.fi .chips{margin-top:8px}
+.pri{font-size:11px;font-weight:700;padding:1px 8px;border-radius:999px;white-space:nowrap}
+.pri.must{background:var(--accent-soft);color:var(--accent-ink)}
+.pri.want{background:var(--line2);color:var(--ink2)}
+.pri.nice{border:1px dashed var(--line);color:var(--muted)}
+.hz{font-size:11px;color:var(--muted);padding:1px 8px;border-radius:999px;border:1px solid var(--line2);white-space:nowrap}
+.fa.empty{background:transparent;box-shadow:none;border-style:dashed}
+.fa.empty .fa-h b{color:var(--muted)}
+.fa.empty .say{margin-top:6px}
+.fsum{border-top:1px solid var(--line2);padding-top:12px;margin-top:2px}
+.fsum dt{font-size:11.5px;font-weight:700;color:var(--muted);letter-spacing:.04em}
+.fsum dd{font-size:13.5px;color:var(--ink);line-height:1.65;margin:1px 0 8px}
+.fsum .more{font-size:12px;font-weight:700;color:var(--accent-ink);min-height:32px;display:inline-flex;align-items:center}
+
 #print{display:none}
 
 @media (min-width:760px){
@@ -585,7 +626,7 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
   var INTERVIEW_KEYS = [
     ['self_pr', '自己PR'], ['gakuchika', 'ガクチカ'], ['setback', '挫折経験'], ['success', '成功体験'],
     ['strength', '長所'], ['weakness', '短所'], ['team', 'チームでの役割'], ['challenge', '挑戦したこと'],
-    ['values', '大切にしている価値観'], ['axis', '就活の軸']
+    ['values', '大切にしている価値観'], ['axis', '就活の軸'], ['vision', '将来のビジョン']
   ];
   var INTERVIEW_LABEL = {};
   INTERVIEW_KEYS.forEach(function (k) { INTERVIEW_LABEL[k[0]] = k[1]; });
@@ -600,7 +641,20 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
   var TRAIT_KEYS = ['strengths', 'weaknesses', 'values', 'motivators', 'demotivators'];
   var TRAIT_LABEL = { strengths: '強み', weaknesses: '弱み', values: '価値観', motivators: 'やる気スイッチ', demotivators: 'やる気が下がる条件' };
   var OUTPUT_LABEL = { intro1min: '1分自己紹介', manual: '自分の取扱説明書', es: 'ES下書き', qa: '想定問答', otherRequest: '他己分析の依頼文', companyFit: '企業別のネタ当て' };
-  var ID_ARRAYS = ['periods', 'episodes', 'deepDive', 'requests', 'checks', 'axes'];
+  var ID_ARRAYS = ['periods', 'episodes', 'deepDive', 'requests', 'checks', 'axes', 'future'];
+  // 未来（Will）の8領域。[area, 表示名, 聞くこと, 「AIで続ける時に〜と言えばOK」の言い方]
+  var FUTURE_AREAS = [
+    ['vision', 'なりたい姿・ビジョン', 'どんな人になりたい？誰にどう言われたい？', 'どんな人になりたいか話したい'],
+    ['career', 'キャリアプラン', '3年後・10年後に何をしている？どんな役割？', '3年後・10年後のキャリアについて話したい'],
+    ['work', '仕事でやりたいこと', 'どんな仕事・テーマ・相手に関わりたい？', '仕事でやりたいことについて話したい'],
+    ['style', '働き方・環境', '勤務地・転勤・リモート・忙しさ・社風', '働き方や勤務地の希望について話したい'],
+    ['money', '年収・お金', 'いつまでにどのくらい？何に使いたい？', '将来の年収について話したい'],
+    ['life', '家庭・ライフプラン', '結婚・子育て・地元・家族との距離・趣味の時間', '家庭やライフプランについて、話せる範囲で話したい'],
+    ['growth', '成長・スキル', 'どんな力をいつまでに？どんな環境で伸ばしたい？', '身につけたい力について話したい'],
+    ['society', '社会への関わり', 'どんな人や社会の役に立ちたい？', 'どんな人の役に立ちたいか話したい']
+  ];
+  var FUTURE_LABEL = {};
+  FUTURE_AREAS.forEach(function (a) { FUTURE_LABEL[a[0]] = a[1]; });
 
   function isObj(v) { return v !== null && typeof v === 'object' && !Array.isArray(v); }
   function clone(v) { return v === undefined ? undefined : JSON.parse(JSON.stringify(v)); }
@@ -612,7 +666,7 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
       periods: clone(DEFAULT_PERIODS),
       episodes: [],
       traits: { strengths: [], weaknesses: [], values: [], motivators: [], demotivators: [] },
-      axes: [], interview: {}, deepDive: [], requests: [], checks: [], outputs: {}, progress: {}, log: []
+      axes: [], future: [], interview: {}, deepDive: [], requests: [], checks: [], outputs: {}, progress: {}, log: []
     };
   }
 
@@ -673,7 +727,7 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
   function looksLikeData(o) {
     if (!isObj(o)) return false;
     if (o.app === 'jibun-note') return true;
-    return ['profile', 'episodes', 'traits', 'interview', 'deepDive', 'outputs', 'progress', 'axes', 'log'].some(function (k) { return k in o; });
+    return ['profile', 'episodes', 'traits', 'interview', 'deepDive', 'outputs', 'progress', 'axes', 'future', 'log'].some(function (k) { return k in o; });
   }
 
   function deepMerge(a, b) {
@@ -728,6 +782,7 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
     { path: ['traits', 'motivators'], head: 'name', prefix: 'm' },
     { path: ['traits', 'demotivators'], head: 'name', prefix: 'n' },
     { path: ['axes'], head: 'text', prefix: 'a', ref: 'axis' },
+    { path: ['future'], head: 'text', prefix: 'f', ref: 'future' },
     { path: ['deepDive'], head: 'question', prefix: 'd' },
     { path: ['requests'], head: 'text', prefix: 'r' },
     { path: ['checks'], head: 'question', prefix: 'c' },
@@ -736,7 +791,7 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
   ];
   function getPath(o, path) { for (var i = 0; i < path.length; i++) { if (!isObj(o)) return undefined; o = o[path[i]]; } return o; }
   function resolveIdCollisions(d, patch) {
-    var renamed = { episode: {}, axis: {} }, any = false;
+    var renamed = { episode: {}, axis: {}, future: {} }, any = false;
     COLLIDE.forEach(function (def) {
       var parr = getPath(patch, def.path), barr = getPath(d, def.path);
       if (!Array.isArray(parr) || !Array.isArray(barr)) return;
@@ -754,24 +809,27 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
       });
     });
     if (!any) return renamed;
-    var E = renamed.episode, A = renamed.axis;
+    var E = renamed.episode, A = renamed.axis, F = renamed.future;
     function re(x) { return x != null && E[String(x)] ? E[String(x)] : x; }
     function rl(a) { return Array.isArray(a) ? a.map(re) : a; }
     if (isObj(patch.traits)) Object.keys(patch.traits).forEach(function (k) { (Array.isArray(patch.traits[k]) ? patch.traits[k] : []).forEach(function (t) { if (isObj(t)) t.evidence = rl(t.evidence); }); });
     (Array.isArray(patch.axes) ? patch.axes : []).forEach(function (a) { if (isObj(a)) a.evidence = rl(a.evidence); });
+    (Array.isArray(patch.future) ? patch.future : []).forEach(function (f) { if (isObj(f)) f.evidence = rl(f.evidence); });
     if (isObj(patch.interview)) Object.keys(patch.interview).forEach(function (k) { (Array.isArray(patch.interview[k]) ? patch.interview[k] : []).forEach(function (c) { if (isObj(c)) c.episode = re(c.episode); }); });
     (Array.isArray(patch.deepDive) ? patch.deepDive : []).forEach(function (x) { if (!isObj(x) || x.target == null) return; var t = String(x.target); x.target = E[t] || A[t] || x.target; });
-    (Array.isArray(patch.requests) ? patch.requests : []).forEach(function (x) { if (!isObj(x) || x.target == null) return; x.target = retarget(String(x.target), E, A); });
+    (Array.isArray(patch.requests) ? patch.requests : []).forEach(function (x) { if (!isObj(x) || x.target == null) return; x.target = retarget(String(x.target), E, A, F); });
     (Array.isArray(patch.checks) ? patch.checks : []).forEach(function (x) { if (isObj(x)) x.targets = rl(x.targets); });
     if (isObj(patch.outputs)) Object.keys(patch.outputs).forEach(function (k) { (Array.isArray(patch.outputs[k]) ? patch.outputs[k] : []).forEach(function (o) { if (isObj(o)) o.episodes = rl(o.episodes); }); });
     return renamed;
   }
 
   // requests.target（e3／interview.setback.e3／a1 など）の中の episode・軸の id を付け替える
-  function retarget(t, E, A) {
+  function retarget(t, E, A, F) {
     if (E[t] || A[t]) return E[t] || A[t];
     var m = /^(interview\.[^.]+\.)(.+)$/.exec(t);
     if (m && E[m[2]]) return m[1] + E[m[2]];
+    var mf = /^future\.(.+)$/.exec(t);
+    if (mf && F && F[mf[1]]) return 'future.' + F[mf[1]];
     return t;
   }
   function targetEpisode(t) { t = String(t == null ? '' : t); var m = /^interview\.[^.]+\.(.+)$/.exec(t); return m ? m[1] : t; }
@@ -784,6 +842,7 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
       (Array.isArray(d.traits[k]) ? d.traits[k] : []).forEach(function (t) { if (isObj(t) && Array.isArray(t.evidence)) t.evidence = t.evidence.filter(keep); });
     });
     d.axes.forEach(function (a) { if (isObj(a) && Array.isArray(a.evidence)) a.evidence = a.evidence.filter(keep); });
+    d.future.forEach(function (f) { if (isObj(f) && Array.isArray(f.evidence)) f.evidence = f.evidence.filter(keep); });
     Object.keys(d.interview).forEach(function (k) { if (Array.isArray(d.interview[k])) d.interview[k] = d.interview[k].filter(function (c) { return !isObj(c) || keep(c.episode); }); });
     Object.keys(d.outputs).forEach(function (k) { (Array.isArray(d.outputs[k]) ? d.outputs[k] : []).forEach(function (o) { if (isObj(o) && Array.isArray(o.episodes)) o.episodes = o.episodes.filter(keep); }); });
     if (Array.isArray(d.deepDive)) d.deepDive = d.deepDive.filter(function (q) { return !isObj(q) || keep(q.target); });
@@ -799,7 +858,7 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
   function newChanges() {
     return {
       profile: false, periods: { added: [], updated: [] }, episodes: { added: [], updated: [] },
-      traits: { added: [], updated: [] }, axes: { added: [], updated: [] }, deepDive: { added: [], updated: [] },
+      traits: { added: [], updated: [] }, axes: { added: [], updated: [] }, future: { added: [], updated: [] }, deepDive: { added: [], updated: [] },
       requests: { added: [], updated: [] }, checks: { added: [], updated: [] }, reqDone: 0, checkDone: 0,
       deepDone: 0, interview: [], outputs: [], progress: null, log: 0, deleted: {}, other: []
     };
@@ -847,6 +906,11 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
     if (Array.isArray(del.episodes)) asked = asked.concat(del.episodes);
     var gone = asked.map(String).filter(function (id) { return indexById(d.episodes, id) < 0; });
     removeEpisodeRefs(d, gone);
+    // 消えた未来の項目あての依頼は「未来全体」あてにする
+    if (Array.isArray(del.future)) {
+      var fgone = del.future.map(String).filter(function (id) { return indexById(d.future, id) < 0; });
+      d.requests.forEach(function (r) { var m = isObj(r) && /^future\.(.+)$/.exec(String(r.target == null ? '' : r.target)); if (m && fgone.indexOf(m[1]) >= 0) r.target = 'future'; });
+    }
   }
 
   // パッチを今のデータにマージする（元のデータは変えない）
@@ -946,7 +1010,7 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
     return { data: d, changes: c, summary: summarize(c) };
   }
 
-  var DEL_LABEL = { requests: 'AIへの依頼', checks: '確認待ち', episodes: 'エピソード', periods: '時期', deepDive: '深掘り', axes: '就活の軸', strengths: '強み', weaknesses: '弱み', values: '価値観', motivators: 'やる気スイッチ', demotivators: 'やる気が下がる条件', es: 'ES', qa: '想定問答', companyFit: '企業別のネタ', interview: '面接ネタ', outputs: '作れるもの', log: '記録' };
+  var DEL_LABEL = { requests: 'AIへの依頼', checks: '確認待ち', episodes: 'エピソード', periods: '時期', deepDive: '深掘り', axes: '就活の軸', future: '未来（Will）', strengths: '強み', weaknesses: '弱み', values: '価値観', motivators: 'やる気スイッチ', demotivators: 'やる気が下がる条件', es: 'ES', qa: '想定問答', companyFit: '企業別のネタ', interview: '面接ネタ', outputs: '作れるもの', log: '記録' };
 
   function summarize(c) {
     var s = [];
@@ -958,6 +1022,8 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
     if (c.traits.updated.length) s.push('強み・価値観 更新' + uniq(c.traits.updated).length);
     if (c.axes.added.length) s.push('就活の軸+' + c.axes.added.length);
     if (c.axes.updated.length) s.push('就活の軸 更新' + uniq(c.axes.updated).length);
+    if (c.future.added.length) s.push('未来（Will）+' + c.future.added.length);
+    if (c.future.updated.length) s.push('未来（Will）更新' + uniq(c.future.updated).length);
     if (c.deepDive.added.length) s.push('深掘り待ち+' + c.deepDive.added.length);
     if (c.deepDone) s.push('深掘り完了' + c.deepDone);
     if (c.reqDone) s.push('AIへの依頼 対応済み' + c.reqDone);
@@ -984,6 +1050,7 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
     var nTr = TRAIT_KEYS.reduce(function (n, k) { return n + d.traits[k].length; }, 0);
     var s = ['エピソード' + d.episodes.length + '件', '面接ネタ' + nCat + 'カテゴリ'];
     if (nTr) s.push('強み・価値観' + nTr + '件');
+    if (d.future.length) s.push('未来（Will）' + d.future.length + '件');
     if (d.deepDive.length) s.push('深掘り待ち' + d.deepDive.filter(function (x) { return !x.done; }).length + '件');
     var nOut = Object.keys(d.outputs).filter(function (k) { var v = d.outputs[k]; return Array.isArray(v) ? v.length : v && v.text; }).length;
     if (nOut) s.push('作れるもの' + nOut + '種類');
@@ -1052,11 +1119,14 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
     { key: 'boost', name: '盛る', desc: '規模・成果・役割を大きめに。小さな経験を大きく見せる' }
   ];
   var DEPTH_LABEL = ['出来事だけ', '行動と気持ちまで', '理由と結果まで', '学びと再現性まで', '最難関水準'];
-  var REACH_NEED = { A: [3, 5, 8, 12, 15], B: [1, 2, 3, 4, 5], D1: [1, 1, 2, 2, 3], D2: [0, 0, 1, 1, 2], E: [0, 1, 2, 3, 4], F: [0, 0, 1, 2, 2], G: [0, 0, 0, 0, 1] };
+  var REACH_NEED = { A: [3, 5, 8, 12, 15], B: [1, 2, 3, 4, 5], D1: [1, 1, 2, 2, 3], D2: [0, 0, 1, 1, 2], E: [0, 1, 2, 3, 4], F: [0, 0, 1, 2, 2], G: [0, 0, 0, 0, 1], H: [0, 2, 3, 5, 7] };
   var SLOT_NEED = {
     gakuchika: [2, 3, 3, 3, 4], self_pr: [0, 2, 3, 3, 4], strength: [0, 2, 2, 3, 3], weakness: [0, 2, 2, 3, 3], setback: [0, 0, 3, 3, 4],
-    team: [0, 0, 2, 3, 4], success: [0, 0, 0, 3, 3], challenge: [0, 0, 0, 3, 3], values: [0, 0, 0, 2, 3], axis: [0, 0, 0, 2, 3]
+    team: [0, 0, 2, 3, 4], success: [0, 0, 0, 3, 3], challenge: [0, 0, 0, 3, 3], values: [0, 0, 0, 2, 3], axis: [0, 0, 0, 2, 3],
+    vision: [0, 0, 2, 3, 3]
   };
+  // vision 枠の深さは future から判定する（SCHEMA「vision 枠の深さ」）
+  var VISION_DEPTH_LABEL = ['まだ', 'なりたい姿かキャリアプランのどちらか', 'なりたい姿とキャリアプランの両方', '根拠のエピソードつき'];
   var PERIOD_DEPTH = [2, 2, 3, 3, 4];
 
   function toNum(v) { if (v === '' || v == null || typeof v === 'boolean') return null; var n = Number(v); return isFinite(n) ? n : null; }
@@ -1076,6 +1146,50 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
       if (b.index < 0 || dep > b.depth) b = { key: key, index: i, depth: dep, penalized: pen };
     });
     return b;
+  }
+
+  // 未来：中身のある項目（text が空でない）を領域ごとに
+  function futureItems(d, area) {
+    return (Array.isArray(d.future) ? d.future : []).filter(function (f) { return isObj(f) && f.area === area && String(f.text == null ? '' : f.text).trim(); });
+  }
+  function futureAreas(d) {
+    var filled = [], empty = [];
+    FUTURE_AREAS.forEach(function (a) { (futureItems(d, a[0]).length ? filled : empty).push(a); });
+    return { filled: filled, empty: empty };
+  }
+  // vision 枠：career か vision に1つ→1、両方→2、さらに（その2領域に）根拠つきが1つ以上→3。
+  // 候補（interview.vision）があれば飛び先にする。L3以上で fit 2 以上の候補がぜんぶ missing つきなら1段下げる
+  function visionBest(d, lv, realEv) {
+    var v = futureItems(d, 'vision'), c = futureItems(d, 'career');
+    var dep = v.length && c.length ? 2 : v.length || c.length ? 1 : 0;
+    if (dep === 2 && v.concat(c).some(function (f) { return realEv(f.evidence) >= 1; })) dep = 3;
+    var arr = Array.isArray(d.interview.vision) ? d.interview.vision : [], idx = -1, clean = false;
+    arr.forEach(function (x, i) {
+      if (!isObj(x) || !((toNum(x.fit) || 0) >= 2)) return;
+      var ok = !hasMissing(x);
+      if (idx < 0 || (ok && !clean) || (ok === clean && (toNum(x.fit) || 0) > (toNum(arr[idx].fit) || 0))) { idx = i; clean = ok; }
+    });
+    var pen = dep > 0 && idx >= 0 && lv >= 3 && !clean;
+    return { key: 'vision', index: idx, depth: pen ? dep - 1 : dep, penalized: pen };
+  }
+
+  // 自己分析の範囲（過去・現在・未来）。目標レベルに関係なく、全部埋まると100%
+  function computeCoverage(data) {
+    var d = normalize(data);
+    var pastSum = 0, pastMissing = [], pastShallow = [];
+    DEFAULT_PERIODS.forEach(function (p) {
+      var es = d.episodes.filter(function (e) { return isObj(e) && e.period === p.id; });
+      if (!es.length) { pastMissing.push(p.label); return; }
+      if (es.some(function (e) { return depthOf(e) >= 2; })) pastSum += 1;
+      else { pastSum += 0.5; pastShallow.push(p.label); }
+    });
+    var nowDefs = TRAIT_KEYS.map(function (k) { return [d.traits[k], TRAIT_LABEL[k]]; }).concat([[d.axes, '就活の軸']]);
+    var nowMissing = nowDefs.filter(function (x) { return !x[0].filter(isObj).length; }).map(function (x) { return x[1]; });
+    var fa = futureAreas(d);
+    var past = { pct: Math.round(pastSum / DEFAULT_PERIODS.length * 100), missing: pastMissing, shallow: pastShallow, have: pastSum, need: DEFAULT_PERIODS.length };
+    var now = { pct: Math.round((nowDefs.length - nowMissing.length) / nowDefs.length * 100), missing: nowMissing, have: nowDefs.length - nowMissing.length, need: nowDefs.length };
+    var fut = { pct: Math.round(fa.filled.length / FUTURE_AREAS.length * 100), missing: fa.empty.map(function (a) { return a[1]; }), have: fa.filled.length, need: FUTURE_AREAS.length };
+    return { past: past, now: now, future: fut, total: Math.round((past.pct + now.pct + fut.pct) / 3) };
   }
 
   function computeReach(data, opt) {
@@ -1110,16 +1224,18 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
     // C. 面接枠
     var slots = {}, req = [];
     INTERVIEW_KEYS.forEach(function (k) {
-      var key = k[0], need = SLOT_NEED[key][li], best = bestCand(d, key, lv, eps);
+      var key = k[0], need = SLOT_NEED[key][li], best = key === 'vision' ? visionBest(d, lv, realEv) : bestCand(d, key, lv, eps);
       if (lv === 1 && key === 'gakuchika') { var alt = bestCand(d, 'self_pr', lv, eps); if (alt.index >= 0 && (best.index < 0 || alt.depth > best.depth)) best = alt; }
       var needFor = need;
       if (!needFor) for (var j = li + 1; j < 5 && !needFor; j++) needFor = SLOT_NEED[key][j];
       if (!needFor) needFor = SLOT_NEED[key][4];
-      var sc = best.index < 0 ? 0 : ratio(best.depth, needFor);
+      var has = key === 'vision' ? best.depth > 0 || best.index >= 0 : best.index >= 0;
+      var sc = has ? ratio(best.depth, needFor) : 0, LB = key === 'vision' ? VISION_DEPTH_LABEL : DEPTH_LABEL;
       slots[key] = {
         key: key, label: k[1], need: need, needFor: needFor, have: best.depth, score: sc, pct: Math.round(sc * 100),
-        required: need > 0, hasCand: best.index >= 0, penalized: best.penalized, from: best.key,
-        go: best.index >= 0 ? 'cand/' + best.key + '/' + best.index : 'interview/' + key
+        required: need > 0, hasCand: has, penalized: best.penalized, from: best.key,
+        haveLabel: LB[best.depth], needLabel: LB[need || needFor],
+        go: best.index >= 0 ? 'cand/' + best.key + '/' + best.index : key === 'vision' ? 'future' : 'interview/' + key
       };
       if (need > 0) req.push(slots[key]);
     });
@@ -1129,7 +1245,13 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
       if (x.score >= 1) return;
       var label, hint;
       var name = lv === 1 && x.key === 'gakuchika' ? '「ガクチカ」か「自己PR」' : '「' + x.label + '」';
-      if (!x.hasCand) { label = name + 'のネタを見つける'; hint = 'まだ使える候補がないよ。AIに材料探しを頼もう'; }
+      if (x.key === 'vision') {
+        if (!x.hasCand) { label = '「将来のビジョン」を話す'; hint = 'なりたい姿と、3年後・10年後のキャリアプランを話そう'; }
+        else {
+          label = name + 'をあと' + (x.need - x.have) + '段深く';
+          hint = x.penalized ? '「足りない情報」を埋めると1段上がるよ' : x.have < 2 ? 'なりたい姿とキャリアプランの両方があると1段上がるよ' : '根拠になるエピソードとつなぐと1段上がるよ';
+        }
+      } else if (!x.hasCand) { label = name + 'のネタを見つける'; hint = 'まだ使える候補がないよ。AIに材料探しを頼もう'; }
       else {
         label = name + 'をあと' + (x.need - x.have) + '段深く';
         hint = x.penalized ? '「足りない情報」を埋めると1段上がるよ（今は「' + DEPTH_LABEL[x.have] + '」扱い）' : '今は「' + DEPTH_LABEL[x.have] + '」。目標は「' + DEPTH_LABEL[x.need] + '」';
@@ -1163,6 +1285,12 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
     if (nG > 0) {
       item('G', '企業別ネタ', 0.5, ratio(hG, nG), hG, nG);
       lose(0.5 * (1 - ratio(hG, nG)), '企業別ネタを' + (nG - hG) + '社分つくる', '受ける企業に、刺さるエピソードを当ててもらおう', 'out/companyFit', 'G');
+    }
+    // H. 未来（8領域のうち、1つ以上ある領域の数）
+    var nH = REACH_NEED.H[li], fa = futureAreas(d), hH = fa.filled.length;
+    if (nH > 0) {
+      item('H', '未来（Will）', 1, ratio(hH, nH), hH, nH);
+      lose(1 - ratio(hH, nH), '未来（Will）をあと' + (nH - hH) + '領域', 'まだ：' + fa.empty.slice(0, 3).map(function (a) { return a[1]; }).join('、') + (fa.empty.length > 3 ? 'など' : ''), 'future', 'H');
     }
 
     var W = items.reduce(function (s, x) { return s + x.weight; }, 0);
@@ -1203,6 +1331,7 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
     INTERVIEW_KEYS: INTERVIEW_KEYS, INTERVIEW_LABEL: INTERVIEW_LABEL, DEFAULT_PERIODS: DEFAULT_PERIODS,
     TRAIT_KEYS: TRAIT_KEYS, TRAIT_LABEL: TRAIT_LABEL, OUTPUT_LABEL: OUTPUT_LABEL,
     LEVELS: LEVELS, EMBELLISH: EMBELLISH, DEPTH_LABEL: DEPTH_LABEL, SLOT_NEED: SLOT_NEED,
+    FUTURE_AREAS: FUTURE_AREAS, FUTURE_LABEL: FUTURE_LABEL, VISION_DEPTH_LABEL: VISION_DEPTH_LABEL, computeCoverage: computeCoverage,
     emptyData: emptyData, normalize: normalize, stripTrailingCommas: stripTrailingCommas, parseLoose: parseLoose,
     isPatch: isPatch, looksLikeData: looksLikeData, applyPatch: applyPatch, summarize: summarize,
     describeFull: describeFull, hasContent: hasContent, prepareImport: prepareImport,
@@ -1270,6 +1399,7 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
     trash: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 7h14M10 7V4.5h4V7M7 7l1 12.5h8L17 7"/></svg>',
     file: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M6 3.5h8l4 4v13H6z"/><path d="M14 3.5v4h4"/></svg>',
     flag: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 20.5V4"/><path d="M6 4.5c3-1.6 5.2 1.4 8.2 0s3.8-.6 3.8-.6v8.6s-1.2-.8-3.8.5-5.2-1.6-8.2 0"/></svg>',
+    future: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5h16"/><path d="M7 15.5a5 5 0 0 1 10 0"/><path d="M12 4v3.5M5.2 8.2l2 1.9M18.8 8.2l-2 1.9"/></svg>',
     merge: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 6.5h6v5h-6zM13.5 12.5h6v5h-6z"/><path d="M10.5 9h3.5a2 2 0 0 1 2 2v1.5M13.5 15H10a2 2 0 0 1-2-2v-1.5"/></svg>'
   };
 
@@ -1355,6 +1485,12 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
     var bs = boostsOf(o); if (!bs.length) return '';
     return '<ul class="p-boost">' + bs.map(function (b) { return '<li>盛った所「' + esc(b.text) + '」→ 実際：' + esc(b.fact || '') + (b.answer ? '／聞かれたら：' + esc(b.answer) : '') + '</li>'; }).join('') + '</ul>';
   }
+  // ---------- 未来（Will） ----------
+  var HORIZON = { '3y': '3年後', '10y': '10年後', life: '一生を通じて' };
+  var PRIORITY = { must: '譲れない', want: 'できれば', nice: 'あったらいい' };
+  function futureOf(d, area) { return (d.future || []).filter(function (f) { return f && f.area === area && String(f.text || '').trim(); }); }
+  function futureCount(d) { return C.FUTURE_AREAS.filter(function (a) { return futureOf(d, a[0]).length; }).length; }
+  function namesLine(list, n) { n = n || 3; return list.slice(0, n).join('、') + (list.length > n ? ' ほか' + (list.length - n) : ''); }
   var CONF = { high: ['high', '根拠しっかり'], mid: ['mid', '根拠1つ'], low: ['low', 'まだ仮説'] };
   function confPill(c) { var x = CONF[c]; return x ? '<span class="conf ' + x[0] + '">' + x[1] + '</span>' : ''; }
 
@@ -1377,6 +1513,9 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
     if (t === '') return 'ノート全体';
     if (t === 'axes') return '就活の軸';
     if (t === 'traits') return '強み・価値観・就活の軸';
+    if (t === 'future') return '未来（Will）';
+    var mf = /^future\.(.+)$/.exec(t);
+    if (mf) { var fx = (d.future || []).filter(function (x) { return String(x.id) === mf[1]; })[0]; return '未来『' + (fx ? trunc(fx.text, 20) : mf[1]) + '』'; }
     var mi = /^interview\.([^.]+)\.(.+)$/.exec(t);
     if (mi) { var ce = epById(d, mi[2]); return '面接ネタ『' + (C.INTERVIEW_LABEL[mi[1]] || mi[1]) + '』の候補' + (ce ? '「' + ce.title + '」' : ''); }
     var mo = /^outputs\.(es|qa)\.(.+)$/.exec(t);
@@ -1400,7 +1539,7 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
     return '面接で使えるように、具体的な数字や場面';
   }
   // 面接ネタの空の枠で「AIで続ける時にこう言えばOK」と出す言い方
-  function ivSay(key) { var l = C.INTERVIEW_LABEL[key] || key; return /^(strength|weakness|values|axis)$/.test(key) ? l + 'を見つけたい' : l + 'を作りたい'; }
+  function ivSay(key) { var l = C.INTERVIEW_LABEL[key] || key; if (key === 'vision') return '将来のビジョンやキャリアプランについて話したい'; return /^(strength|weakness|values|axis)$/.test(key) ? l + 'を見つけたい' : l + 'を作りたい'; }
   var OUT_DEF = [
     { key: 'intro1min', desc: '面接の最初に話す、約300字の台本', ask: '1分自己紹介を作って' },
     { key: 'manual', desc: '性格・強み・苦手・やる気スイッチを1枚に', ask: '自分の取扱説明書を作って' },
@@ -1833,12 +1972,19 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
         : '<p class="gaps-done">レベル' + R.level + 'の基準は、ぜんぶそろったよ。' + (R.level < 5 ? '<button class="link-in" data-go="goal">目標を上げる ›</button>' : '') + '</p>') + '</div>';
     h += '<div class="stats">' +
       '<button class="stat" data-go="timeline"><b>' + nEp + '</b><span>エピソード</span></button>' +
-      '<button class="stat" data-go="interview"><b>' + nCat + '<small>/10</small></b><span>面接ネタ</span></button>' +
+      '<button class="stat" data-go="interview"><b>' + nCat + '<small>/' + C.INTERVIEW_KEYS.length + '</small></b><span>面接ネタ</span></button>' +
       '<button class="stat" data-go="deep"><b>' + nDeep + '</b><span>深掘り待ち</span></button></div>';
     if (nEp) h += '<div class="sec"><button class="card minigraph" data-go="graph" aria-label="モチベーショングラフを開く"><div class="mg-head"><b>モチベーショングラフ</b><span>くわしく見る ›</span></div>' + graphSVG(d, { w: viewWidth() - 30, h: 70, mini: true, animate: true, id: 'mg' }) + '</button></div>';
-    h += '<div class="sec"><h2 class="sec-title">時期ごとの進み具合<button class="link" data-go="timeline">年表へ ›</button></h2><div class="card">' +
-      periods(d).map(function (pe) { var v = R.periods[pe.id] || 0; return '<div class="prow"><span>' + esc(pe.label) + '</span>' + bar(v) + '<span class="pv">' + v + '%</span></div>'; }).join('') +
-      '<p class="small muted" style="margin-top:6px">各時期に「' + esc(C.DEPTH_LABEL[R.periodNeed.depth]) + '」の話が' + R.periodNeed.count + 'つあると100%</p></div></div>';
+    // 自己分析の範囲（過去・現在・未来）。旧「時期ごとの進み具合」の場所（時期ごとの％は年表に出ている）
+    var CV = C.computeCoverage(d);
+    function covRow(k, go, c, extra) {
+      var note = c.missing.length ? 'まだ：' + namesLine(c.missing) : extra && extra.length ? 'もう少し：' + namesLine(extra) : '';
+      return '<li><button data-go="' + go + '" aria-label="' + esc(k + ' ' + c.pct + '%。' + (note || 'ひと通りそろっています')) + '"><span class="k">' + k + '</span>' + bar(c.pct) + '<span class="pv">' + c.pct + '%</span>' +
+        (note ? '<small>' + esc(note) + '</small>' : '<small class="ok">ひと通りそろってる</small>') + '</button></li>';
+    }
+    h += '<div class="sec"><h2 class="sec-title"><span>自己分析の範囲 <small>全体 ' + CV.total + '%</small></span></h2><div class="card cov"><ul>' +
+      covRow('過去', 'timeline', CV.past, CV.past.shallow) + covRow('現在', 'traits', CV.now) + covRow('未来', 'future', CV.future) + '</ul>' +
+      '<p class="cov-note">これまでの出来事・今の自分・これからの希望。目標レベルとは別に、ひと通り話すと100%</p></div></div>';
     h += '<div class="sec"><h2 class="sec-title">面接ネタの進み具合<button class="link" data-go="interview">ネタ帳へ ›</button></h2><div class="card"><div class="pgrid">' +
       C.INTERVIEW_KEYS.map(function (k) { var sl = R.slots[k[0]]; return '<button class="prow' + (sl.required ? '' : ' opt') + '" data-go="interview/' + k[0] + '"' + (sl.required ? '' : ' style="opacity:.55"') + '><span>' + k[1] + '</span><span class="pv">' + sl.pct + '%</span>' + bar(sl.pct) + '</button>'; }).join('') + '</div>' +
       '<p class="small muted" style="margin-top:8px">必要な深さに対して、今どこまで掘れているか' + (C.INTERVIEW_KEYS.some(function (k) { return !R.slots[k[0]].required; }) ? '。うすい枠は、今の目標では無くてもOK' : '') + '</p></div></div>';
@@ -1854,18 +2000,18 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
     var h = subhead('<button class="mini-btn" data-go="goal">' + ICON.flag + '目標を変える</button>') + pagehead('到達度', 'レベル' + R.level + '「' + esc(R.levelName) + '」の基準で、ノートがデータから計算しています');
     h += '<div class="card reach-top"><div class="ringbox" role="img" aria-label="到達度 ' + R.pct + '%">' + ringSVG(R.pct, 84, 7) + '<div class="ring-num"><b>' + R.pct + '<small>%</small></b></div></div><p><b>' + (R.gaps.length ? '足りないものは あと' + R.gaps.length + 'つ' : 'ぜんぶそろったよ') + '</b>' + esc(C.LEVELS[R.level - 1].need) + '</p></div>';
     h += '<div class="sec"><h2 class="sec-title">内わけ<small>面接ネタは4倍で数えます</small></h2><div class="card" style="padding:6px 16px">' + R.items.map(function (it) {
-      var v = it.key === 'C' ? it.have + '／' + it.need + '枠' : it.have + '／' + it.need;
+      var v = it.key === 'C' ? it.have + '／' + it.need + '枠' : it.have + '／' + it.need + (it.key === 'H' ? '領域' : '');
       if (it.key === 'D' && it.highNeed) v += '<span class="w">しっかり' + it.highHave + '／' + it.highNeed + '</span>';
       return '<div class="irow"><span>' + esc(it.label) + (it.weight !== 1 ? '<span class="w">×' + it.weight + '</span>' : '') + '</span>' + bar(it.score * 100) + '<span class="pv">' + v + '</span></div>';
     }).join('') + '</div></div>';
     h += '<div class="sec"><h2 class="sec-title">面接ネタの深さ<small>●今の深さ　○必要な深さ</small></h2><div class="card" style="padding:4px 16px"><ul class="slotlist">' + C.INTERVIEW_KEYS.map(function (k) {
       var sl = R.slots[k[0]], ok = sl.required && sl.score >= 1;
-      var sub = !sl.hasCand ? 'まだ候補なし' : C.DEPTH_LABEL[sl.have] + (sl.penalized ? '（足りない情報ありで1段下げ）' : '');
+      var sub = !sl.hasCand ? (k[0] === 'vision' ? 'まだ未来の話なし' : 'まだ候補なし') : sl.haveLabel + (sl.penalized ? '（足りない情報ありで1段下げ）' : '');
       return '<li><button data-go="' + esc(sl.go) + '"' + (sl.required ? '' : ' class="opt"') + '><span>' + esc(k[1]) + '<small>' + esc(sub) + '</small></span>' + dsteps(sl.have, sl.required ? sl.need : 0) +
         '<span class="dnum' + (ok ? ' ok' : '') + '">' + (sl.required ? (ok ? 'OK' : sl.have + '／' + sl.need + '段') : '今は不要') + '</span></button></li>';
     }).join('') + '</ul></div></div>';
     if (R.gaps.length) h += '<div class="sec"><h2 class="sec-title">足りないもの<small>上から順にやると早い</small></h2><div class="card gaps"><ul>' + R.gaps.map(gapRow).join('') + '</ul></div></div>';
-    h += '<p class="small muted" style="margin-top:16px">％はAIの目安ではなく、ノートの中のデータから計算しています。足りない情報（面接ネタの「足りない情報」）が残っている話は、レベル3以上では1段下げて数えます。</p>';
+    h += '<p class="small muted" style="margin-top:16px">％はAIの目安ではなく、ノートの中のデータから計算しています。足りない情報（面接ネタの「足りない情報」）が残っている話は、レベル3以上では1段下げて数えます。「将来のビジョン」の深さは、未来（Will）のなりたい姿・キャリアプランと、その根拠のエピソードで決まります。</p>';
     return h;
   }
 
@@ -1995,33 +2141,51 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
   function vInterview(open) {
     var d = D(), R = reach(d);
     if (open) S.openI[open] = true;
-    var h = pagehead('面接ネタ帳', 'よく聞かれる10の質問に、使えるエピソードを当てはめています');
+    var h = pagehead('面接ネタ帳', 'よく聞かれる' + C.INTERVIEW_KEYS.length + 'の質問に、使えるエピソードを当てはめています');
     C.INTERVIEW_KEYS.forEach(function (k) {
       var cs = cands(d, k[0]), isOpen = !!S.openI[k[0]], sl = R.slots[k[0]];
-      h += '<section class="iv' + (isOpen ? ' open' : '') + (cs.length ? '' : ' none') + '" id="iv-' + k[0] + '">' +
-        '<button class="iv-head" data-act="toggleI" data-id="' + k[0] + '" aria-expanded="' + isOpen + '"><span><b>' + k[1] + '</b><span class="sub">' + (cs.length ? '候補' + cs.length + 'つ' : 'まだ材料なし') + bar(sl.pct) + '</span></span>' +
+      var vis = k[0] === 'vision', fsum = vis ? visionSummary(d) : '';
+      var subTxt = cs.length ? '候補' + cs.length + 'つ' : fsum ? '未来のメモから' : 'まだ材料なし';
+      h += '<section class="iv' + (isOpen ? ' open' : '') + (cs.length || fsum ? '' : ' none') + '" id="iv-' + k[0] + '">' +
+        '<button class="iv-head" data-act="toggleI" data-id="' + k[0] + '" aria-expanded="' + isOpen + '"><span><b>' + k[1] + '</b><span class="sub">' + subTxt + bar(sl.pct) + '</span></span>' +
         '<span class="iv-rec" aria-label="仕上がり ' + sl.pct + '%"' + (sl.required ? '' : ' style="opacity:.55"') + '><span class="sym">' + slotSym(sl) + '</span><small>' + (sl.required ? '仕上がり' : '今は不要') + '</small></span>' + ICON.chev + '</button>' +
         '<div class="acc"><div><div class="iv-body">';
       if (cs.length) cs.forEach(function (x) {
         var e = epById(d, x.c.episode);
-        h += '<button class="cand" data-go="cand/' + k[0] + '/' + x.i + '"><span class="ct"><b>' + esc(e ? e.title : (x.c.episode || 'エピソード')) + '</b><span class="fit" aria-label="おすすめ度">' + fitSym(x.c.fit) + '</span></span>' +
+        h += '<button class="cand" data-go="cand/' + k[0] + '/' + x.i + '"><span class="ct"><b>' + esc(e ? e.title : (x.c.episode || (vis ? '将来のビジョンの答え' : 'エピソード'))) + '</b><span class="fit" aria-label="おすすめ度">' + fitSym(x.c.fit) + '</span></span>' +
           (boostsOf(x.c).length ? '<span style="display:block;margin-top:4px">' + boostBadge(x.c) + '</span>' : '') +
           (x.c.points && x.c.points.length ? '<ul>' + x.c.points.map(function (pt) { return '<li>' + esc(pt) + '</li>'; }).join('') + '</ul>' : '') +
           '<span class="more">' + (x.c.draft ? '下書きを見る ›' : 'くわしく見る ›') + '</span></button>';
       });
-      else h += '<div class="hint"><p>まだ材料がありません。</p>' + sayLine(ivSay(k[0])) + '</div>';
+      if (fsum) h += fsum;
+      else if (!cs.length) h += '<div class="hint"><p>まだ材料がありません。</p>' + sayLine(ivSay(k[0])) + '</div>';
       h += '</div></div></div></section>';
     });
     return h;
+  }
+  // 面接ネタ帳の vision 枠：未来（Will）のなりたい姿・キャリアプラン・やりたいことを要約して出す
+  function visionSummary(d) {
+    var rows = ['vision', 'career', 'work'].map(function (a) {
+      var fs = futureOf(d, a); if (!fs.length) return '';
+      return '<dt>' + esc(C.FUTURE_LABEL[a]) + '</dt><dd>' + fs.map(function (f) { return esc(f.text) + (f.horizon && HORIZON[f.horizon] ? '<span class="muted small">（' + HORIZON[f.horizon] + '）</span>' : ''); }).join('<br>') + '</dd>';
+    }).join('');
+    if (!rows) return '';
+    return '<div class="fsum"><dl>' + rows + '</dl><button class="more" data-go="future">未来（Will）を見る ›</button></div>';
   }
   function vCand(key, i) {
     var d = D(), c = (d.interview[key] || [])[+i];
     if (!c) return subhead() + '<p class="muted" style="padding:40px 0">この候補は見つかりませんでした。</p>';
     var e = epById(d, c.episode), label = C.INTERVIEW_LABEL[key] || key, R = reach(d), sl = R.slots[key];
     var h = subhead(askBtn('interview.' + key + '.' + c.episode));
-    h += '<div class="ep-head"><p class="eyebrow">' + esc(label) + 'のネタ</p><h1>' + esc(e ? e.title : c.episode) + '</h1></div>';
-    h += '<div class="ep-meta"><span><span class="lbl">おすすめ度</span><span class="fit">' + fitSym(c.fit) + '</span> <span class="small muted">' + fitText(c.fit) + '</span></span>' + (e ? depthMeter(e.depth) : '') + boostBadge(c) + aiBadge(c) + '</div>';
-    if (sl && e) {
+    h += '<div class="ep-head"><p class="eyebrow">' + esc(label) + 'のネタ</p><h1>' + esc(e ? e.title : (c.episode || (key === 'vision' ? '将来のビジョンの答え' : ''))) + '</h1></div>';
+    h += '<div class="ep-meta"><span><span class="lbl">おすすめ度</span><span class="fit">' + fitSym(c.fit) + '</span> <span class="small muted">' + fitText(c.fit) + '</span></span>' + (e && key !== 'vision' ? depthMeter(e.depth) : '') + boostBadge(c) + aiBadge(c) + '</div>';
+    if (sl && key === 'vision') {
+      var vneed = sl.required ? sl.need : sl.needFor, vok = sl.have >= vneed;
+      h += '<p class="slot-note">レベル' + R.level + 'の「' + esc(label) + '」に必要なのは<b>「' + esc(sl.needLabel) + '」</b>' + (sl.required ? '' : '（今の目標では無くてもOK）') + '。未来（Will）は今<b>「' + esc(sl.haveLabel) + '」</b>' +
+        (sl.penalized ? '（足りない情報があるので1段下げて判定）' : '') + ' → ' + (vok ? '<span class="ok">クリア</span>' : 'あと' + Math.max(1, vneed - sl.have) + '段') + '</p>';
+      var vs = visionSummary(d);
+      if (vs) h += '<div class="sec"><h2 class="sec-title">未来（Will）のメモ</h2><div class="card" style="padding:4px 16px 8px">' + vs.replace('class="fsum"', 'class="fsum" style="border-top:0"') + '</div></div>';
+    } else if (sl && e) {
       var need = sl.required ? sl.need : sl.needFor, pen = R.level >= 3 && c.missing && c.missing.some(function (m) { return String(m || '').trim(); });
       var eff = Math.max(0, depthN(e.depth) - (pen ? 1 : 0)), ok = eff >= need && num(c.fit) >= 2;
       h += '<p class="slot-note">レベル' + R.level + 'の「' + esc(label) + '」に必要なのは<b>「' + esc(C.DEPTH_LABEL[need]) + '」</b>' + (sl.required ? '' : '（今の目標では無くてもOK）') + '。この話は今<b>「' + esc(C.DEPTH_LABEL[eff]) + '」</b>' +
@@ -2034,7 +2198,7 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
     h += '</div>' + boostSection(c);
     if (c.missing && c.missing.length) h += '<div class="sec"><h2 class="sec-title">足りない情報<small>ここが埋まると強くなる</small></h2><div class="card" style="padding:6px 16px"><ul class="missing">' +
       c.missing.map(function (m) { return '<li><span>' + esc(m) + '</span></li>'; }).join('') + '</ul></div><p class="small muted" style="margin:8px 2px 0">AIで続けると、ここから聞いてくれます</p></div>';
-    if (e) h += '<div class="sec"><h2 class="sec-title">元のエピソード</h2><button class="card linkcard" data-go="ep/' + esc(e.id) + '"><span><small>' + esc(periodOf(d, e.period).label + (e.when ? '・' + e.when : '')) + '</small><b>' + esc(e.title) + '</b></span>' + ICON.right + '</button></div>';
+    if (e) h += '<div class="sec"><h2 class="sec-title">' + (key === 'vision' ? '根拠のエピソード' : '元のエピソード') + '</h2><button class="card linkcard" data-go="ep/' + esc(e.id) + '"><span><small>' + esc(periodOf(d, e.period).label + (e.when ? '・' + e.when : '')) + '</small><b>' + esc(e.title) + '</b></span>' + ICON.right + '</button></div>';
     return h;
   }
 
@@ -2064,9 +2228,32 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
     return h;
   }
 
+  // ---------- 画面：未来（Will） ----------
+  function futureItem(d, f) {
+    var tags = (f.priority && PRIORITY[f.priority] ? '<span class="pri ' + esc(f.priority) + '">' + PRIORITY[f.priority] + '</span>' : '') +
+      (f.horizon && HORIZON[f.horizon] ? '<span class="hz">' + HORIZON[f.horizon] + '</span>' : '') + aiBadge(f);
+    return '<div class="fi"><b>' + esc(f.text) + '</b>' + (f.reason ? '<p>' + esc(f.reason) + '</p>' : '') + (tags ? '<div class="tags">' + tags + '</div>' : '') + evChips(d, f.evidence) + '</div>';
+  }
+  function vFuture() {
+    var d = D(), n = futureCount(d), all = C.FUTURE_AREAS.length;
+    var h = subhead(askBtn('future')) + pagehead('未来（Will）', 'これからどう生きたいか。迷っている・まだ決めていない、も立派な答えです');
+    h += '<div class="prow" style="margin:-6px 2px 4px"><span>' + n + '／' + all + '領域</span>' + bar(n / all * 100) + '<span class="pv">' + Math.round(n / all * 100) + '%</span></div>';
+    var musts = [];
+    C.FUTURE_AREAS.forEach(function (a) { futureOf(d, a[0]).forEach(function (f) { if (f.priority === 'must') musts.push(f); }); });
+    if (musts.length) h += '<section class="card mustbox" style="margin-top:14px"><p class="eyebrow">譲れない条件</p><ul>' + musts.map(function (f) {
+      return '<li><span>' + esc(f.text) + '</span><small>' + esc(C.FUTURE_LABEL[f.area]) + '</small></li>';
+    }).join('') + '</ul></section>';
+    h += '<div class="sec"><h2 class="sec-title">8つの領域<small>' + (n < all ? 'まだ ' + (all - n) + 'つ' : 'ぜんぶ話せた') + '</small></h2>' + C.FUTURE_AREAS.map(function (a) {
+      var fs = futureOf(d, a[0]);
+      if (!fs.length) return '<div class="card fa empty"><div class="fa-h"><b>' + esc(a[1]) + '</b><span class="st no">まだ</span></div>' + sayLine(a[3]) + '</div>';
+      return '<div class="card fa"><div class="fa-h"><b>' + esc(a[1]) + '</b>' + (fs.length > 1 ? '<small>' + fs.length + 'つ</small>' : '') + '</div>' + fs.map(function (f) { return futureItem(d, f); }).join('') + '</div>';
+    }).join('') + '</div>';
+    return h;
+  }
+
   // ---------- 画面：深掘りリスト ----------
   function deepCard(x) {
-    var d = D(), t = String(x.target || ''), go = epById(d, t) ? 'ep/' + t : t.indexOf('interview.') === 0 ? 'interview/' + t.slice(10) : (t === 'axes' || d.axes.some(function (a) { return String(a.id) === t; })) ? 'traits' : '';
+    var d = D(), t = String(x.target || ''), go = epById(d, t) ? 'ep/' + t : t.indexOf('interview.') === 0 ? 'interview/' + t.slice(10) : (t === 'axes' || d.axes.some(function (a) { return String(a.id) === t; })) ? 'traits' : /^future(\.|$)/.test(t) ? 'future' : '';
     var pr = clamp(num(x.priority) || 3, 1, 3);
     return '<div class="card dd' + (x.done ? ' done' : '') + '"><div class="tgt">' + (go ? '<button data-go="' + esc(go) + '">' + esc(targetLabel(d, t)) + ' ›</button>' : '<span>' + esc(targetLabel(d, t)) + '</span>') +
       (x.done ? '<span class="prio p3">聞けた</span>' : '<span class="prio p' + pr + '">' + ['', '最優先', 'ふつう', 'あとで'][pr] + '</span>') + '</div>' +
@@ -2099,6 +2286,7 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
       menuItem('checks', CHECK_KIND.unconfirmed[1], '確認待ち', 'AIが本人に確かめたいこと', nCk ? nCk + '件' : '', nCk ? 'w' : '') + '</div>';
     h += '<div class="sec"><h2 class="sec-title menu-head">ノートの中身</h2><div class="menu">' +
       menuItem('traits', ICON.star, '強み・価値観・軸', '強み・弱み・やる気スイッチ・就活の軸', nTr ? nTr + '件' : '') +
+      menuItem('future', ICON.future, '未来（Will）', 'ビジョン・キャリア・働き方・お金・家庭など', futureCount(d) + '／' + C.FUTURE_AREAS.length) +
       menuItem('deep', ICON.dive, '深掘りリスト', 'AIで続ける時に自動で渡る質問', nDeep ? nDeep + '件' : '') +
       menuItem('outputs', ICON.box, '作れるもの', '自己紹介・ES・想定問答など') + '</div></div>';
     h += '<div class="sec"><h2 class="sec-title menu-head">データ</h2><div class="menu">' +
@@ -2111,7 +2299,7 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
   // ---------- 画面：AIへの依頼 ----------
   function reqCard(r) {
     var d = D(), t = String(r.target == null ? '' : r.target), te = C.targetEpisode(t);
-    var go = epById(d, te) ? (t === te ? 'ep/' + te : '') : /^outputs\.[a-zA-Z0-9]+/.test(t) ? 'out/' + t.split('.')[1] : /^traits(\.|$)/.test(t) || d.axes.some(function (a) { return String(a.id) === t; }) ? 'traits' : '';
+    var go = epById(d, te) ? (t === te ? 'ep/' + te : '') : /^outputs\.[a-zA-Z0-9]+/.test(t) ? 'out/' + t.split('.')[1] : /^traits(\.|$)/.test(t) || d.axes.some(function (a) { return String(a.id) === t; }) ? 'traits' : /^future(\.|$)/.test(t) ? 'future' : '';
     var mi = /^interview\.([^.]+)\.(.+)$/.exec(t);
     if (mi) { var arr = d.interview[mi[1]] || [], ix = -1; arr.forEach(function (c, i) { if (String(c.episode) === mi[2]) ix = i; }); go = ix >= 0 ? 'cand/' + mi[1] + '/' + ix : 'interview/' + mi[1]; }
     return '<div class="card dd' + (r.done ? ' done' : '') + '"><div class="tgt">' + (go ? '<button data-go="' + esc(go) + '">' + esc(targetLabel(d, t)) + ' ›</button>' : '<span>' + esc(targetLabel(d, t)) + '</span>') +
@@ -2266,6 +2454,11 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
     C.TRAIT_KEYS.forEach(function (k) { d.traits[k].forEach(function (t) { h += '<div class="p-item"><h3>' + C.TRAIT_LABEL[k] + '：' + esc(t.name) + '</h3><p>' + esc(t.description || '') + '</p></div>'; }); });
     d.axes.forEach(function (a) { h += '<div class="p-item"><h3>軸：' + esc(a.text) + '</h3><p>' + esc(a.reason || '') + '</p></div>'; });
     h += '</div></div>';
+    if (futureCount(d)) {
+      h += '<div class="p-sec"><h2>未来（Will）</h2><div class="p-grid">';
+      C.FUTURE_AREAS.forEach(function (a) { futureOf(d, a[0]).forEach(function (f) { h += '<div class="p-item"><h3>' + esc(a[1]) + (f.priority && PRIORITY[f.priority] ? '（' + PRIORITY[f.priority] + '）' : '') + '</h3><p>' + esc(f.text) + (f.horizon && HORIZON[f.horizon] ? '　' + HORIZON[f.horizon] : '') + '</p></div>'; }); });
+      h += '</div></div>';
+    }
     var o = d.outputs || {};
     if (o.intro1min && o.intro1min.text) h += '<div class="p-sec"><h2>1分自己紹介</h2><p class="p-text">' + esc(o.intro1min.text) + '</p>' + boostPrint(o.intro1min) + '</div>';
     if (o.manual && o.manual.text) h += '<div class="p-sec"><h2>自分の取扱説明書</h2><p class="p-text">' + esc(o.manual.text) + '</p></div>';
@@ -2298,6 +2491,7 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
       case 'graph': html = vGraph(); break;
       case 'interview': html = vInterview(parts[1]); break;
       case 'cand': html = vCand(parts[1], parts[2]); break;
+      case 'future': html = vFuture(); break;
       case 'traits': html = subhead(S.data && C.hasContent(S.data) ? askBtn('traits') : '') + vTraits(); break;
       case 'deep': html = vDeep(); break;
       case 'more': html = vMore(); break;
@@ -2318,7 +2512,7 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
     var tab = { home: 'home', timeline: 'timeline', ep: 'timeline', graph: 'graph', interview: 'interview', cand: 'interview' }[r] || 'more';
     document.querySelectorAll('.tab').forEach(function (t) { if (t.getAttribute('data-tab') === tab) t.setAttribute('aria-current', 'page'); else t.removeAttribute('aria-current'); });
     $('#tabbar').classList.toggle('hide', r === 'welcome' || (!S.data && r === 'import'));
-    var titles = { home: 'ホーム', timeline: '年表', ep: 'エピソード', graph: 'モチベーショングラフ', interview: '面接ネタ帳', cand: '面接ネタ', traits: '強み・価値観', deep: '深掘りリスト', more: 'もっと', outputs: '作れるもの', out: '作れるもの', import: 'AIの出力を貼り付け', data: 'バックアップ', goal: '目標と盛り方', reach: '到達度', requests: 'AIへの依頼', checks: '確認待ち' };
+    var titles = { home: 'ホーム', timeline: '年表', ep: 'エピソード', graph: 'モチベーショングラフ', interview: '面接ネタ帳', cand: '面接ネタ', traits: '強み・価値観', future: '未来（Will）', deep: '深掘りリスト', more: 'もっと', outputs: '作れるもの', out: '作れるもの', import: 'AIの出力を貼り付け', data: 'バックアップ', goal: '目標と盛り方', reach: '到達度', requests: 'AIへの依頼', checks: '確認待ち' };
     document.title = (titles[r] ? titles[r] + '｜' : '') + 'じぶんノート';
     // スクロール位置
     var h = location.hash.slice(1);
