@@ -315,6 +315,7 @@ button.chip{min-height:30px}
 .dd .tgt button{color:var(--accent-ink);font-weight:600;text-align:left;min-height:28px}
 .dd h3{font-size:16px;font-weight:800;line-height:1.55;margin:4px 0 4px}
 .dd p.why{font-size:13px;color:var(--ink2);margin-bottom:12px}
+.dd p.why:last-child,.dd h3:last-child{margin-bottom:0}
 .prio{font-size:11px;font-weight:800;padding:1px 8px;border-radius:999px;white-space:nowrap}
 .prio.p1{background:var(--warm-soft);color:var(--warm)}
 .prio.p2{background:var(--accent-soft);color:var(--accent-ink)}
@@ -497,25 +498,32 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
 .depth-next{margin-top:10px;font-size:12.5px;color:var(--muted);line-height:1.65}
 .depth-next b{color:var(--ink2);font-weight:700}
 .note-import{margin-top:16px;padding:12px 14px;border:1px dashed var(--muted);border-radius:var(--r);font-size:13px;color:var(--ink2);line-height:1.65}
-.note-import .mini-btn{margin-top:10px}
 .textlink{display:block;margin:16px auto 0;font-size:13px;color:var(--accent-ink);font-weight:600;min-height:40px;text-align:center}
 .textlink[disabled]{color:var(--muted);cursor:default}
 .cc-box{margin-top:12px;padding:12px 14px;border-radius:var(--r-sm);background:var(--paper2);border:1px dashed var(--line);font-size:14px;color:var(--ink)}
 
 /* requests & checks */
 .badge-check{display:inline-flex;align-items:center;font-size:11px;font-weight:700;padding:1px 8px;border-radius:999px;background:var(--warm-soft);color:var(--warm);line-height:1.6;white-space:nowrap}
-.mini-btn.ask{background:var(--paper);border-color:var(--line);color:var(--ink2)}
-.next-sub{margin-top:8px;display:flex;justify-content:center}
-.pend{display:flex;gap:8px;margin-top:12px}
-.pend button{flex:1;display:flex;align-items:center;gap:8px;min-height:46px;padding:8px 12px;background:var(--paper);border:1px solid var(--line);border-radius:var(--r);font-size:13px;color:var(--ink2);box-shadow:var(--shadow);transition:transform .12s}
-.pend button:active{transform:scale(.97)}
-.pend b{margin-left:auto;font-size:17px;font-weight:800;color:var(--ink);font-variant-numeric:tabular-nums}
+.mini-btn.ask{background:var(--paper);border-color:var(--line);color:var(--ink2);font-weight:600}
+/* 整理後のしずかな部品 */
+.pend-line{display:block;width:100%;margin-top:8px;min-height:28px;font-size:12px;color:var(--muted);text-align:center;letter-spacing:.02em}
+.pend-line::after{content:' ›';color:var(--accent-ink)}
+.say{margin-top:8px;font-size:12.5px;color:var(--muted);line-height:1.6}
+.say::before{content:'';display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--accent);margin:0 7px 2px 0;vertical-align:middle;opacity:.7}
+.quiet{border-top:1px solid var(--line2)}
+.quiet li button{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;width:100%;min-height:52px;padding:10px 2px;border-bottom:1px solid var(--line2);text-align:left}
+.quiet li button:active{background:var(--line2)}
+.quiet b{display:block;font-size:14px;font-weight:600;color:var(--ink);line-height:1.5}
+.quiet small{display:block;font-size:12px;color:var(--muted);line-height:1.5}
+.quiet svg{width:16px;height:16px;color:var(--muted)}
+.gaps-done .link-in{color:var(--accent-ink);font-weight:600;margin-left:4px}
+.w-links{display:flex;flex-wrap:wrap;justify-content:center;gap:2px 18px;margin-top:6px}
+.w-links .textlink{margin:0;display:inline-flex;align-items:center}
+.menu-head{margin-top:2px}
 .ck-ic{flex:none;width:30px;height:30px;border-radius:9px;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent-ink)}
 .ck-ic svg{width:17px;height:17px}
 .ck-ic.w{background:var(--warm-soft);color:var(--warm)}
 .ck-ic.h{background:var(--hl-soft);color:var(--hl-ink)}
-.pend .ck-ic{width:26px;height:26px;border-radius:8px}
-.pend .ck-ic svg{width:15px;height:15px}
 .ck{display:grid;grid-template-columns:30px 1fr;gap:12px;padding:13px 0;border-top:1px solid var(--line2)}
 .ck:first-child{border-top:0}
 .ck-k{display:block;font-size:11.5px;font-weight:700;color:var(--muted);letter-spacing:.04em}
@@ -1251,7 +1259,6 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
     right: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="arrow"><path d="M9 6l6 6-6 6"/></svg>',
     left: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg>',
     copy: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><rect x="8.5" y="8.5" width="11" height="11" rx="2"/><path d="M15.5 8.5V6a1.5 1.5 0 0 0-1.5-1.5H6A1.5 1.5 0 0 0 4.5 6v8A1.5 1.5 0 0 0 6 15.5h2.5"/></svg>',
-    dig: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="6"/><path d="M20 20l-4.3-4.3M11 8.5v5M8.5 11h5"/></svg>',
     send: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h12M12 6l6 6-6 6"/></svg>',
     in: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 19.5h14"/></svg>',
     star: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.8l2.5 5.2 5.6.7-4.1 3.9 1 5.6L12 16.5l-5 2.7 1-5.6-4.1-3.9 5.6-.7z"/></svg>',
@@ -1369,6 +1376,7 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
     t = String(t == null ? '' : t);
     if (t === '') return 'ノート全体';
     if (t === 'axes') return '就活の軸';
+    if (t === 'traits') return '強み・価値観・就活の軸';
     var mi = /^interview\.([^.]+)\.(.+)$/.exec(t);
     if (mi) { var ce = epById(d, mi[2]); return '面接ネタ『' + (C.INTERVIEW_LABEL[mi[1]] || mi[1]) + '』の候補' + (ce ? '「' + ce.title + '」' : ''); }
     var mo = /^outputs\.(es|qa)\.(.+)$/.exec(t);
@@ -1382,43 +1390,27 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
     var e = epById(d, t);
     return e ? t + '『' + (e.title || '') + '』' : t;
   }
-  function deepReq(d, target, q) {
-    q = String(q || '').trim();
-    return '深掘りしたい：' + targetLabel(d, target) + '。' + (q ? '「' + q + '」を聞いてほしい' : 'もう一段深く聞いてほしい');
-  }
   var FIELDS = [['situation', '状況'], ['action', '行動'], ['reason', '理由'], ['feeling', '気持ち'], ['result', '結果'], ['learning', '学び']];
-  function epDeepReq(d, e) {
-    var miss = FIELDS.filter(function (f) { return !String(e[f[1] ? f[0] : ''] || '').trim(); }).map(function (f) { return f[1]; });
-    var base = '深掘りしたい：' + targetLabel(d, e.id) + '。';
-    if (miss.length) return base + 'まだ聞けていない「' + miss.join('・') + '」のところを聞いてほしい';
-    if (depthN(e.depth) >= 4) return base + '最難関水準まで来ているので、面接官の反論や意地悪な質問を想定して、答えの練習をしたい';
-    if (depthN(e.depth) >= 3 && C.levelOf(d) >= 4) return base + '最難関水準にしたい。数字・比べる基準・ほかの選択肢と選んだ理由・別の場面での再現・反論への備えを聞いてほしい';
-    return base + '面接で使えるように、具体的な数字や場面をもう少し聞いてほしい';
+  // エピソードの「次に聞けるとよいこと」（表示だけ）
+  function epNextHint(d, e) {
+    var miss = FIELDS.filter(function (f) { return !String(e[f[0]] || '').trim(); }).map(function (f) { return f[1]; });
+    if (miss.length) return 'まだ聞けていない「' + miss.join('・') + '」のところ';
+    if (depthN(e.depth) >= 4) return '面接官の反論や意地悪な質問への答えの練習';
+    if (depthN(e.depth) >= 3 && C.levelOf(d) >= 4) return '数字・比べる基準・ほかの選択肢と選んだ理由・別の場面での再現・反論への備え';
+    return '面接で使えるように、具体的な数字や場面';
   }
-  var IV_HINT = {
-    self_pr: '自分の強みがいちばん出ているエピソードを一緒に選んで、自己PRの形にしてほしい',
-    gakuchika: '大学でいちばん時間を使ったことを深掘りして、ガクチカにしてほしい',
-    setback: '今までで一番悔しかったこと・やめたくなったことを一緒に思い出したい',
-    success: 'うまくいった経験を、なぜうまくいったのかまで一緒に整理したい',
-    strength: '周りからよく言われる長所を、エピソード付きで整理してほしい',
-    weakness: '自分の短所と、それにどう向き合っているかを一緒に考えたい',
-    team: 'チームの中で自分がいつもどんな役割をしているか、一緒に振り返りたい',
-    challenge: '自分から何かに挑戦したことを思い出す手伝いをしてほしい。小さなことでもいい',
-    values: '今までのエピソードから、自分が大切にしている価値観を見つけてほしい',
-    axis: '今までの話から、自分に合う就活の軸を一緒に考えてほしい'
-  };
-  function ivReq(key) { return 'じぶんノートの続き：面接ネタ『' + C.INTERVIEW_LABEL[key] + '』の材料を探したい。' + IV_HINT[key]; }
+  // 面接ネタの空の枠で「AIで続ける時にこう言えばOK」と出す言い方
+  function ivSay(key) { var l = C.INTERVIEW_LABEL[key] || key; return /^(strength|weakness|values|axis)$/.test(key) ? l + 'を見つけたい' : l + 'を作りたい'; }
   var OUT_DEF = [
-    { key: 'intro1min', desc: '面接の最初に話す、約300字の台本', req: '今までのデータから、面接の最初に話す「1分自己紹介」（300字くらい）の台本を作ってほしい。本人の言葉をできるだけ残して、じぶんノートに読み込める形（outputs.intro1min）で出して' },
-    { key: 'manual', desc: '性格・強み・苦手・やる気スイッチを1枚に', req: '今までのデータから「自分の取扱説明書」（性格・強み・苦手・やる気スイッチ・付き合い方のコツ）を作ってほしい。じぶんノートに読み込める形（outputs.manual）で出して' },
-    { key: 'es', desc: '設問と文字数を伝えて、下書きを作る', req: 'ESの下書きを作ってほしい。設問は「（ここに設問）」、文字数は「（例：400字）」。今までのエピソードを使って、じぶんノートに読み込める形（outputs.es）で出して' },
-    { key: 'qa', desc: '聞かれそうな質問と、自分らしい答え', req: '今までのデータから、面接で聞かれそうな質問と答え（想定問答）を5つ作ってほしい。じぶんノートに読み込める形（outputs.qa）で出して' },
-    { key: 'otherRequest', desc: '友達に「私ってどんな人？」と聞くメッセージ', req: '友達や家族に他己分析をお願いするLINEのメッセージ文を作ってほしい。気軽に答えられる質問を3つくらい入れて、じぶんノートに読み込める形（outputs.otherRequest）で出して' },
-    { key: 'companyFit', desc: '受ける企業ごとに、刺さるエピソードを当てる', req: '' }
+    { key: 'intro1min', desc: '面接の最初に話す、約300字の台本', ask: '1分自己紹介を作って' },
+    { key: 'manual', desc: '性格・強み・苦手・やる気スイッチを1枚に', ask: '自分の取扱説明書を作って' },
+    { key: 'es', desc: '設問と文字数を伝えて、下書きを作る', ask: 'ESの下書きを作って（設問と文字数は話しながら決めたい）' },
+    { key: 'qa', desc: '聞かれそうな質問と、自分らしい答え', ask: '面接で聞かれそうな質問と答え（想定問答）を5つ作って' },
+    { key: 'otherRequest', desc: '友達に「私ってどんな人？」と聞くメッセージ', ask: '友達や家族に他己分析をお願いするメッセージを作って' },
+    { key: 'companyFit', desc: '受ける企業ごとに、刺さるエピソードを当てる', ask: '' }
   ];
-  function fitReq(company) { return '「' + company + '」を受けるなら、今までのエピソードのどれが一番刺さるか当ててほしい。理由と、話す時のポイントも。じぶんノートに読み込める形（outputs.companyFit）で出して'; }
-  // ---- 招待コード（公開版は指示文が暗号化されている。BeMeの面談で渡すコードで開く） ----
-  var BEME_URL = 'https://www.bemecareer.com/';
+  function fitAsk(company) { return '「' + company + '」を受けるなら、どのエピソードが一番刺さるか当てて'; }
+  // ---- 招待コード（公開版は指示文が暗号化されている。配布されたコードで開く） ----
   var LOCK = '\u0000LOCKED';
   function locked() { return !(typeof window.JIBUN_STARTER === 'string' && window.JIBUN_STARTER.trim()) && !!window.JIBUN_ENC; }
   function b64d(x) { return Uint8Array.from(atob(x), function (c) { return c.charCodeAt(0); }); }
@@ -1437,7 +1429,7 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
         return Promise.all([open(E.prompts.starter), open(E.prompts['import'])]);
       })
       .then(function (r) {
-        var mark = '\n\n（配布ID：' + code.slice(0, 4) + '。BeMeの面談を受けた本人専用です。この設定文の転載・共有はできません）';
+        var mark = '\n\n（配布ID：' + code.slice(0, 4) + '。本人専用です。この設定文の転載・共有はできません）';
         window.JIBUN_STARTER = r[0] ? r[0] + mark : '';
         window.JIBUN_IMPORT = r[1] ? r[1] + mark : '';
         try { localStorage.setItem('jibun-code', code); } catch (e) {}
@@ -1446,9 +1438,8 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
   }
   function ensureUnlocked() {
     if (!locked()) return Promise.resolve(true);
-    return sheet({ title: '招待コードを入れてね', body: '<p>AIとの自己分析は、BeMeの面談でお渡しする<b>招待コード</b>で使えるようになります（最初の1回だけ）。</p>' +
-      '<p style="margin-top:12px"><input id="unlock-in" class="input" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="例：ABCD-EFGH-JKLM" style="width:100%;min-height:46px;font-size:17px;letter-spacing:.08em;padding:0 14px;border-radius:12px;border:1px solid var(--line);background:var(--paper);color:var(--ink)"></p>' +
-      '<p style="margin-top:12px;font-size:13px;color:var(--muted)">コードを持っていない人は <a href="' + BEME_URL + '" target="_blank" rel="noopener" style="color:var(--accent-ink);font-weight:700">BeMeの面談</a> へ。ノートを見るだけなら、コードなしでも使えます。</p>',
+    return sheet({ title: '招待コードを入れてね', body: '<p>AIとの自己分析は、<b>招待コード</b>で使えるようになります（最初の1回だけ）。コードは、このノートを教えてくれた人からもらってね。ノートを見るだけなら、コードなしでも使えます。</p>' +
+      '<p style="margin-top:12px"><input id="unlock-in" class="input" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="例：ABCD-EFGH-JKLM" style="width:100%;min-height:46px;font-size:17px;letter-spacing:.08em;padding:0 14px;border-radius:12px;border:1px solid var(--line);background:var(--paper);color:var(--ink)"></p>',
       actions: [{ label: 'あとで', value: 0 }, { label: '使えるようにする', cls: 'primary', value: 'ok' }] })
       .then(function (v) {
         var el = document.getElementById('unlock-in'); var code = el ? el.value : '';
@@ -1468,10 +1459,6 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
     var t = importPrompt();
     if (S.mode === 'local' && S.data && C.hasContent(S.data)) t += '\n以下が今までのデータです：' + JSON.stringify(C.makeHandoff(S.data));
     return t;
-  }
-  function importBtn(cls) {
-    if (S.mode !== 'file' && !importPrompt()) return '<button class="btn block ' + (cls || '') + '" disabled aria-disabled="true" style="opacity:.55">' + ICON.merge + '他のAIから取り込む（準備中）</button>';
-    return '<button class="btn block ' + (cls || '') + '" data-act="importAI">' + ICON.merge + '他のAIから取り込む</button>';
   }
   function handoffText() {
     var code = JSON.stringify(C.makeHandoff(D()));
@@ -1506,11 +1493,17 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
       (tg.length ? '<span class="chips" style="margin-top:6px">' + tg.map(function (id) { return '<button class="chip ac" data-go="ep/' + esc(id) + '">' + esc(trunc(epById(d, id).title, 14)) + '</button>'; }).join('') + '</span>' : '') +
       (c.done && c.answer ? '<span class="ck-a">→ ' + esc(c.answer) + '</span>' : '') + '</span></div>';
   }
-  function handoffLabel() { var n = openChecks().length; return 'AIに続きを頼む' + (n ? '（確認' + n + '件あり）' : ''); }
+  function handoffLabel() { return 'AIで続ける'; }
+  // 主ボタンの下の1行：まだの依頼・確認の件数（0なら出さない）
+  function pendLine() {
+    var nRq = openRequests().length, nCk = openChecks().length, a = [];
+    if (nRq) a.push('依頼' + nRq + '件'); if (nCk) a.push('確認' + nCk + '件');
+    return a.length ? a.join('・') + 'もいっしょに渡します' : '';
+  }
 
   // ---------- 依頼（requests） ----------
   var LS_CCREQ = 'jibun-note-cc-requests';
-  var REQ_CHIPS = ['もっと深掘りしたい', 'ここ事実と違う', 'もっと盛って', '言い方を変えたい'];
+  var REQ_CHIPS = ['もっと深掘りしたい', '事実と違う', 'もっと盛って', '言い方を変えたい'];
   function ccLocal() { try { var a = JSON.parse(localStorage.getItem(LS_CCREQ) || '[]'); return Array.isArray(a) ? a : []; } catch (e) { return []; } }
   function ccSaveLocal(a) { try { localStorage.setItem(LS_CCREQ, JSON.stringify(a)); } catch (e) { /* なし */ } }
   // 表示用：Claude Code版は data の requests ＋ ローカルの未取り込み分
@@ -1523,13 +1516,13 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
     return base.concat(loc.map(function (r) { var x = JSON.parse(JSON.stringify(r)); x._local = true; return x; }));
   }
   function openRequests() { return allRequests().filter(function (r) { return r.done !== true; }); }
-  function askBtn(target, label) { return '<button class="mini-btn ask" data-act="ask" data-t="' + esc(target) + '">' + ICON.chat + esc(label || 'AIに頼む') + '</button>'; }
+  function askBtn(target, label) { return '<button class="mini-btn ask" aria-haspopup="dialog" data-act="ask" data-t="' + esc(target) + '">' + ICON.chat + esc(label || 'AIに頼む') + '</button>'; }
   function askSheet(target) {
     var d = D();
     var body = '<p class="small muted" style="margin-bottom:10px">対象：' + esc(targetLabel(d, target)) + '</p><div class="chips" style="margin-bottom:10px">' +
       REQ_CHIPS.map(function (c) { return '<button class="chip req-chip" type="button" data-chip="' + esc(c) + '">' + esc(c) + '</button>'; }).join('') + '</div>' +
       '<label class="sr" for="req-text">AIへの依頼</label><textarea id="req-text" class="paste" style="min-height:110px" placeholder="例：監督とのやりとりを、もっと掘りたい"></textarea>' +
-      '<p class="small muted" style="margin-top:8px">' + (readonly() ? '保存すると、Claude Codeが次に読む場所に置きます。' : '保存すると、次に「AIに続きを頼む」で一緒に渡るよ。') + '</p>';
+      '<p class="small muted" style="margin-top:8px">' + (readonly() ? '保存すると、Claude Codeが次に読む場所に置きます。' : '保存すると依頼にたまって、「AIで続ける」で一緒に渡ります。') + '</p>';
     var sp = sheet({ title: 'AIに頼む', body: body, actions: [{ label: 'やめる', value: 0 }, { label: '保存する', cls: 'primary', value: 1 }] });
     setTimeout(function () {
       var ta = $('#req-text'); if (!ta) return;
@@ -1553,10 +1546,17 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
       if (!Array.isArray(d.requests)) d.requests = [];
       r.id = C.nextId('r', [d.requests]);
       d.requests.push(r); save();
-      toast('依頼を保存したよ。「AIに続きを頼む」で一緒に渡ります');
+      toast('依頼をためました。『AIで続ける』で渡せます');
     }
     rerender();
   }
+  // 同じ依頼がもうたまっていれば、二重にためない
+  function queueRequest(target, text) {
+    var dup = openRequests().some(function (r) { return String(r.target) === String(target) && String(r.text) === String(text); });
+    if (dup) { toast('もう依頼にたまっています。『AIで続ける』で渡せます'); return; }
+    addRequest(target, text);
+  }
+  function hasOpenReq(target) { return openRequests().some(function (r) { return String(r.target) === String(target); }); }
   function delRequest(id) {
     if (readonly()) {
       ccSaveLocal(ccLocal().filter(function (r) { return String(r.id) !== String(id); }));
@@ -1678,7 +1678,7 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
   // ---------- 共通パーツ ----------
   function subhead(right) { return '<div class="subhead"><button class="back" data-act="back">' + ICON.left + '戻る</button>' + (right || '') + '</div>'; }
   function pagehead(t, sub) { return '<header class="pagehead"><h1>' + t + '</h1>' + (sub ? '<p>' + sub + '</p>' : '') + '</header>'; }
-  function digBtn(text, label) { return '<button class="mini-btn" ' + copyAttr(text, 'コピーしました。AIとのチャットに貼り付けてね') + '>' + ICON.dig + esc(label || 'ここを深掘り') + '</button>'; }
+  function sayLine(text) { return '<p class="say">AIで続ける時に「' + esc(text) + '」と言えばOK</p>'; }
   function ringSVG(p, size, stroke) {
     var r = (size - stroke) / 2, c = 2 * Math.PI * r, h = size / 2;
     return '<svg width="' + size + '" height="' + size + '" viewBox="0 0 ' + size + ' ' + size + '" aria-hidden="true"><circle class="ring-bg" cx="' + h + '" cy="' + h + '" r="' + r + '" fill="none" stroke-width="' + stroke + '"/>' +
@@ -1786,17 +1786,17 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
       '<div class="btn-row" style="flex-direction:column">' +
       (canStartChatGPT() && starter() ? startBtn('primary') : startBtn()) +
       '<button class="btn block' + (starter() ? '' : ' primary') + '" data-go="import">' + ICON.in + 'AIの出力を貼り付け</button>' +
-      (hasSample ? '<button class="btn block" data-act="sample">サンプルを見る（架空の大学3年生）</button>' : '') +
       '</div>' +
-      (importPrompt() ? '<button class="textlink" data-act="importAI">過去のESや、ほかのAIとの会話から取り込む ›</button>' : '<button class="textlink" disabled>過去のESや、ほかのAIとの会話から取り込む（準備中）</button>') +
+      '<div class="w-links">' +
+      (hasSample ? '<button class="textlink" data-act="sample">サンプルを見る</button>' : '') +
+      (importPrompt() ? '<button class="textlink" data-act="importAI">過去のESや他のAIから取り込む</button>' : '<button class="textlink" disabled>過去のESや他のAIから取り込む（準備中）</button>') +
+      '</div>' +
       '<div class="sec"><h2 class="sec-title">使い方</h2><ol class="steps card">' +
-      '<li><b>「ChatGPTではじめる」を押す</b><span>はじめるプロンプトがコピーされます。ChatGPT（無料でOK）の新しいチャットに貼って送信。</span></li>' +
-      '<li><b>AIと自己分析ラリーをする</b><span>子どもの頃から今までのことを、1問ずつ答えていきます。区切りでAIが「セーブデータ」を出してくれます。</span></li>' +
-      '<li><b>「AIの出力を貼り付け」で読み込む</b><span>前後の文章ごと貼ってOK。貼るたびに、ノートが少しずつ育っていきます。</span></li>' +
-      '<li><b>続きは「AIに続きを頼む」</b><span>今までのデータごとコピーされるので、新しいチャットでも続きから話せます。</span></li>' +
+      '<li><b>「ChatGPTではじめる」を押して、貼って送信</b><span>ChatGPT（無料でOK）の新しいチャットへ。AIが1問ずつ聞いてくれます。</span></li>' +
+      '<li><b>出てきたセーブデータを「AIの出力を貼り付け」</b><span>前後の文章ごと貼ってOK。貼るたびにノートが育ちます。</span></li>' +
+      '<li><b>続きは「AIで続ける」</b><span>今までのデータと、ためた依頼がまとめて渡ります。</span></li>' +
       '</ol></div>' +
-      '<p class="small muted" style="margin-top:14px;text-align:center">データはこの端末の中だけに保存されます。</p>' +
-      '<p class="foot-note">made by BeMe</p></section>';
+      '<p class="small muted" style="margin-top:14px;text-align:center">データはこの端末の中だけに保存されます。</p></section>';
   }
 
   // ---------- 画面：ホーム ----------
@@ -1823,14 +1823,14 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
     if (showLevelTip(R)) h += '<div class="tipline"><button data-go="goal">目標レベルを決めると、％の基準が合います<b>決める ›</b></button><button class="x" data-act="tipClose" aria-label="この案内を閉じる">×</button></div>';
     if (p.goal) h += '<p class="goal">' + esc(p.goal) + '</p>';
     var next = (d.progress && d.progress.nextStep) || 'AIとの自己分析を続けて、エピソードを増やしていこう';
+    var pl = pendLine();
     h += '<section class="card next" style="margin-top:16px"><p class="eyebrow">次にやること</p><p class="next-text">' + esc(next) + '</p>' +
       '<button class="btn primary block" data-act="handoff">' + ICON.send + esc(handoffLabel()) + '</button>' +
-      '<div class="next-sub">' + askBtn('', 'ノート全体についてAIに頼む') + '</div></section>';
-    var nCk = openChecks(d).length, nRq = openRequests().length;
-    if (nCk || nRq) h += '<div class="pend">' + (nCk ? '<button data-go="checks"><span class="ck-ic w">' + CHECK_KIND.conflict[1] + '</span>確認待ち <b>' + nCk + '</b></button>' : '') + (nRq ? '<button data-go="requests"><span class="ck-ic">' + ICON.chat + '</span>AIへの依頼 <b>' + nRq + '</b></button>' : '') + '</div>';
+      (pl ? '<button class="pend-line" data-go="' + (openRequests().length ? 'requests' : 'checks') + '">' + esc(pl) + '</button>' : '') +
+      (readonly() ? '' : '<button class="btn block" data-go="import" style="margin-top:10px">' + ICON.in + 'AIの出力を貼り付け</button>') + '</section>';
     h += '<div class="sec"><h2 class="sec-title"><span>足りないもの <small>レベル' + R.level + 'まで</small></span>' + (R.gaps.length ? '<button class="link" data-go="reach">ぜんぶ見る ›</button>' : '') + '</h2>' +
-      (R.gaps.length ? '<div class="card gaps"><ul>' + R.gaps.slice(0, 4).map(gapRow).join('') + '</ul></div>'
-        : '<div class="card"><p class="gaps-done">レベル' + R.level + 'の基準は、ぜんぶそろったよ。' + (R.level < 5 ? 'もう一段上を目指すなら、目標を上げてみよう。' : '') + '</p>' + (R.level < 5 ? '<button class="mini-btn" data-go="goal">' + ICON.flag + '目標を変える</button>' : '') + '</div>') + '</div>';
+      (R.gaps.length ? '<ul class="quiet">' + R.gaps.slice(0, 3).map(function (g) { return '<li><button data-go="' + esc(g.go) + '"><span><b>' + esc(g.label) + '</b><small>' + esc(g.hint) + '</small></span>' + ICON.right + '</button></li>'; }).join('') + '</ul>'
+        : '<p class="gaps-done">レベル' + R.level + 'の基準は、ぜんぶそろったよ。' + (R.level < 5 ? '<button class="link-in" data-go="goal">目標を上げる ›</button>' : '') + '</p>') + '</div>';
     h += '<div class="stats">' +
       '<button class="stat" data-go="timeline"><b>' + nEp + '</b><span>エピソード</span></button>' +
       '<button class="stat" data-go="interview"><b>' + nCat + '<small>/10</small></b><span>面接ネタ</span></button>' +
@@ -1845,8 +1845,6 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
     var logs = (d.log || []).slice().sort(function (a, b) { return String(b.date || '').localeCompare(String(a.date || '')); }).slice(0, 4);
     if (logs.length) h += '<div class="sec"><h2 class="sec-title">最近の記録<small>' + (num(d.progress.sessions) ? d.progress.sessions + '回話した' : '') + '</small></h2><div class="card"><ul class="loglist">' +
       logs.map(function (l) { return '<li><time>' + esc(fmtDate(l.date)) + '</time><span>' + esc(l.summary) + '</span></li>'; }).join('') + '</ul></div></div>';
-    h += '<div class="sec btn-row" style="flex-direction:column">' + (readonly() ? '' : '<button class="btn soft block" data-go="import">' + ICON.in + 'AIの出力を貼り付け</button>') + importBtn() + '<button class="btn block" data-go="outputs">' + ICON.box + '作れるもの</button></div>';
-    if (canStartChatGPT()) h += '<div class="sec" style="margin-top:12px">' + startBtn() + '<p class="small muted" style="margin-top:6px;text-align:center">はじめから話す時はこちら。続きなら上の「AIに続きを頼む」がおすすめ</p></div>';
     return h;
   }
 
@@ -1929,7 +1927,7 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
         '<span class="tl-meta">' + list.length + '話・' + (R.periods[pe.id] || 0) + '%<span class="moods">' + list.map(function (e) { return '<i class="' + moodCls(e.motivation) + '"></i>'; }).join('') + '</span></span>' + ICON.chev + '</button>' +
         '<div class="acc"><div><div class="tl-eps">';
       if (list.length) list.forEach(function (e) { h += epRow(e); });
-      else h += '<div class="empty-note">まだこの時期のエピソードはありません。<br>' + digBtn('じぶんノートの続き：' + pe.label + '（' + (pe.range || '') + '）の頃の話を聞いてほしい。覚えていることが少なくても大丈夫なように、思い出しやすい質問からお願い', 'この時期の話をAIに聞いてもらう') + '</div>';
+      else h += '<div class="empty-note">まだこの時期のエピソードはありません。' + sayLine(pe.label + 'の頃の話をしたい') + '</div>';
       h += '</div></div></div></li>';
     });
     return h + '</ol>';
@@ -1945,15 +1943,15 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
     var d = D(), e = epById(d, id);
     if (!e) return subhead() + '<p class="muted" style="padding:40px 0">このエピソードは見つかりませんでした。</p>';
     var pe = periodOf(d, e.period), eps = epsSorted(d), idx = eps.indexOf(e);
-    var h = subhead('<span style="display:flex;gap:6px">' + askBtn(String(e.id)) + digBtn(epDeepReq(d, e)) + '</span>');
+    var h = subhead(askBtn(String(e.id)));
     h += '<article><div class="ep-head"><p class="eyebrow">' + esc(pe.label) + (e.when ? '・' + esc(e.when) : '') + '</p><h1>' + esc(e.title) + '</h1>' + (e.summary ? '<p class="lead">' + esc(e.summary) + '</p>' : '') + '</div>';
     var dn = depthN(e.depth);
     h += '<div class="ep-meta">' + (num(e.motivation) != null ? '<span><span class="lbl">気持ち</span>' + moodChip(e.motivation) + '</span>' : '') + depthMeter(e.depth, true) + (dn === 4 ? '<span class="stamp">最難関水準</span>' : '') + checkBadge(e.id) + aiBadge(e) + '</div>';
     h += '<p class="depth-next">' + (dn === 4 ? '<b>最難関水準：</b>' + esc(DEPTH_NEXT[3]) + '、がそろっています。深掘りが何回あっても崩れにくい話です'
       : '<b>次の段「' + esc(C.DEPTH_LABEL[dn + 1]) + '」：</b>' + esc(DEPTH_NEXT[dn])) + '</p>';
     var ck = openChecks(d).filter(function (c) { return (c.targets || []).map(String).indexOf(String(e.id)) >= 0; });
-    if (ck.length) h += '<div class="card checks-mini" style="margin-top:14px">' + ck.map(checkRow).join('') + '<p class="small muted" style="margin-top:8px">AIに続きを頼むと、最初に聞いてくれるよ</p></div>';
-    if (e.source === 'import') h += '<div class="note-import">過去のESや、ほかのAIとの会話から取り込んだ話です。まだ本人が確かめていないので、合っているか確認して、自分の言葉で話し直すと「本人の話」になるよ。<br>' + digBtn('じぶんノートの続き：取り込んだ ' + e.id + '『' + (e.title || '') + '』の話を確かめたい。合っているか1つずつ聞いて、自分の言葉で話し直させて', 'AIと確かめる') + '</div>';
+    if (ck.length) h += '<div class="card checks-mini" style="margin-top:14px">' + ck.map(checkRow).join('') + '<p class="small muted" style="margin-top:8px">「AIで続ける」と、最初に聞いてくれるよ</p></div>';
+    if (e.source === 'import') h += '<div class="note-import">過去のESや、ほかのAIとの会話から取り込んだ話です。まだ本人が確かめていないので、合っているか確認して、自分の言葉で話し直すと「本人の話」になるよ。' + sayLine('取り込んだ話を確かめたい') + '</div>';
     if (e.quotes && e.quotes.length) h += '<div class="quotes" aria-label="本人の言葉">' + e.quotes.map(function (q) { return '<blockquote class="quote">' + esc(q) + '</blockquote>'; }).join('') + '</div>';
     h += '<dl class="fields">' + FIELDS.map(function (f) {
       var v = String(e[f[0]] || '').trim();
@@ -1968,7 +1966,7 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
     C.TRAIT_KEYS.forEach(function (k) { d.traits[k].forEach(function (t) { if ((t.evidence || []).map(String).indexOf(String(e.id)) >= 0) tr.push('<button class="chip ac" data-go="traits">' + C.TRAIT_LABEL[k] + '：' + esc(t.name) + '</button>'); }); });
     if (tr.length) h += '<div class="sec"><h2 class="sec-title">この話からわかること</h2><div class="chips">' + tr.join('') + '</div></div>';
     var dd = d.deepDive.filter(function (x) { return String(x.target) === String(e.id) && !x.done; });
-    h += '<div class="sec"><h2 class="sec-title">まだ掘れるところ</h2>' + (dd.length ? dd.map(deepCard).join('') : '<div class="card"><p class="small muted" style="margin-bottom:10px">' + esc(epDeepReq(d, e).split('。')[1] || '') + '</p>' + digBtn(epDeepReq(d, e), 'AIに深掘りを頼む') + '</div>') + '</div>';
+    h += '<div class="sec"><h2 class="sec-title">まだ掘れるところ</h2>' + (dd.length ? dd.map(deepCard).join('') : '<div class="card"><p class="small" style="color:var(--ink2)">次に聞けるとよいのは、' + esc(epNextHint(d, e)) + '。</p></div>') + (dd.length ? '<p class="small muted" style="margin:8px 2px 0">ここにある質問は、AIで続ける時に自動で渡ります</p>' : '') + '</div>';
     var pv = eps[idx - 1], nx = eps[idx + 1];
     h += '<nav class="pager" aria-label="前後のエピソード">' + (pv ? '<button data-go="ep/' + esc(pv.id) + '" data-replace="1">‹ 前の話<b>' + esc(pv.title) + '</b></button>' : '<span></span>') + (nx ? '<button data-go="ep/' + esc(nx.id) + '" data-replace="1">次の話 ›<b>' + esc(nx.title) + '</b></button>' : '<span></span>') + '</nav>';
     return h + '</article>';
@@ -1978,7 +1976,7 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
   function vGraph() {
     var d = D(), eps = epsSorted(d).filter(function (e) { return num(e.motivation) != null; });
     var h = pagehead('モチベーショングラフ', '点をタップすると、そのエピソードが開きます');
-    if (!eps.length) return h + '<div class="card"><p class="muted small" style="margin-bottom:10px">まだ点がありません。AIと話してエピソードが増えると、ここに線が引かれていきます。</p>' + digBtn('じぶんノートの続き：モチベーショングラフを作りたい。子どもの頃から順に、気持ちが上がった時・下がった時を聞いてほしい', 'AIにグラフ作りを頼む') + '</div>';
+    if (!eps.length) return h + '<div class="card"><p class="muted small">まだ点がありません。AIと話してエピソードが増えると、ここに線が引かれていきます。</p>' + sayLine('モチベーショングラフを作りたい') + '</div>';
     h += '<div class="card graphcard">' + graphSVG(d, { w: viewWidth() - 14, h: 300, animate: true, id: 'gf' }) + '</div>';
     var hi = eps.slice().sort(function (a, b) { return num(b.motivation) - num(a.motivation); })[0];
     var lo = eps.slice().sort(function (a, b) { return num(a.motivation) - num(b.motivation); })[0];
@@ -2011,7 +2009,7 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
           (x.c.points && x.c.points.length ? '<ul>' + x.c.points.map(function (pt) { return '<li>' + esc(pt) + '</li>'; }).join('') + '</ul>' : '') +
           '<span class="more">' + (x.c.draft ? '下書きを見る ›' : 'くわしく見る ›') + '</span></button>';
       });
-      else h += '<div class="hint"><p>まだ材料がありません。AIにこう聞くと見つかります：</p><p class="ask">' + esc(IV_HINT[k[0]]) + '</p>' + digBtn(ivReq(k[0]), 'この聞き方をコピー') + '</div>';
+      else h += '<div class="hint"><p>まだ材料がありません。</p>' + sayLine(ivSay(k[0])) + '</div>';
       h += '</div></div></div></section>';
     });
     return h;
@@ -2032,10 +2030,10 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
     if (c.points && c.points.length) h += '<div class="sec"><h2 class="sec-title">話すポイント</h2><div class="card"><ul class="dots">' + c.points.map(function (p) { return '<li style="font-size:14.5px;color:var(--ink)">' + esc(p) + '</li>'; }).join('') + '</ul></div></div>';
     h += '<div class="sec"><h2 class="sec-title">面接で話す下書き' + (c.draft ? '<small class="cnt">' + c.draft.length + '字</small>' : '') + '</h2>';
     if (c.draft) h += '<div class="draft">' + boostText(c.draft, c) + '</div><div class="btn-row" style="margin-top:10px"><button class="btn sm" ' + copyAttr(c.draft) + '>' + ICON.copy + '下書きをコピー</button></div>' + (boostsOf(c).length ? '<p class="small muted" style="margin-top:6px">色の付いた所は盛った表現。コピーすると本文だけになります</p>' : '');
-    else h += '<div class="card"><p class="small muted" style="margin-bottom:10px">まだ下書きはありません。足りない情報が埋まると、AIが作ってくれます。</p>' + digBtn(ivReq(key).replace('の材料を探したい。' + IV_HINT[key], '：' + targetLabel(d, c.episode) + 'を使って、面接で話す下書き（200〜300字）を作ってほしい'), '下書きをAIに頼む') + '</div>';
+    else h += '<div class="card"><p class="small muted">まだ下書きはありません。足りない情報が埋まると、AIが作ってくれます。</p></div>';
     h += '</div>' + boostSection(c);
     if (c.missing && c.missing.length) h += '<div class="sec"><h2 class="sec-title">足りない情報<small>ここが埋まると強くなる</small></h2><div class="card" style="padding:6px 16px"><ul class="missing">' +
-      c.missing.map(function (m) { return '<li><span>' + esc(m) + '</span>' + digBtn('深掘りしたい：' + targetLabel(d, c.episode) + '（' + label + 'のネタ）。「' + m + '」を聞いてほしい') + '</li>'; }).join('') + '</ul></div></div>';
+      c.missing.map(function (m) { return '<li><span>' + esc(m) + '</span></li>'; }).join('') + '</ul></div><p class="small muted" style="margin:8px 2px 0">AIで続けると、ここから聞いてくれます</p></div>';
     if (e) h += '<div class="sec"><h2 class="sec-title">元のエピソード</h2><button class="card linkcard" data-go="ep/' + esc(e.id) + '"><span><small>' + esc(periodOf(d, e.period).label + (e.when ? '・' + e.when : '')) + '</small><b>' + esc(e.title) + '</b></span>' + ICON.right + '</button></div>';
     return h;
   }
@@ -2048,21 +2046,21 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
   }
   function vTraits() {
     var d = D();
-    var h = pagehead('強み・価値観', 'エピソードから見えてきた「じぶん」のまとめ');
+    var h = pagehead('強み・価値観・軸', 'エピソードから見えてきた「じぶん」のまとめ');
     var any = false;
     C.TRAIT_KEYS.forEach(function (k) {
       var arr = d.traits[k]; if (!arr.length) return; any = true;
       h += '<div class="sec"><h2 class="sec-title">' + C.TRAIT_LABEL[k] + '<small>' + arr.length + '</small></h2>' + arr.map(function (t) {
-        return '<div class="card tr"><div class="tr-top"><b>' + esc(t.name) + '</b><span class="badges">' + confPill(t.confidence) + aiBadge(t) + '</span></div>' + (t.description ? '<p>' + esc(t.description) + '</p>' : '') + evChips(d, t.evidence) + '<div style="margin-top:10px">' + askBtn('traits.' + k + '.' + t.id) + '</div></div>';
+        return '<div class="card tr"><div class="tr-top"><b>' + esc(t.name) + '</b><span class="badges">' + confPill(t.confidence) + aiBadge(t) + '</span></div>' + (t.description ? '<p>' + esc(t.description) + '</p>' : '') + evChips(d, t.evidence) + '</div>';
       }).join('') + '</div>';
     });
     if (d.axes.length) {
       any = true;
       h += '<div class="sec"><h2 class="sec-title">就活の軸<small>' + d.axes.length + '</small></h2>' + d.axes.map(function (a, i) {
-        return '<div class="card tr"><div class="tr-top"><b><span class="axis-num">' + (i + 1) + '</span>' + esc(a.text) + '</b><span class="badges">' + aiBadge(a) + '</span></div>' + (a.reason ? '<p>' + esc(a.reason) + '</p>' : '') + evChips(d, a.evidence) + '<div style="margin-top:10px">' + askBtn(String(a.id)) + '</div></div>';
+        return '<div class="card tr"><div class="tr-top"><b><span class="axis-num">' + (i + 1) + '</span>' + esc(a.text) + '</b><span class="badges">' + aiBadge(a) + '</span></div>' + (a.reason ? '<p>' + esc(a.reason) + '</p>' : '') + evChips(d, a.evidence) + '</div>';
       }).join('') + '</div>';
     }
-    if (!any) h += '<div class="card"><p class="small muted" style="margin-bottom:10px">エピソードが集まると、AIが強みや価値観をまとめてくれます。</p>' + digBtn('じぶんノートの続き：今までのエピソードから、強み・弱み・価値観・就活の軸をまとめてほしい', 'AIにまとめを頼む') + '</div>';
+    if (!any) h += '<div class="card"><p class="small muted">エピソードが集まると、AIが強みや価値観をまとめてくれます。</p>' + sayLine('強みや価値観をまとめたい') + '</div>';
     return h;
   }
 
@@ -2073,13 +2071,13 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
     return '<div class="card dd' + (x.done ? ' done' : '') + '"><div class="tgt">' + (go ? '<button data-go="' + esc(go) + '">' + esc(targetLabel(d, t)) + ' ›</button>' : '<span>' + esc(targetLabel(d, t)) + '</span>') +
       (x.done ? '<span class="prio p3">聞けた</span>' : '<span class="prio p' + pr + '">' + ['', '最優先', 'ふつう', 'あとで'][pr] + '</span>') + '</div>' +
       '<h3>' + esc(x.question) + '</h3>' + (x.why && !x.done ? '<p class="why">' + esc(x.why) + '</p>' : '') +
-      (x.done ? '' : digBtn(deepReq(d, t, x.question), 'AIに深掘りを頼む')) + '</div>';
+      '</div>';
   }
   function vDeep() {
     var d = D();
     var todo = d.deepDive.filter(function (x) { return !x.done; }).sort(function (a, b) { return (num(a.priority) || 3) - (num(b.priority) || 3); });
     var done = d.deepDive.filter(function (x) { return x.done; });
-    var h = subhead() + pagehead('深掘りリスト', 'ここを聞けると、面接で話せる話が強くなります。ボタンで依頼文がコピーされるので、AIとのチャットに貼ってね');
+    var h = subhead() + pagehead('深掘りリスト', 'ここにある質問は、AIで続ける時に自動で渡ります');
     h += todo.length ? todo.map(deepCard).join('') : '<div class="card"><p class="small muted">いま深掘り待ちはありません。</p></div>';
     if (done.length) h += '<div class="sec"><h2 class="sec-title">聞けたこと<small>' + done.length + '</small></h2>' + done.map(deepCard).join('') + '</div>';
     return h;
@@ -2091,32 +2089,29 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
   }
   function vMore() {
     var d = D(), nDeep = d.deepDive.filter(function (x) { return !x.done; }).length;
-    var nTr = C.TRAIT_KEYS.reduce(function (n, k) { return n + d.traits[k].length; }, 0);
-    var h = pagehead('もっと');
-    h += '<div class="menu">' +
-      menuItem('traits', ICON.star, '強み・価値観', '強み・弱み・やる気スイッチ・就活の軸', nTr ? nTr + '件' : '') +
-      menuItem('deep', ICON.dive, '深掘りリスト', 'AIに聞いてもらうと強くなるところ', nDeep ? nDeep + '件' : '') +
-      menuItem('outputs', ICON.box, '作れるもの', '自己紹介・ES・想定問答など') +
-      menuItem('goal', ICON.flag, '目標と盛り方', 'レベル' + C.levelOf(d) + '・' + C.EMBELLISH.filter(function (x) { return x.key === C.embellishOf(d); })[0].name, '') +
-      menuItem('reach', ICON.star, '到達度と足りないもの', '目標までに、あと何が必要か', reach(d).pct + '%') + '</div>';
+    var nTr = C.TRAIT_KEYS.reduce(function (n, k) { return n + d.traits[k].length; }, 0) + d.axes.length;
     var nRq = openRequests().length, nCk = openChecks(d).length;
-    h += '<div class="sec"><div class="menu">' +
-      menuItem('requests', ICON.chat, 'AIへの依頼', 'ノートから書いた「ここ頼む」のメモ', nRq ? nRq + '件' : '') +
-      menuItem('checks', CHECK_KIND.unconfirmed[1], '確認待ち', 'AIが本人に確かめたいこと', nCk ? nCk + '件' : '', nCk ? 'w' : '') + '</div></div>';
-    h += '<div class="sec"><div class="menu">' +
-      menuItem('', ICON.send, esc(handoffLabel()), '今までのデータをコピーして、新しいチャットへ', '', '', 'handoff') +
-      (readonly() ? '' : menuItem('import', ICON.in, 'AIの出力を貼り付け', 'セーブデータを貼り付けて、ノートを更新')) +
+    var h = pagehead('もっと');
+    h += '<h2 class="sec-title menu-head">目標とAIとのやりとり</h2><div class="menu">' +
+      menuItem('goal', ICON.flag, '目標と盛り方', 'レベル' + C.levelOf(d) + '・' + C.EMBELLISH.filter(function (x) { return x.key === C.embellishOf(d); })[0].name, '') +
+      menuItem('reach', ICON.star, '到達度', '目標までに、あと何が必要か', reach(d).pct + '%') +
+      menuItem('requests', ICON.chat, 'AIへの依頼', '「AIで続ける」で渡る頼みごと', nRq ? nRq + '件' : '') +
+      menuItem('checks', CHECK_KIND.unconfirmed[1], '確認待ち', 'AIが本人に確かめたいこと', nCk ? nCk + '件' : '', nCk ? 'w' : '') + '</div>';
+    h += '<div class="sec"><h2 class="sec-title menu-head">ノートの中身</h2><div class="menu">' +
+      menuItem('traits', ICON.star, '強み・価値観・軸', '強み・弱み・やる気スイッチ・就活の軸', nTr ? nTr + '件' : '') +
+      menuItem('deep', ICON.dive, '深掘りリスト', 'AIで続ける時に自動で渡る質問', nDeep ? nDeep + '件' : '') +
+      menuItem('outputs', ICON.box, '作れるもの', '自己紹介・ES・想定問答など') + '</div></div>';
+    h += '<div class="sec"><h2 class="sec-title menu-head">データ</h2><div class="menu">' +
       ((importPrompt() || readonly()) ? menuItem('', ICON.merge, '他のAIから取り込む', '過去のESや、ほかのAIとの会話から', '', '', 'importAI') : menuItem('', ICON.merge, '他のAIから取り込む', '準備中', '', '', 'noop')) +
-      (canStartChatGPT() && starter() ? menuItem('', ICON.chat, 'ChatGPTではじめる', 'はじめるプロンプトをコピー', '', '', 'startGPT') : '') +
-      menuItem('data', ICON.file, 'バックアップ・印刷・データ管理', 'バックアップ、PDFで保存、削除') + '</div></div>';
-    h += '<p class="foot-note">じぶんノート　made by BeMe</p>';
+      menuItem('data', ICON.file, 'バックアップ・印刷・データ', 'バックアップ、PDFで保存、削除') + '</div></div>';
+    h += '<p class="foot-note">じぶんノート</p>';
     return h;
   }
 
   // ---------- 画面：AIへの依頼 ----------
   function reqCard(r) {
     var d = D(), t = String(r.target == null ? '' : r.target), te = C.targetEpisode(t);
-    var go = epById(d, te) ? (t === te ? 'ep/' + te : '') : /^outputs\.(es|qa)\./.test(t) ? 'out/' + t.split('.')[1] : /^traits\./.test(t) || d.axes.some(function (a) { return String(a.id) === t; }) ? 'traits' : '';
+    var go = epById(d, te) ? (t === te ? 'ep/' + te : '') : /^outputs\.[a-zA-Z0-9]+/.test(t) ? 'out/' + t.split('.')[1] : /^traits(\.|$)/.test(t) || d.axes.some(function (a) { return String(a.id) === t; }) ? 'traits' : '';
     var mi = /^interview\.([^.]+)\.(.+)$/.exec(t);
     if (mi) { var arr = d.interview[mi[1]] || [], ix = -1; arr.forEach(function (c, i) { if (String(c.episode) === mi[2]) ix = i; }); go = ix >= 0 ? 'cand/' + mi[1] + '/' + ix : 'interview/' + mi[1]; }
     return '<div class="card dd' + (r.done ? ' done' : '') + '"><div class="tgt">' + (go ? '<button data-go="' + esc(go) + '">' + esc(targetLabel(d, t)) + ' ›</button>' : '<span>' + esc(targetLabel(d, t)) + '</span>') +
@@ -2127,8 +2122,8 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
   }
   function vRequests() {
     var all = allRequests(), todo = all.filter(function (r) { return r.done !== true; }), done = all.filter(function (r) { return r.done === true; });
-    var h = subhead(askBtn('', '新しく頼む')) + pagehead('AIへの依頼', readonly() ? 'ノートから書いた依頼は、Claude Codeが次に読んで対応します' : 'ここに書いた依頼は、次に「AIに続きを頼む」でAIに渡ります。AIが対応すると「対応済み」に移るよ');
-    h += '<div class="sec" style="margin-top:4px"><h2 class="sec-title">まだ<small>' + todo.length + '</small></h2>' + (todo.length ? todo.map(reqCard).join('') : '<div class="card"><p class="small muted">いま待っている依頼はありません。エピソードや下書きの「AIに頼む」から書けます。</p></div>') + '</div>';
+    var h = subhead(askBtn('', '新しく頼む')) + pagehead('AIへの依頼', readonly() ? 'ノートから書いた依頼は、Claude Codeが次に読んで対応します' : 'ためた依頼は、次に「AIで続ける」でまとめてAIに渡ります。AIが対応すると「対応済み」に移るよ');
+    h += '<div class="sec" style="margin-top:4px"><h2 class="sec-title">まだ<small>' + todo.length + '</small></h2>' + (todo.length ? todo.map(reqCard).join('') : '<div class="card"><p class="small muted">いま待っている依頼はありません。エピソードや下書きのページ右上の「AIに頼む」からためられます。</p></div>') + '</div>';
     if (done.length) h += '<div class="sec"><h2 class="sec-title">対応済み<small>' + done.length + '</small></h2>' + done.map(reqCard).join('') + '</div>';
     if (readonly() && todo.some(function (r) { return r._local; })) h += '<div class="sec"><button class="btn soft block" data-act="ccSend">' + ICON.send + 'Claude Codeに渡す（もう一度）</button></div>';
     return h;
@@ -2156,7 +2151,8 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
       OUT_DEF.map(function (o) {
         var ok = outDone(d, o.key), v = d.outputs[o.key];
         var cnt = Array.isArray(v) && v.length ? v.length + '件 ' : '';
-        return menuItem('out/' + o.key, o.key === 'qa' ? ICON.chat : o.key === 'companyFit' ? ICON.star : ICON.file, C.OUTPUT_LABEL[o.key], o.desc, ok ? '<span class="st ok">' + cnt + '作成済み</span>' : '<span class="st no">まだ</span>', ok ? '' : 'w');
+        var st = ok ? '<span class="st ok">' + cnt + '作成済み</span>' : hasOpenReq('outputs.' + o.key) ? '<span class="st ok">依頼済み</span>' : '<span class="st no">まだ</span>';
+        return menuItem('out/' + o.key, o.key === 'qa' ? ICON.chat : o.key === 'companyFit' ? ICON.star : ICON.file, C.OUTPUT_LABEL[o.key], o.desc, st, ok ? '' : 'w');
       }).join('') + '</div></div>';
     return h;
   }
@@ -2164,32 +2160,33 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
     var d = D(), def = OUT_DEF.filter(function (o) { return o.key === key; })[0];
     if (!def) return subhead() + '<p class="muted" style="padding:40px 0">見つかりませんでした。</p>';
     var v = d.outputs[key], ok = outDone(d, key);
-    var h = subhead() + pagehead(C.OUTPUT_LABEL[key], def.desc);
+    var h = subhead(ok ? askBtn('outputs.' + key) : '') + pagehead(C.OUTPUT_LABEL[key], def.desc);
     if (key === 'companyFit') {
       var comps = ((d.profile.targets || {}).companies || []);
       if (ok) h += v.map(function (f) {
         return '<div class="card tr"><div class="tr-top"><b>' + esc(f.company) + '</b>' + (f.updatedAt ? '<span class="cnt">' + fmtDate(f.updatedAt) + '</span>' : '') + '</div><ul class="dots" style="margin-top:8px">' + (f.points || []).map(function (p) { return '<li>' + esc(p) + '</li>'; }).join('') + '</ul>' + evChips(d, f.episodes) + '</div>';
       }).join('');
       h += '<div class="sec"><h2 class="sec-title">' + (ok ? 'ほかの企業も当ててもらう' : '企業を選んで、AIに当ててもらう') + '</h2><div class="card">' +
-        (comps.length ? '<div class="btn-row" style="margin-bottom:12px">' + comps.map(function (c) { return '<button class="mini-btn" ' + copyAttr(fitReq(c), '依頼文をコピーしました') + '>' + ICON.copy + esc(c) + '</button>'; }).join('') + '</div>' : '') +
-        '<label class="small muted" for="fitname">企業名を入れる</label><input id="fitname" class="field-input" placeholder="例：博報堂" style="margin:6px 0 10px"><button class="btn soft block" data-act="fitcopy">' + ICON.copy + 'AIへの依頼文をコピー</button></div></div>';
+        (comps.length ? '<div class="btn-row" style="margin-bottom:12px">' + comps.map(function (c) { return '<button class="mini-btn" data-act="fitAsk" data-c="' + esc(c) + '">' + esc(c) + '</button>'; }).join('') + '</div>' : '') +
+        '<label class="small muted" for="fitname">企業名を入れる</label><input id="fitname" class="field-input" placeholder="例：博報堂" style="margin:6px 0 10px"><button class="btn soft block" data-act="fitAsk">' + ICON.chat + 'AIに当ててもらう</button>' +
+        '<p class="small muted" style="margin-top:8px">依頼にたまって、「AIで続ける」で渡ります</p></div></div>';
       return h;
     }
     if (!ok) {
-      return h + '<div class="card"><p class="small" style="margin-bottom:6px;font-weight:700">まだ作っていません</p><p class="small muted" style="margin-bottom:14px">下のボタンで依頼文をコピーして、AIとのチャットに貼り付けてね。できあがったら、セーブデータをノートに読み込めば、ここに表示されます。</p>' +
-        '<p class="ask hint" style="border:1px dashed var(--line);border-radius:8px;padding:10px 12px;font-size:13.5px;margin-bottom:12px">' + esc(def.req) + '</p>' +
-        '<button class="btn primary block" ' + copyAttr(def.req, '依頼文をコピーしました') + '>' + ICON.copy + 'AIへの依頼文をコピー</button></div>';
+      var asked = hasOpenReq('outputs.' + key);
+      return h + '<div class="card"><p class="small" style="margin-bottom:6px;font-weight:700">' + (asked ? '依頼にたまっています' : 'まだ作っていません') + '</p><p class="small muted" style="margin-bottom:14px">' + (asked ? '「AIで続ける」で渡すと、AIが作ってくれます。できあがったセーブデータを読み込むと、ここに表示されます。' : '押すと依頼にたまります。「AIで続ける」でAIに渡すと作ってくれて、セーブデータを読み込むとここに表示されます。') + '</p>' +
+        (asked ? '<button class="btn primary block" data-act="handoff">' + ICON.send + esc(handoffLabel()) + '</button>' : '<button class="btn primary block" data-act="makeOut" data-k="' + esc(key) + '">' + ICON.chat + 'AIに作ってもらう</button>') + '</div>';
     }
     if (key === 'es') {
       h += v.map(function (es) {
         var len = String(es.text || '').replace(/\s/g, '').length;
         var badges = (isImportedEs(es) ? importBadge() : '') + boostBadge(es);
         return '<div class="sec" style="margin-top:14px"><h2 class="sec-title">' + esc(es.title || 'ES') + '<small class="cnt">' + len + (num(es.chars) ? '／' + es.chars : '') + '字</small></h2>' + (badges ? '<div class="chips" style="margin:-4px 2px 8px">' + badges + '</div>' : '') + '<div class="draft">' + boostText(es.text, es) + '</div>' +
-          '<div class="btn-row" style="margin-top:10px;align-items:center"><button class="btn sm" ' + copyAttr(es.text || '') + '>' + ICON.copy + 'コピー</button>' + askBtn('outputs.es.' + es.id) + '</div>' + (es.episodes && es.episodes.length ? '<div style="margin-top:10px">' + evChips(d, es.episodes) + '</div>' : '') + boostSection(es).replace('id="boosts"', '') + '</div>';
+          '<div class="btn-row" style="margin-top:10px;align-items:center"><button class="btn sm" ' + copyAttr(es.text || '') + '>' + ICON.copy + 'コピー</button></div>' + (es.episodes && es.episodes.length ? '<div style="margin-top:10px">' + evChips(d, es.episodes) + '</div>' : '') + boostSection(es).replace('id="boosts"', '') + '</div>';
       }).join('');
     } else if (key === 'qa') {
       h += v.map(function (q) {
-        return '<div class="card qa"><h3>' + esc(q.question) + '</h3>' + (boostsOf(q).length ? '<div style="margin:6px 0 0 22px">' + boostBadge(q) + '</div>' : '') + '<p class="a">' + boostText(q.answer, q) + '</p><div class="btn-row" style="margin-top:10px;align-items:center"><button class="mini-btn" ' + copyAttr(q.answer || '') + '>' + ICON.copy + '答えをコピー</button>' + askBtn('outputs.qa.' + q.id) + '</div>' + (q.episodes && q.episodes.length ? '<div style="margin-top:10px">' + evChips(d, q.episodes) + '</div>' : '') + boostFold(q) + '</div>';
+        return '<div class="card qa"><h3>' + esc(q.question) + '</h3>' + (boostsOf(q).length ? '<div style="margin:6px 0 0 22px">' + boostBadge(q) + '</div>' : '') + '<p class="a">' + boostText(q.answer, q) + '</p><div class="btn-row" style="margin-top:10px;align-items:center"><button class="mini-btn" ' + copyAttr(q.answer || '') + '>' + ICON.copy + '答えをコピー</button></div>' + (q.episodes && q.episodes.length ? '<div style="margin-top:10px">' + evChips(d, q.episodes) + '</div>' : '') + boostFold(q) + '</div>';
       }).join('');
     } else {
       var t = String(v.text || '');
@@ -2197,7 +2194,7 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
       h += '<div class="' + (key === 'intro1min' ? 'draft' : 'card outbox') + '">' + boostText(t, v) + '</div>' +
         '<div class="btn-row" style="margin-top:12px;align-items:center;justify-content:space-between"><button class="btn sm" ' + copyAttr(t) + '>' + ICON.copy + 'コピー</button><span class="cnt">' + t.replace(/\s/g, '').length + '字' + (v.updatedAt ? '・' + fmtDate(v.updatedAt) + ' 作成' : '') + '</span></div>' + boostSection(v);
     }
-    h += '<div class="sec"><button class="mini-btn" ' + copyAttr(def.req.replace('作ってほしい', '作り直してほしい（もっと自分らしく）'), '依頼文をコピーしました') + '>' + ICON.copy + (key === 'es' ? '別の設問で作ってもらう' : '作り直しを頼む') + '</button></div>';
+    if (key === 'es') h += '<div class="sec"><button class="mini-btn" data-act="makeOut" data-k="es">' + ICON.chat + '別の設問でも作ってもらう</button></div>';
     return h;
   }
 
@@ -2230,9 +2227,8 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
 
   // ---------- 画面：データ管理 ----------
   function vData() {
-    var h = subhead() + pagehead('バックアップ・印刷・データ管理');
+    var h = subhead() + pagehead('バックアップ・印刷・データ');
     h += '<div class="menu">' +
-      menuItem('', ICON.send, esc(handoffLabel()), '引き継ぎ用に、全部のデータをコピー', '', '', 'handoff') +
       menuItem('', ICON.save, 'バックアップ', '全部のデータをファイルに保存', '', '', 'export') +
       (readonly() ? '' : menuItem('', ICON.in, 'バックアップから戻す', '保存したファイルを選ぶ（貼り付けでも戻せます）', '', '', 'pickFile')) +
       menuItem('', ICON.print, '印刷・PDFで保存', 'ノート全体を見やすい形で', '', '', 'print') + '</div>';
@@ -2275,7 +2271,7 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
     if (o.manual && o.manual.text) h += '<div class="p-sec"><h2>自分の取扱説明書</h2><p class="p-text">' + esc(o.manual.text) + '</p></div>';
     (o.es || []).forEach(function (es) { h += '<div class="p-sec"><h2>ES：' + esc(es.title) + '</h2><p class="p-text">' + esc(es.text) + '</p>' + boostPrint(es) + '</div>'; });
     if ((o.qa || []).length) h += '<div class="p-sec"><h2>想定問答</h2>' + o.qa.map(function (q) { return '<div class="p-item"><h3>Q. ' + esc(q.question) + '</h3><p class="p-text">A. ' + esc(q.answer) + '</p>' + boostPrint(q) + '</div>'; }).join('') + '</div>';
-    h += '<p class="p-foot">じぶんノート　made by BeMe</p>';
+    h += '<p class="p-foot">じぶんノート</p>';
     $('#print').innerHTML = h;
   }
 
@@ -2302,7 +2298,7 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
       case 'graph': html = vGraph(); break;
       case 'interview': html = vInterview(parts[1]); break;
       case 'cand': html = vCand(parts[1], parts[2]); break;
-      case 'traits': html = subhead() + vTraits(); break;
+      case 'traits': html = subhead(S.data && C.hasContent(S.data) ? askBtn('traits') : '') + vTraits(); break;
       case 'deep': html = vDeep(); break;
       case 'more': html = vMore(); break;
       case 'outputs': html = vOutputs(); break;
@@ -2434,7 +2430,15 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
     paste: function () { navigator.clipboard.readText().then(function (t) { var ta = $('#paste'); if (ta) { ta.value = t; S.importText = t; } }, function () { toast('貼り付けできませんでした。長押しで貼り付けてね'); }); },
     runImport: function () { var t = ($('#paste') || {}).value || ''; if (!t.trim()) { S.importErr = 'まだ何も貼り付けられていません。'; render(); return; } doImport(t); },
     pickFile: function () { var f = $('#fileIn'); if (f) f.click(); },
-    fitcopy: function () { var n = ($('#fitname') || {}).value || ''; if (!n.trim()) { toast('企業名を入れてね'); return; } copyText(fitReq(n.trim()), '依頼文をコピーしました'); },
+    fitAsk: function (b) {
+      var n = b.getAttribute('data-c') || ($('#fitname') || {}).value || '';
+      if (!n.trim()) { toast('企業名を入れてね'); return; }
+      queueRequest('outputs.companyFit', fitAsk(n.trim()));
+    },
+    makeOut: function (b) {
+      var k = b.getAttribute('data-k'), def = OUT_DEF.filter(function (o) { return o.key === k; })[0];
+      if (def && def.ask) queueRequest('outputs.' + k, k === 'es' && outDone(D(), 'es') ? 'ESの下書きを別の設問でも作って（設問と文字数は話しながら決めたい）' : def.ask);
+    },
     export: function () {
       var blob = new Blob([JSON.stringify(D(), null, 2)], { type: 'application/json' });
       var a = document.createElement('a'); a.href = URL.createObjectURL(blob);
