@@ -1,0 +1,2492 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#F7F5F0" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#161716" media="(prefers-color-scheme: dark)">
+<meta name="description" content="AIとの自己分析ラリーで見つけた「じぶん」を、きれいに見返せるノート。">
+<title>じぶんノート</title>
+<style>
+:root{
+  --bg:#F7F5F0; --paper:#FFFFFF; --paper2:#FBFAF7; --ink:#26251F; --ink2:#55524A; --muted:#736F66;
+  --line:#E5E0D5; --line2:#EFEBE3; --band:#F6F3EC;
+  --accent:#2F7A68; --accent-ink:#1E5C4D; --accent-soft:#E4F0EB; --accent-line:#BFDCD2;
+  --warm:#B95B3F; --warm-soft:#F8E8E1; --warm-line:#EBC6B8;
+  --hl:#F7E6A6; --hl-soft:#FBF4DA; --hl-ink:#7D5D12; --hl-line:#EAD592;
+  --shadow:0 1px 2px rgba(40,35,20,.04),0 4px 14px rgba(40,35,20,.05);
+  --r:10px; --r-sm:7px;
+  --tabh:62px;
+  --font:system-ui,-apple-system,BlinkMacSystemFont,"Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP","Yu Gothic UI","Yu Gothic",Meiryo,sans-serif;
+  --serif:"Hiragino Mincho ProN","Yu Mincho","Noto Serif JP",serif;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#161716; --paper:#1F201E; --paper2:#1B1C1A; --ink:#ECEAE4; --ink2:#C4C0B6; --muted:#9A968C;
+    --line:#34352F; --line2:#2A2B27; --band:#232421;
+    --accent:#72BCA6; --accent-ink:#9AD3C1; --accent-soft:#1F332D; --accent-line:#2F5146;
+    --warm:#E3907A; --warm-soft:#3A2620; --warm-line:#5A382E;
+    --hl:#5B4B1D; --hl-soft:#2C2716; --hl-ink:#E6CC85; --hl-line:#54461F;
+    --shadow:0 1px 2px rgba(0,0,0,.3);
+  }
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:15px;line-height:1.7;letter-spacing:.01em;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;text-align:inherit}
+button:focus-visible,[tabindex]:focus-visible,a:focus-visible,textarea:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
+h1,h2,h3,p,ul,ol,dl,dd,figure{margin:0}
+ul,ol{padding:0;list-style:none}
+.app{max-width:600px;margin:0 auto;min-height:100vh;min-height:100dvh;padding-bottom:calc(var(--tabh) + env(safe-area-inset-bottom) + 24px);position:relative}
+#view{padding:0 18px}
+svg.arrow{width:18px;height:18px;flex:none;color:var(--muted)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* banner */
+.banner{position:sticky;top:0;z-index:30;display:flex;align-items:center;gap:10px;justify-content:space-between;padding:9px 18px;padding-top:calc(9px + env(safe-area-inset-top));background:var(--warm-soft);color:var(--warm);font-size:13px;border-bottom:1px solid var(--warm-line)}
+.banner b{font-weight:700}
+.banner button{flex:none;font-size:12.5px;font-weight:700;padding:6px 10px;border-radius:999px;border:1px solid var(--warm-line);background:var(--paper);color:var(--warm);min-height:32px}
+.banner.info{background:var(--accent-soft);color:var(--accent-ink);border-color:var(--accent-line)}
+
+/* view transitions */
+.view-in{animation:viewIn .32s cubic-bezier(.2,.75,.25,1) both}
+.view-back{animation:viewBack .32s cubic-bezier(.2,.75,.25,1) both}
+@keyframes viewIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes viewBack{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:none}}
+
+/* headers */
+.pagehead{padding:26px 0 14px}
+.pagehead h1{font-size:25px;line-height:1.35;font-weight:800;letter-spacing:.02em}
+.pagehead p{color:var(--muted);font-size:13.5px;margin-top:4px}
+.eyebrow{font-size:12px;color:var(--muted);letter-spacing:.08em;font-weight:600}
+.subhead{position:sticky;top:0;z-index:20;margin:0 -18px;padding:6px 10px;padding-top:calc(6px + env(safe-area-inset-top));background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:space-between}
+.has-banner .subhead{top:var(--bannerh,0px);padding-top:6px}
+.back{display:inline-flex;align-items:center;gap:2px;min-height:44px;padding:0 10px 0 4px;border-radius:8px;color:var(--accent-ink);font-weight:600;font-size:15px}
+.back svg{width:22px;height:22px}
+.back:active{background:var(--line2)}
+
+/* cards */
+.card{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:16px;box-shadow:var(--shadow)}
+.card+.card,.stack>*+*{margin-top:12px}
+.sec{margin-top:28px}
+.sec-title{display:flex;align-items:baseline;justify-content:space-between;gap:8px;font-size:13px;font-weight:700;color:var(--ink2);letter-spacing:.06em;margin:0 2px 10px}
+.sec-title small{font-weight:500;color:var(--muted);letter-spacing:0;font-size:12px}
+.sec-title .link{color:var(--accent-ink);font-weight:600;font-size:12.5px;letter-spacing:0;min-height:32px;display:inline-flex;align-items:center}
+.muted{color:var(--muted)}
+.small{font-size:13px}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:46px;padding:0 18px;border-radius:999px;border:1px solid var(--line);background:var(--paper);font-weight:700;font-size:14.5px;color:var(--ink);transition:transform .12s ease,background .2s ease;user-select:none;-webkit-user-select:none}
+.btn:active{transform:scale(.97)}
+.btn svg{width:18px;height:18px;flex:none}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+@media (prefers-color-scheme: dark){.btn.primary{color:#0F1F1A}}
+.btn.soft{background:var(--accent-soft);border-color:var(--accent-line);color:var(--accent-ink)}
+.btn.danger{color:var(--warm);border-color:var(--warm-line)}
+.btn.block{display:flex;width:100%}
+.btn.sm{min-height:38px;padding:0 14px;font-size:13px}
+.btn-row{display:flex;gap:10px;flex-wrap:wrap}
+.btn-row>.btn{flex:1 1 0}
+.mini-btn{display:inline-flex;align-items:center;gap:6px;min-height:36px;padding:0 12px;border-radius:999px;font-size:12.5px;font-weight:700;color:var(--accent-ink);background:var(--accent-soft);border:1px solid var(--accent-line);transition:transform .12s}
+.mini-btn:active{transform:scale(.96)}
+.mini-btn svg{width:15px;height:15px}
+
+/* chips & badges */
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{display:inline-flex;align-items:center;font-size:12px;padding:3px 9px;border-radius:999px;background:var(--line2);color:var(--ink2);line-height:1.5}
+.chip.ac{background:var(--accent-soft);color:var(--accent-ink)}
+button.chip{min-height:30px}
+.badge-ai{display:inline-flex;align-items:center;gap:3px;font-size:11px;font-weight:700;padding:1px 7px;border-radius:999px;border:1px dashed var(--warm-line);color:var(--warm);background:transparent;line-height:1.6;white-space:nowrap}
+.badge-other{display:inline-flex;align-items:center;font-size:11px;font-weight:700;padding:1px 7px;border-radius:999px;background:var(--accent-soft);color:var(--accent-ink);line-height:1.6;white-space:nowrap}
+.badge-import{display:inline-flex;align-items:center;gap:3px;font-size:11px;font-weight:700;padding:1px 7px;border-radius:999px;border:1px dashed var(--muted);color:var(--ink2);background:transparent;line-height:1.6;white-space:nowrap}
+.badge-import svg{width:11px;height:11px}
+.badge-boost{display:inline-flex;align-items:center;gap:3px;font-size:11px;font-weight:700;padding:1px 8px;border-radius:999px;background:var(--hl-soft);color:var(--hl-ink);border:1px solid var(--hl-line);line-height:1.6;white-space:nowrap}
+.badge-boost::before{content:"";width:9px;height:5px;border-radius:2px;background:var(--hl);transform:rotate(-8deg)}
+.mood{display:inline-flex;align-items:center;justify-content:center;min-width:34px;height:22px;padding:0 6px;border-radius:999px;font-size:12px;font-weight:800;font-variant-numeric:tabular-nums}
+.mood.up{background:var(--accent-soft);color:var(--accent-ink)}
+.mood.down{background:var(--warm-soft);color:var(--warm)}
+.mood.flat{background:var(--line2);color:var(--muted)}
+.depth{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;color:var(--muted)}
+.depth i{display:inline-flex;gap:2px}
+.depth i b{width:10px;height:5px;border-radius:2px;background:var(--line)}
+.depth i b.on{background:var(--accent)}
+.depth.max i b.on{background:var(--accent-ink)}
+.depth.max .depth-txt{color:var(--accent-ink);font-weight:700}
+.fit{font-weight:800;color:var(--accent-ink)}
+.conf{font-size:11px;font-weight:700;padding:1px 8px;border-radius:999px;white-space:nowrap}
+.conf.high{background:var(--accent-soft);color:var(--accent-ink)}
+.conf.mid{background:var(--line2);color:var(--ink2)}
+.conf.low{border:1px dashed var(--line);color:var(--muted)}
+
+/* progress bars */
+.bar{height:6px;border-radius:99px;background:var(--line2);overflow:hidden}
+.bar>i{display:block;height:100%;width:0;border-radius:99px;background:var(--accent);transition:width .9s cubic-bezier(.2,.75,.25,1)}
+.prow{display:grid;grid-template-columns:5.2em 1fr 2.6em;align-items:center;gap:10px;font-size:13px;min-height:30px}
+.prow .pv{text-align:right;font-variant-numeric:tabular-nums;color:var(--muted);font-size:12px}
+.pgrid{display:grid;grid-template-columns:1fr 1fr;gap:4px 18px}
+.pgrid .prow{grid-template-columns:1fr 2.4em;grid-template-rows:auto auto;gap:2px 8px;min-height:44px;padding:4px 0;text-align:left;width:100%}
+.pgrid .prow .bar{grid-column:1 / -1}
+
+/* home */
+.top{display:flex;align-items:center;justify-content:space-between;padding:18px 0 6px}
+.brand{font-size:13px;font-weight:800;letter-spacing:.14em;color:var(--ink2)}
+.top time{font-size:12px;color:var(--muted)}
+.hero{position:relative;overflow:hidden;display:flex;gap:14px;align-items:center;justify-content:space-between;padding:20px 18px 18px;
+  background-image:repeating-linear-gradient(to bottom,transparent 0 31px,var(--line2) 31px 32px);background-position:0 12px}
+.hero::before{content:"";position:absolute;left:12px;top:0;bottom:0;width:1px;background:var(--warm-line);opacity:.7}
+.hero-main{min-width:0;padding-left:8px}
+.name{font-family:var(--serif);font-size:30px;font-weight:700;line-height:1.3;letter-spacing:.04em}
+.name span{font-family:var(--font);font-size:14px;font-weight:600;color:var(--muted);margin-left:6px;letter-spacing:.02em}
+.meta{font-size:12.5px;color:var(--ink2);margin-top:2px}
+.hero .chips{margin-top:10px}
+.ringbox{position:relative;flex:none;width:96px;height:96px;display:grid;place-items:center}
+.ringbox svg{position:absolute;inset:0}
+.ring-bg{stroke:var(--line2)}
+.ring-fg{stroke:var(--accent);transition:stroke-dashoffset 1.1s cubic-bezier(.2,.75,.25,1)}
+.ring-num{text-align:center;line-height:1}
+.ring-num b{font-size:26px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.ring-num b small{font-size:13px;font-weight:700;margin-left:1px}
+.ring-num span{display:block;font-size:10.5px;color:var(--muted);margin-top:4px}
+.goal{font-size:13px;color:var(--ink2);margin:12px 4px 0;display:flex;gap:8px}
+.goal::before{content:"めあて";flex:none;font-size:11px;font-weight:700;color:var(--accent-ink);border:1px solid var(--accent-line);border-radius:4px;padding:0 5px;height:20px;line-height:18px;margin-top:1px}
+.next{border-color:var(--accent-line);background:linear-gradient(var(--accent-soft),var(--accent-soft)) top/100% 4px no-repeat,var(--paper)}
+.next .eyebrow{color:var(--accent-ink)}
+.next-text{font-size:16px;font-weight:700;line-height:1.65;margin:6px 0 14px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+.stat{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:12px 10px;text-align:center;min-height:76px;transition:transform .12s}
+.stat:active{transform:scale(.97)}
+.stat b{display:block;font-size:24px;font-weight:800;line-height:1.2;font-variant-numeric:tabular-nums}
+.stat b small{font-size:12px;color:var(--muted);font-weight:600}
+.stat span{font-size:11.5px;color:var(--muted)}
+.minigraph{display:block;width:100%;padding:14px 14px 10px}
+.minigraph .mg-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}
+.minigraph .mg-head b{font-size:14px}
+.minigraph .mg-head span{font-size:12px;color:var(--accent-ink);font-weight:600}
+.loglist li{display:grid;grid-template-columns:4.4em 1fr;gap:10px;padding:10px 0;border-top:1px solid var(--line2);font-size:13.5px}
+.loglist li:first-child{border-top:0;padding-top:0}
+.loglist time{color:var(--muted);font-size:12px;font-variant-numeric:tabular-nums;padding-top:1px}
+
+/* timeline */
+.tl{position:relative;padding-left:0}
+.tl::before{content:"";position:absolute;left:15px;top:22px;bottom:22px;width:2px;background:var(--line);border-radius:2px}
+.tl-period{position:relative;margin-bottom:10px}
+.tl-head{position:relative;display:grid;grid-template-columns:32px 1fr auto 20px;align-items:center;gap:8px;width:100%;min-height:64px;padding:10px 12px 10px 0;border-radius:var(--r);transition:background .2s}
+.tl-head:active{background:var(--line2)}
+.tl-dot{justify-self:center;width:14px;height:14px;border-radius:50%;background:var(--paper);border:2px solid var(--accent);position:relative;z-index:1;transition:background .2s,transform .25s}
+.tl-period.open .tl-dot{background:var(--accent);transform:scale(1.1)}
+.tl-period.empty .tl-dot{border-color:var(--line)}
+.tl-title b{font-size:17px;font-weight:800;display:block;line-height:1.3}
+.tl-title small{font-size:12px;color:var(--muted)}
+.tl-meta{text-align:right;font-size:12px;color:var(--muted);line-height:1.4}
+.tl-meta .moods{display:flex;gap:3px;justify-content:flex-end;margin-top:5px}
+.tl-meta .moods i{width:7px;height:7px;border-radius:50%;background:var(--line)}
+.tl-meta .moods i.up{background:var(--accent)}
+.tl-meta .moods i.down{background:var(--warm)}
+.chev{width:20px;height:20px;color:var(--muted);transition:transform .3s cubic-bezier(.2,.75,.25,1)}
+.open>button .chev{transform:rotate(180deg)}
+.acc{display:grid;grid-template-rows:0fr;transition:grid-template-rows .36s cubic-bezier(.2,.75,.25,1)}
+.open>.acc{grid-template-rows:1fr}
+.acc>div{overflow:hidden;min-height:0}
+.tl-eps{padding:2px 0 10px 40px}
+.ep-row{display:block;width:100%;background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;margin-top:8px;box-shadow:var(--shadow);transition:transform .12s ease,border-color .2s;opacity:0;transform:translateY(-4px)}
+.open .ep-row{opacity:1;transform:none;transition:opacity .35s ease,transform .35s ease}
+.ep-row:active{transform:scale(.985)}
+.ep-row .when{font-size:11.5px;color:var(--muted);display:flex;gap:8px;align-items:center;justify-content:space-between}
+.ep-row h3{font-size:15.5px;font-weight:700;line-height:1.5;margin-top:2px}
+.ep-row p{font-size:13px;color:var(--ink2);margin-top:3px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.ep-row .foot{display:flex;align-items:center;gap:10px;margin-top:9px;flex-wrap:wrap}
+.empty-note{font-size:13px;color:var(--muted);padding:12px 14px;border:1px dashed var(--line);border-radius:var(--r);margin-top:8px}
+.empty-note .mini-btn{margin-top:8px}
+
+/* episode detail */
+.ep-head{padding:8px 0 4px}
+.ep-head h1{font-size:23px;font-weight:800;line-height:1.45;margin-top:6px}
+.ep-head .lead{font-size:14.5px;color:var(--ink2);margin-top:8px}
+.ep-meta{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center;margin-top:14px;padding:12px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.ep-meta .lbl{font-size:11.5px;color:var(--muted);margin-right:6px}
+.depth-txt{font-size:12px;color:var(--ink2)}
+.quotes{margin-top:18px}
+.quote{margin:0;position:relative;font-family:var(--serif);font-size:16px;line-height:1.8;padding:12px 16px 12px 18px;background:var(--paper2);border-left:3px solid var(--warm-line);border-radius:0 var(--r-sm) var(--r-sm) 0}
+.quote+.quote{margin-top:8px}
+.quote::before{content:"「";color:var(--warm)}
+.quote::after{content:"」";color:var(--warm)}
+.fields{margin-top:18px}
+.field{display:grid;grid-template-columns:4.6em 1fr;gap:12px;padding:13px 0;border-top:1px solid var(--line2)}
+.field:first-child{border-top:0}
+.field dt{font-size:12px;font-weight:700;color:var(--accent-ink);padding-top:2px}
+.field dd{font-size:14.5px;line-height:1.75}
+.field dd.none{color:var(--muted);font-size:13px}
+.related a,.related button.rel{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;padding:12px 0;border-top:1px solid var(--line2);font-size:14px;min-height:48px}
+.related button.rel:first-child{border-top:0}
+.related .rel small{color:var(--muted);font-size:12px}
+.pager{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px;margin-top:22px}
+.pager button{min-width:0;border:1px solid var(--line);border-radius:var(--r);padding:10px 12px;font-size:12px;color:var(--muted);min-height:56px;background:var(--paper)}
+.pager button b{display:block;color:var(--ink);font-size:13px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pager button:last-child{text-align:right}
+
+/* graph */
+.graphcard{padding:12px 6px 6px}
+.gsvg{display:block;width:100%;height:auto;overflow:visible}
+.g-band{fill:var(--band)}
+.g-grid{stroke:var(--line);stroke-width:1}
+.g-zero{stroke:var(--line);stroke-width:1.2;stroke-dasharray:3 4}
+.g-axis{fill:var(--muted);font-size:10px;font-family:var(--font)}
+.g-plabel{fill:var(--ink2);font-size:11px;font-weight:700;font-family:var(--font)}
+.g-prange{fill:var(--muted);font-size:9.5px;font-family:var(--font)}
+.g-line{fill:none;stroke:var(--ink2);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.g-draw{stroke-dasharray:1;stroke-dashoffset:1;animation:draw 1.3s cubic-bezier(.4,.1,.2,1) .1s forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.g-up{fill:var(--accent);opacity:.16}
+.g-down{fill:var(--warm);opacity:.16}
+.pt{cursor:pointer;outline:none}
+.pt .hit{fill:transparent}
+.pt .dot{stroke:var(--paper);stroke-width:2;transition:r .15s}
+.pt .dot.up{fill:var(--accent)}
+.pt .dot.down{fill:var(--warm)}
+.pt .dot.flat{fill:var(--muted)}
+.pt:hover .dot,.pt:focus-visible .dot{r:7}
+.g-lab{font-size:10.5px;font-weight:700;font-family:var(--font);paint-order:stroke;stroke:var(--paper);stroke-width:4px;stroke-linejoin:round}
+.g-lab.up{fill:var(--accent-ink)}
+.g-lab.down{fill:var(--warm)}
+.g-fade{opacity:0;animation:fade .5s ease 1.1s forwards}
+@keyframes fade{to{opacity:1}}
+.hilo{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.hilo button{text-align:left;background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:12px;min-height:84px;transition:transform .12s}
+.hilo button:active{transform:scale(.97)}
+.hilo .k{font-size:11.5px;font-weight:700}
+.hilo .k.up{color:var(--accent-ink)}
+.hilo .k.down{color:var(--warm)}
+.hilo b{display:block;font-size:13.5px;line-height:1.5;margin-top:3px}
+.hilo span{font-size:11.5px;color:var(--muted)}
+.glist li button{display:grid;grid-template-columns:40px 1fr auto;gap:10px;align-items:center;width:100%;padding:10px 2px;border-top:1px solid var(--line2);min-height:52px;font-size:14px}
+.glist li:first-child button{border-top:0}
+.glist small{display:block;font-size:11.5px;color:var(--muted)}
+.glist .arrow{color:var(--muted);width:18px;height:18px}
+.gperiod{font-size:12px;font-weight:700;color:var(--muted);margin:16px 2px 4px;letter-spacing:.06em}
+
+/* interview */
+.iv{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);margin-bottom:10px;overflow:hidden}
+.iv-head{display:grid;grid-template-columns:1fr auto 20px;gap:10px;align-items:center;width:100%;padding:14px 14px;min-height:68px;transition:background .2s}
+.iv-head:active{background:var(--line2)}
+.iv-head b{font-size:16px;font-weight:800;display:block;line-height:1.35}
+.iv-head .sub{font-size:12px;color:var(--muted);display:flex;gap:10px;align-items:center;margin-top:3px}
+.iv-head .sub .bar{width:70px;flex:none}
+.iv-rec{text-align:center;min-width:52px}
+.iv-rec .sym{display:block;font-size:22px;font-weight:700;line-height:1;color:var(--accent-ink)}
+.iv-rec small{font-size:10px;color:var(--muted)}
+.iv.none .iv-rec .sym{color:var(--line)}
+.iv-body{padding:0 14px 14px}
+.cand{display:block;width:100%;border-top:1px solid var(--line2);padding:12px 0 12px;transition:transform .12s}
+.cand:active{transform:scale(.99)}
+.cand .ct{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.cand .ct b{font-size:14.5px;font-weight:700;line-height:1.5}
+.cand ul{margin-top:6px}
+.cand li,.dots li{position:relative;padding-left:14px;font-size:13.5px;line-height:1.65;color:var(--ink2)}
+.cand li::before,.dots li::before{content:"";position:absolute;left:2px;top:.72em;width:5px;height:5px;border-radius:50%;background:var(--accent-line)}
+.cand .more{display:inline-block;margin-top:6px;font-size:12px;font-weight:700;color:var(--accent-ink)}
+.hint{border-top:1px solid var(--line2);padding-top:12px}
+.hint p{font-size:13px;color:var(--ink2)}
+.hint .ask{margin:8px 0 10px;padding:10px 12px;border-radius:var(--r-sm);background:var(--paper2);border:1px dashed var(--line);font-size:13.5px}
+.draft{white-space:pre-wrap;font-size:15px;line-height:1.95;padding:16px;background:var(--paper2);border:1px solid var(--line);border-radius:var(--r);background-image:repeating-linear-gradient(to bottom,transparent 0 28.25px,var(--line2) 28.25px 29.25px);background-position:0 13px}
+.cnt{font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+.missing li{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 0;border-top:1px solid var(--line2);font-size:14px}
+.missing li:first-child{border-top:0}
+.linkcard{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;text-align:left}
+.linkcard small{display:block;font-size:12px;color:var(--muted)}
+.linkcard b{font-size:15px}
+.linkcard svg{width:18px;height:18px;color:var(--muted);flex:none}
+
+/* traits */
+.tr{padding:14px 16px}
+.tr+.tr{margin-top:10px}
+.tr-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.tr-top b{font-size:15.5px;font-weight:800;line-height:1.5}
+.tr p{font-size:13.5px;color:var(--ink2);margin-top:4px}
+.tr .chips{margin-top:10px}
+.tr .badges{display:flex;gap:6px;flex:none;align-items:center;margin-top:2px}
+.ev-label{font-size:11px;color:var(--muted);margin-right:2px;align-self:center}
+.axis-num{font-family:var(--serif);font-size:22px;font-weight:700;color:var(--accent);line-height:1;margin-right:8px}
+
+/* deep */
+.dd{padding:14px 16px}
+.dd+.dd{margin-top:10px}
+.dd .tgt{display:flex;justify-content:space-between;gap:8px;align-items:center;font-size:12px;color:var(--muted)}
+.dd .tgt button{color:var(--accent-ink);font-weight:600;text-align:left;min-height:28px}
+.dd h3{font-size:16px;font-weight:800;line-height:1.55;margin:4px 0 4px}
+.dd p.why{font-size:13px;color:var(--ink2);margin-bottom:12px}
+.prio{font-size:11px;font-weight:800;padding:1px 8px;border-radius:999px;white-space:nowrap}
+.prio.p1{background:var(--warm-soft);color:var(--warm)}
+.prio.p2{background:var(--accent-soft);color:var(--accent-ink)}
+.prio.p3{background:var(--line2);color:var(--muted)}
+.dd.done{opacity:.7;box-shadow:none;background:transparent}
+.dd.done h3{font-size:14px;text-decoration:line-through;text-decoration-color:var(--muted)}
+
+/* menus */
+.menu{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow)}
+.menu>*{display:grid;grid-template-columns:34px 1fr auto;align-items:center;gap:10px;width:100%;min-height:58px;padding:10px 14px;border-top:1px solid var(--line2);transition:background .2s}
+.menu>*:first-child{border-top:0}
+.menu>button:active{background:var(--line2)}
+.menu .ic{width:34px;height:34px;border-radius:9px;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent-ink)}
+.menu .ic svg{width:19px;height:19px}
+.menu .ic.w{background:var(--warm-soft);color:var(--warm)}
+.menu b{font-size:15px;font-weight:700;display:block;line-height:1.4}
+.menu small{font-size:12px;color:var(--muted);display:block;line-height:1.4}
+.menu .end{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:4px}
+.menu .end svg{width:16px;height:16px}
+.st{font-size:11px;font-weight:700;padding:1px 8px;border-radius:999px}
+.st.ok{background:var(--accent-soft);color:var(--accent-ink)}
+.st.no{background:var(--line2);color:var(--muted)}
+.outbox{white-space:pre-wrap;font-size:14.5px;line-height:1.9}
+.qa+.qa{margin-top:10px}
+.qa h3{font-size:15px;font-weight:800;line-height:1.55;display:flex;gap:8px}
+.qa h3::before{content:"Q";color:var(--accent);font-family:var(--serif)}
+.qa .a{display:flex;gap:8px;margin-top:8px;font-size:14px;line-height:1.85;color:var(--ink2);white-space:pre-wrap}
+.qa .a::before{content:"A";color:var(--warm);font-family:var(--serif);font-weight:700}
+.field-input{width:100%;min-height:46px;border:1px solid var(--line);border-radius:var(--r-sm);padding:10px 12px;font:inherit;font-size:16px;color:var(--ink);background:var(--paper)}
+
+/* import */
+textarea.paste{width:100%;min-height:220px;resize:vertical;border:1px solid var(--line);border-radius:var(--r);padding:14px;font:inherit;font-size:15px;line-height:1.6;color:var(--ink);background:var(--paper)}
+textarea.paste::placeholder{color:var(--muted)}
+.err{margin-top:10px;padding:10px 12px;border-radius:var(--r-sm);background:var(--warm-soft);color:var(--warm);font-size:13.5px}
+.steps{counter-reset:s}
+.steps li{position:relative;padding:0 0 14px 40px;font-size:14px}
+.steps li::before{counter-increment:s;content:counter(s);position:absolute;left:0;top:0;width:26px;height:26px;border-radius:50%;border:1.5px solid var(--accent);color:var(--accent-ink);font-weight:800;font-size:13px;display:grid;place-items:center}
+.steps li b{display:block;font-size:15px}
+.steps li span{color:var(--ink2);font-size:13px}
+
+/* welcome */
+.welcome{padding-top:40px}
+.welcome .logo{font-family:var(--serif);font-size:38px;font-weight:700;letter-spacing:.08em;line-height:1.3}
+.welcome .tag{font-size:16px;color:var(--ink2);margin-top:10px;line-height:1.8}
+.preview{margin:26px 0 24px;padding:16px;position:relative;overflow:hidden}
+.preview svg{display:block;width:100%;height:auto}
+.foot-note{text-align:center;font-size:11.5px;color:var(--muted);margin-top:30px;letter-spacing:.06em}
+
+/* tabbar */
+.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:40;background:color-mix(in srgb,var(--paper) 92%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
+.tabbar nav{max-width:600px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);height:var(--tabh)}
+.tab{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:10.5px;font-weight:600;color:var(--muted);position:relative;transition:color .2s}
+.tab svg{width:23px;height:23px;transition:transform .2s cubic-bezier(.3,1.6,.5,1)}
+.tab[aria-current="page"]{color:var(--accent-ink)}
+.tab[aria-current="page"] svg{transform:translateY(-1px) scale(1.06)}
+.tab[aria-current="page"]::after{content:"";position:absolute;top:0;left:30%;right:30%;height:2px;border-radius:0 0 2px 2px;background:var(--accent)}
+.tab:active svg{transform:scale(.9)}
+.tabbar.hide{display:none}
+
+/* toast & modal */
+.toast{position:fixed;left:50%;bottom:calc(var(--tabh) + env(safe-area-inset-bottom) + 14px);transform:translate(-50%,12px);opacity:0;z-index:60;background:var(--ink);color:var(--bg);font-size:13.5px;font-weight:600;padding:10px 16px;border-radius:999px;box-shadow:0 6px 20px rgba(0,0,0,.18);transition:opacity .22s,transform .22s;pointer-events:none;max-width:calc(100% - 36px);text-align:center}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.scrim{position:fixed;inset:0;z-index:70;background:rgba(20,18,12,.36);display:flex;align-items:flex-end;justify-content:center;opacity:0;transition:opacity .22s}
+.scrim.show{opacity:1}
+.sheet{width:100%;max-width:600px;background:var(--paper);border-radius:16px 16px 0 0;padding:10px 20px calc(20px + env(safe-area-inset-bottom));transform:translateY(30px);transition:transform .3s cubic-bezier(.2,.75,.25,1);max-height:88vh;overflow:auto}
+.scrim.show .sheet{transform:none}
+.sheet .grab{width:38px;height:4px;border-radius:4px;background:var(--line);margin:0 auto 14px}
+.sheet h2{font-size:19px;font-weight:800;line-height:1.5}
+.sheet .body{font-size:14px;color:var(--ink2);margin-top:8px}
+.sheet .btn-row{margin-top:20px}
+.changes{margin-top:12px}
+.changes li{display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-top:1px solid var(--line2);font-size:14.5px;color:var(--ink);font-weight:600}
+.changes li:first-child{border-top:0}
+.changes li::before{content:"";flex:none;width:18px;height:18px;margin-top:3px;border-radius:50%;background:var(--accent-soft) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232F7A68' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 12.5l4 4 8-9'/%3E%3C/svg%3E") center/12px no-repeat}
+
+/* goal & reach */
+.hero{flex-wrap:wrap}
+.hero .hero-main{flex:1 1 0}
+.hero .lvl-row{flex-basis:100%;padding-left:8px;margin-top:-4px}
+.lvl-pill{display:inline-flex;align-items:center;gap:4px;margin-top:0;max-width:100%;font-size:12px;font-weight:700;color:var(--accent-ink);background:var(--paper);border:1px solid var(--accent-line);border-radius:999px;padding:3px 9px 3px 10px;min-height:30px;line-height:1.35;text-align:left}
+.lvl-pill svg{width:14px;height:14px;flex:none}
+.lvl-pill.unset{color:var(--muted);border-style:dashed;border-color:var(--line)}
+button.ringbox{border-radius:50%;transition:transform .12s}
+button.ringbox:active{transform:scale(.96)}
+.ring-num em{display:block;font-style:normal;font-size:9.5px;font-weight:700;color:var(--accent-ink);margin-top:2px;letter-spacing:.04em}
+.tipline{display:flex;align-items:stretch;gap:4px;margin:12px 0 0;border:1px dashed var(--accent-line);border-radius:var(--r);background:var(--paper2)}
+.tipline>button:first-child{flex:1;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 4px 9px 12px;font-size:13px;color:var(--ink2);min-height:44px}
+.tipline b{flex:none;color:var(--accent-ink);font-size:12.5px}
+.tipline .x{flex:none;width:40px;color:var(--muted);font-size:18px;text-align:center}
+.gaps{padding:4px 16px}
+.gaps li button{display:grid;grid-template-columns:18px 1fr auto;gap:11px;align-items:center;width:100%;padding:11px 0;border-top:1px solid var(--line2);min-height:58px;text-align:left}
+.gaps li:first-child button{border-top:0}
+.gaps .box{width:15px;height:15px;border:1.6px solid var(--warm-line);border-radius:4px;transform:rotate(-4deg);align-self:start;margin-top:4px}
+.gaps li:nth-child(2n) .box{transform:rotate(3deg)}
+.gaps b{display:block;font-size:14.5px;font-weight:700;line-height:1.5}
+.gaps small{display:block;font-size:12px;color:var(--muted);line-height:1.5;margin-top:1px}
+.gaps .gr{display:flex;align-items:center;gap:2px}
+.gain{font-size:11.5px;font-weight:800;color:var(--accent-ink);background:var(--accent-soft);border-radius:999px;padding:1px 8px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.gaps-done{font-size:13.5px;color:var(--ink2);padding:12px 0}
+.reach-top{display:flex;align-items:center;gap:16px}
+.reach-top .ringbox{width:84px;height:84px}
+.reach-top .ring-num b{font-size:22px}
+.reach-top p{font-size:13px;color:var(--ink2);line-height:1.6}
+.reach-top p b{display:block;font-size:16px;color:var(--ink);font-weight:800;line-height:1.45}
+.irow{display:grid;grid-template-columns:7.6em 1fr 5.2em;align-items:center;gap:10px;font-size:13px;min-height:40px;border-top:1px solid var(--line2)}
+.irow:first-child{border-top:0}
+.irow .pv{text-align:right;font-variant-numeric:tabular-nums;color:var(--muted);font-size:12px;line-height:1.3}
+.irow .w{display:block;font-size:10.5px;color:var(--muted);font-weight:500}
+.slotlist li button{display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:center;width:100%;padding:10px 0;border-top:1px solid var(--line2);min-height:50px;font-size:14px;text-align:left}
+.slotlist li:first-child button{border-top:0}
+.slotlist small{display:block;font-size:11.5px;color:var(--muted);line-height:1.4}
+.slotlist .opt{opacity:.55}
+.dsteps{display:inline-flex;gap:3px}
+.dsteps i{width:11px;height:11px;border-radius:50%;border:1.5px solid var(--line);background:transparent}
+.dsteps i.need{border-color:var(--accent-line)}
+.dsteps i.on{background:var(--accent);border-color:var(--accent)}
+.dsteps i.on.over{background:var(--accent-ink);border-color:var(--accent-ink)}
+.dnum{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums;min-width:3.4em;text-align:right}
+.dnum.ok{color:var(--accent-ink);font-weight:700}
+.reach-mini{display:flex;align-items:center;gap:14px;width:100%;padding:14px 14px 14px 16px;text-align:left}
+.reach-mini .rm-num{flex:none;font-family:var(--serif);font-size:32px;font-weight:700;color:var(--accent);line-height:1;font-variant-numeric:tabular-nums}
+.reach-mini .rm-num small{font-family:var(--font);font-size:13px;margin-left:1px}
+.reach-mini>span:nth-child(2){flex:1;min-width:0}
+.reach-mini b{display:block;font-size:14px;line-height:1.4;margin-bottom:6px}
+.reach-mini em{display:block;font-style:normal;font-size:12px;color:var(--muted);margin-top:5px}
+.lv-card{display:grid;grid-template-columns:40px 1fr;gap:12px;width:100%;text-align:left;background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:14px 14px 13px 10px;box-shadow:var(--shadow);position:relative;transition:transform .12s,border-color .2s}
+.lv-card+.lv-card{margin-top:9px}
+.lv-card:active{transform:scale(.985)}
+.lv-card .no{font-family:var(--serif);font-size:27px;font-weight:700;color:var(--muted);line-height:1;text-align:center;padding-top:3px}
+.lv-card .no small{display:block;font-family:var(--font);font-size:9.5px;letter-spacing:.08em;font-weight:700;margin-top:5px}
+.lv-card .t{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
+.lv-card .t b{font-size:15.5px;font-weight:800;line-height:1.4}
+.lv-card .t span{flex:none;font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+.lv-card .for{display:block;font-size:12px;color:var(--muted);line-height:1.5;margin-top:1px}
+.lv-card .ask{display:block;font-size:13px;color:var(--ink2);line-height:1.55;margin-top:6px;padding-top:6px;border-top:1px dashed var(--line2)}
+.lv-card[aria-checked="true"]{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent),var(--shadow);background:linear-gradient(var(--accent-soft),var(--accent-soft)) top/100% 4px no-repeat,var(--paper)}
+.lv-card[aria-checked="true"] .no{color:var(--accent)}
+.lv-card .now{display:inline-block;font-size:10.5px;font-weight:800;color:#fff;background:var(--accent);border-radius:999px;padding:0 7px;margin-left:6px;vertical-align:2px;letter-spacing:.02em}
+@media (prefers-color-scheme: dark){.lv-card .now{color:#0F1F1A}}
+.lv-card .now.tmp{background:transparent;color:var(--muted);border:1px dashed var(--line)}
+.em-card{display:grid;grid-template-columns:22px 1fr;gap:10px;width:100%;text-align:left;background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:13px 14px 13px 12px;box-shadow:var(--shadow);transition:transform .12s}
+.em-card+.em-card{margin-top:9px}
+.em-card:active{transform:scale(.985)}
+.em-card .rd{width:18px;height:18px;border-radius:50%;border:1.6px solid var(--line);margin-top:2px;display:grid;place-items:center}
+.em-card[aria-checked="true"]{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent),var(--shadow)}
+.em-card[aria-checked="true"] .rd{border-color:var(--accent)}
+.em-card[aria-checked="true"] .rd::after{content:"";width:9px;height:9px;border-radius:50%;background:var(--accent)}
+.em-card b{font-size:15px;font-weight:800}
+.em-card b small{font-size:11px;font-weight:700;color:var(--accent-ink);margin-left:6px}
+.em-card span.d{display:block;font-size:12.5px;color:var(--ink2);line-height:1.55;margin-top:2px}
+.em-card .warn{display:block;margin-top:9px;padding:9px 11px;border-radius:var(--r-sm);background:var(--hl-soft);border:1px solid var(--hl-line);color:var(--hl-ink);font-size:12.5px;line-height:1.6}
+.em-card .warn mark{background:linear-gradient(transparent 55%,var(--hl) 55%);color:inherit}
+.sendbar{position:sticky;bottom:calc(var(--tabh) + env(safe-area-inset-bottom) + 10px);z-index:10;margin-top:18px;border-color:var(--accent-line);box-shadow:0 8px 28px rgba(40,35,20,.14);animation:viewIn .3s cubic-bezier(.2,.75,.25,1) both}
+.sendbar .eyebrow{color:var(--accent-ink)}
+.sendbar .send-text{font-size:14px;font-weight:700;line-height:1.6;margin:4px 0 10px}
+.sendbar .btn-row{flex-wrap:nowrap;align-items:center}
+.sendbar .btn-row .x{flex:none;font-size:12.5px;color:var(--muted);padding:0 6px;min-height:38px}
+.sendbar .btn-row .btn{flex:1}
+
+/* boosts */
+mark.boost{background:linear-gradient(transparent 52%,var(--hl) 52%);color:inherit;padding:0 1px;border-radius:2px}
+.bst{padding:12px 0;border-top:1px solid var(--line2)}
+.bst:first-child{border-top:0;padding-top:4px}
+.bst .said{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;font-size:14.5px;font-weight:700;line-height:1.6}
+.bst .said .chip{flex:none;font-size:11px;padding:1px 8px;background:var(--hl-soft);color:var(--hl-ink)}
+.bst dl{display:grid;grid-template-columns:5.4em 1fr;gap:6px 10px;margin-top:8px;font-size:13.5px;line-height:1.65}
+.bst dt{font-size:11.5px;font-weight:700;color:var(--muted);padding-top:2px}
+.bst dd{color:var(--ink2)}
+.bst dd.ans{color:var(--ink);background:var(--paper2);border-left:3px solid var(--accent-line);padding:6px 10px;border-radius:0 var(--r-sm) var(--r-sm) 0}
+.bst-note{font-size:12.5px;color:var(--muted);margin:-2px 2px 10px}
+details.bst-fold{margin-top:10px;border-top:1px dashed var(--line);padding-top:8px}
+details.bst-fold summary{list-style:none;cursor:pointer;font-size:12.5px;font-weight:700;color:var(--hl-ink);min-height:32px;display:flex;align-items:center;gap:6px}
+details.bst-fold summary::-webkit-details-marker{display:none}
+details.bst-fold summary::after{content:"›";transform:rotate(90deg);transition:transform .2s;display:inline-block}
+details.bst-fold[open] summary::after{transform:rotate(-90deg)}
+.slot-note{margin-top:12px;padding:10px 12px;border-radius:var(--r-sm);background:var(--paper2);border:1px solid var(--line2);font-size:13px;color:var(--ink2);line-height:1.65}
+.slot-note b{color:var(--ink)}
+.slot-note .ok{color:var(--accent-ink);font-weight:800}
+.stamp{display:inline-flex;align-items:center;gap:4px;font-size:11.5px;font-weight:800;color:var(--accent-ink);border:1.5px solid var(--accent);border-radius:6px;padding:1px 8px;transform:rotate(-3deg);box-shadow:inset 0 0 0 2px var(--paper),inset 0 0 0 3px var(--accent-line);letter-spacing:.06em}
+.depth-next{margin-top:10px;font-size:12.5px;color:var(--muted);line-height:1.65}
+.depth-next b{color:var(--ink2);font-weight:700}
+.note-import{margin-top:16px;padding:12px 14px;border:1px dashed var(--muted);border-radius:var(--r);font-size:13px;color:var(--ink2);line-height:1.65}
+.note-import .mini-btn{margin-top:10px}
+.textlink{display:block;margin:16px auto 0;font-size:13px;color:var(--accent-ink);font-weight:600;min-height:40px;text-align:center}
+.textlink[disabled]{color:var(--muted);cursor:default}
+.cc-box{margin-top:12px;padding:12px 14px;border-radius:var(--r-sm);background:var(--paper2);border:1px dashed var(--line);font-size:14px;color:var(--ink)}
+
+/* requests & checks */
+.badge-check{display:inline-flex;align-items:center;font-size:11px;font-weight:700;padding:1px 8px;border-radius:999px;background:var(--warm-soft);color:var(--warm);line-height:1.6;white-space:nowrap}
+.mini-btn.ask{background:var(--paper);border-color:var(--line);color:var(--ink2)}
+.next-sub{margin-top:8px;display:flex;justify-content:center}
+.pend{display:flex;gap:8px;margin-top:12px}
+.pend button{flex:1;display:flex;align-items:center;gap:8px;min-height:46px;padding:8px 12px;background:var(--paper);border:1px solid var(--line);border-radius:var(--r);font-size:13px;color:var(--ink2);box-shadow:var(--shadow);transition:transform .12s}
+.pend button:active{transform:scale(.97)}
+.pend b{margin-left:auto;font-size:17px;font-weight:800;color:var(--ink);font-variant-numeric:tabular-nums}
+.ck-ic{flex:none;width:30px;height:30px;border-radius:9px;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent-ink)}
+.ck-ic svg{width:17px;height:17px}
+.ck-ic.w{background:var(--warm-soft);color:var(--warm)}
+.ck-ic.h{background:var(--hl-soft);color:var(--hl-ink)}
+.pend .ck-ic{width:26px;height:26px;border-radius:8px}
+.pend .ck-ic svg{width:15px;height:15px}
+.ck{display:grid;grid-template-columns:30px 1fr;gap:12px;padding:13px 0;border-top:1px solid var(--line2)}
+.ck:first-child{border-top:0}
+.ck-k{display:block;font-size:11.5px;font-weight:700;color:var(--muted);letter-spacing:.04em}
+.ck b{display:block;font-size:14.5px;font-weight:700;line-height:1.6;margin-top:1px}
+.ck .chips{display:flex}
+.ck-a{display:block;font-size:13px;color:var(--ink2);margin-top:4px}
+.checks-mini{padding:4px 16px 12px;border-color:var(--warm-line)}
+
+#print{display:none}
+
+@media (min-width:760px){
+  body{background:var(--bg)}
+  .app{padding-top:20px}
+  #view{padding:0 28px}
+  .subhead{margin:0 -28px;padding-left:18px;padding-right:18px}
+  .pagehead{padding-top:34px}
+}
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;animation-delay:0s!important;transition-duration:.001ms!important;transition-delay:0s!important}
+}
+
+/* print */
+@media print{
+  :root{--bg:#fff;--paper:#fff;--paper2:#fff;--ink:#1d1c18;--ink2:#3d3b35;--muted:#6b675e;--line:#d8d3c8;--line2:#e8e4dc;--band:#f5f2ec;--accent:#2F7A68;--accent-ink:#1E5C4D;--accent-soft:#E4F0EB;--accent-line:#BFDCD2;--warm:#B95B3F;--warm-soft:#F8E8E1;--warm-line:#EBC6B8}
+  @page{size:A4;margin:14mm 14mm 16mm}
+  body{background:#fff;font-size:10pt;line-height:1.65}
+  .app,.tabbar,.toast,.scrim,.banner{display:none!important}
+  #print{display:block}
+  .p-cover{border-bottom:1.5px solid var(--ink);padding-bottom:10px;margin-bottom:14px}
+  .p-cover h1{font-family:var(--serif);font-size:24pt;letter-spacing:.06em}
+  .p-cover p{color:var(--muted);font-size:9.5pt}
+  .p-sec{margin-top:16px}
+  .p-sec>h2{font-size:12.5pt;border-left:4px solid var(--accent);padding-left:8px;margin-bottom:8px;break-after:avoid}
+  .p-ep,.p-item{border:1px solid var(--line);border-radius:6px;padding:8px 10px;margin-bottom:6px;break-inside:avoid}
+  .p-ep h3,.p-item h3{font-size:10.5pt}
+  .p-ep .p-when{font-size:8.5pt;color:var(--muted)}
+  .p-ep dl{display:grid;grid-template-columns:4.5em 1fr;gap:1px 8px;margin-top:4px;font-size:9pt}
+  .p-ep dt{color:var(--accent-ink);font-weight:700}
+  .p-ep blockquote{margin:4px 0 0;font-family:var(--serif);font-size:9.5pt;color:var(--ink2)}
+  .p-period{font-size:10.5pt;font-weight:800;margin:10px 0 4px;color:var(--ink2);break-after:avoid}
+  .p-text{white-space:pre-wrap;font-size:9.5pt}
+  .p-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+  .p-graph{border:1px solid var(--line);border-radius:6px;padding:6px;break-inside:avoid}
+  .p-graph .g-draw{stroke-dashoffset:0;animation:none}
+  .p-graph .g-fade{opacity:1;animation:none}
+  .p-foot{margin-top:18px;text-align:center;font-size:8pt;color:var(--muted)}
+  .badge-ai,.badge-import,.badge-boost{font-size:7.5pt}
+  mark.boost{background:none;padding:0}
+  .p-boost{font-size:8.5pt;color:var(--ink2);margin-top:3px}
+  .p-boost li{margin-top:2px}
+}
+</style>
+
+<!-- ===== コア（マージ・読み込み）: test/merge.test.mjs からも読み込んで検証する ===== -->
+<script id="core">
+(function (root) {
+  'use strict';
+
+  var INTERVIEW_KEYS = [
+    ['self_pr', '自己PR'], ['gakuchika', 'ガクチカ'], ['setback', '挫折経験'], ['success', '成功体験'],
+    ['strength', '長所'], ['weakness', '短所'], ['team', 'チームでの役割'], ['challenge', '挑戦したこと'],
+    ['values', '大切にしている価値観'], ['axis', '就活の軸']
+  ];
+  var INTERVIEW_LABEL = {};
+  INTERVIEW_KEYS.forEach(function (k) { INTERVIEW_LABEL[k[0]] = k[1]; });
+
+  var DEFAULT_PERIODS = [
+    { id: 'kid', label: '幼少期', range: '〜6歳' },
+    { id: 'elem', label: '小学校', range: '6〜12歳' },
+    { id: 'jhs', label: '中学校', range: '12〜15歳' },
+    { id: 'hs', label: '高校', range: '15〜18歳' },
+    { id: 'univ', label: '大学', range: '18歳〜' }
+  ];
+  var TRAIT_KEYS = ['strengths', 'weaknesses', 'values', 'motivators', 'demotivators'];
+  var TRAIT_LABEL = { strengths: '強み', weaknesses: '弱み', values: '価値観', motivators: 'やる気スイッチ', demotivators: 'やる気が下がる条件' };
+  var OUTPUT_LABEL = { intro1min: '1分自己紹介', manual: '自分の取扱説明書', es: 'ES下書き', qa: '想定問答', otherRequest: '他己分析の依頼文', companyFit: '企業別のネタ当て' };
+  var ID_ARRAYS = ['periods', 'episodes', 'deepDive', 'requests', 'checks', 'axes'];
+
+  function isObj(v) { return v !== null && typeof v === 'object' && !Array.isArray(v); }
+  function clone(v) { return v === undefined ? undefined : JSON.parse(JSON.stringify(v)); }
+
+  function emptyData() {
+    return {
+      app: 'jibun-note', version: 1, updatedAt: '',
+      profile: { name: '', university: '', faculty: '', grad: '', targets: { industries: [], companies: [], jobs: [] }, goal: '', mode: 'beginner' },
+      periods: clone(DEFAULT_PERIODS),
+      episodes: [],
+      traits: { strengths: [], weaknesses: [], values: [], motivators: [], demotivators: [] },
+      axes: [], interview: {}, deepDive: [], requests: [], checks: [], outputs: {}, progress: {}, log: []
+    };
+  }
+
+  // 足りない枠を補う（中身は変えない）
+  function normalize(src) {
+    var base = emptyData();
+    var d = isObj(src) ? clone(src) : {};
+    delete d.patch; delete d['delete'];
+    Object.keys(base).forEach(function (k) {
+      if (d[k] === undefined || d[k] === null) { d[k] = base[k]; return; }
+      if (Array.isArray(base[k]) && !Array.isArray(d[k])) d[k] = base[k];
+      else if (isObj(base[k]) && !isObj(d[k])) d[k] = base[k];
+    });
+    if (!d.periods.length) d.periods = clone(DEFAULT_PERIODS);
+    if (!isObj(d.profile.targets)) d.profile.targets = base.profile.targets;
+    TRAIT_KEYS.forEach(function (k) { if (!Array.isArray(d.traits[k])) d.traits[k] = []; });
+    return d;
+  }
+
+  // 文字列の外にある末尾カンマ・全角スペースを取り除く
+  function stripTrailingCommas(s) {
+    var out = '', inStr = false, esc = false;
+    for (var i = 0; i < s.length; i++) {
+      var c = s[i];
+      if (inStr) {
+        out += c;
+        if (esc) esc = false;
+        else if (c === '\\') esc = true;
+        else if (c === '"') inStr = false;
+        continue;
+      }
+      if (c === '"') { inStr = true; out += c; continue; }
+      if (c === '　' || c === ' ') { out += ' '; continue; }
+      if (c === ',') {
+        var j = i + 1;
+        while (j < s.length && /[\s　 ]/.test(s[j])) j++;
+        if (s[j] === '}' || s[j] === ']') continue;
+      }
+      out += c;
+    }
+    return out;
+  }
+
+  // 寛容な読み込み：最初の { から最後の } までを取り出して読む
+  function parseLoose(text) {
+    if (typeof text !== 'string') throw new Error('読み込む文章がありません。');
+    var t = text.replace(/^﻿/, '');
+    var a = t.indexOf('{'), b = t.lastIndexOf('}');
+    if (a < 0 || b <= a) throw new Error('データが見つかりませんでした。AIの出力を、{ から } までまるごと貼り付けてください。');
+    var body = t.slice(a, b + 1);
+    try { return JSON.parse(body); } catch (e) { /* つぎへ */ }
+    try { return JSON.parse(stripTrailingCommas(body)); } catch (e2) {
+      throw new Error('データの形が途中で崩れていて読めませんでした。AIに「セーブデータをもう一度出して」と頼んでみてください。');
+    }
+  }
+
+  function isPatch(o) { return isObj(o) && (o.patch === true || o.patch === 'true'); }
+  function looksLikeData(o) {
+    if (!isObj(o)) return false;
+    if (o.app === 'jibun-note') return true;
+    return ['profile', 'episodes', 'traits', 'interview', 'deepDive', 'outputs', 'progress', 'axes', 'log'].some(function (k) { return k in o; });
+  }
+
+  function deepMerge(a, b) {
+    Object.keys(b).forEach(function (k) {
+      if (b[k] === undefined) return;
+      if (isObj(b[k]) && isObj(a[k])) deepMerge(a[k], b[k]);
+      else a[k] = clone(b[k]);
+    });
+    return a;
+  }
+
+  function indexById(arr, id) {
+    for (var i = 0; i < arr.length; i++) if (isObj(arr[i]) && String(arr[i].id) === String(id)) return i;
+    return -1;
+  }
+
+  // id で突き合わせて上書き・追加
+  function mergeById(arr, items, rec) {
+    if (!Array.isArray(items)) return arr;
+    items.forEach(function (it) {
+      if (!isObj(it)) return;
+      if (it.id === undefined || it.id === null || it.id === '') { arr.push(clone(it)); rec.added.push(''); return; }
+      var i = indexById(arr, it.id);
+      if (i >= 0) { arr[i] = deepMerge(arr[i], it); rec.updated.push(String(it.id)); }
+      else { arr.push(clone(it)); rec.added.push(String(it.id)); }
+    });
+    return arr;
+  }
+
+  // 同じ内容は重複させずに追加
+  function appendUnique(arr, items, keyFn) {
+    var n = 0;
+    if (!Array.isArray(items)) return 0;
+    var seen = {};
+    arr.forEach(function (x) { seen[keyFn(x)] = true; });
+    items.forEach(function (it) {
+      if (!isObj(it)) return;
+      var k = keyFn(it);
+      if (seen[k]) return;
+      seen[k] = true; arr.push(clone(it)); n++;
+    });
+    return n;
+  }
+  function logKey(x) { return isObj(x) ? (x.date || '') + '|' + (x.summary || '') : String(x); }
+
+  // ルール7：IDの衝突回避（同じidで見出しが違う要素は別物として振り直し、同じパッチ内の参照も付け替える）
+  var COLLIDE = [
+    { path: ['episodes'], head: 'title', prefix: 'e', ref: 'episode' },
+    { path: ['traits', 'strengths'], head: 'name', prefix: 's' },
+    { path: ['traits', 'weaknesses'], head: 'name', prefix: 'w' },
+    { path: ['traits', 'values'], head: 'name', prefix: 'v' },
+    { path: ['traits', 'motivators'], head: 'name', prefix: 'm' },
+    { path: ['traits', 'demotivators'], head: 'name', prefix: 'n' },
+    { path: ['axes'], head: 'text', prefix: 'a', ref: 'axis' },
+    { path: ['deepDive'], head: 'question', prefix: 'd' },
+    { path: ['requests'], head: 'text', prefix: 'r' },
+    { path: ['checks'], head: 'question', prefix: 'c' },
+    { path: ['outputs', 'es'], head: 'title', prefix: 'es' },
+    { path: ['outputs', 'qa'], head: 'question', prefix: 'q' }
+  ];
+  function getPath(o, path) { for (var i = 0; i < path.length; i++) { if (!isObj(o)) return undefined; o = o[path[i]]; } return o; }
+  function resolveIdCollisions(d, patch) {
+    var renamed = { episode: {}, axis: {} }, any = false;
+    COLLIDE.forEach(function (def) {
+      var parr = getPath(patch, def.path), barr = getPath(d, def.path);
+      if (!Array.isArray(parr) || !Array.isArray(barr)) return;
+      var used = {}, max = 0, re = new RegExp('^' + def.prefix + '(\\d+)$');
+      function note(x) { if (!isObj(x) || x.id == null) return; var id = String(x.id); used[id] = true; var m = re.exec(id); if (m) max = Math.max(max, +m[1]); }
+      barr.forEach(note); parr.forEach(note);
+      parr.forEach(function (it) {
+        if (!isObj(it) || it.id == null || it[def.head] == null || it[def.head] === '') return;
+        var i = indexById(barr, it.id);
+        if (i < 0 || barr[i][def.head] == null || barr[i][def.head] === '' || String(barr[i][def.head]) === String(it[def.head])) return;
+        var nid; do { max++; nid = def.prefix + max; } while (used[nid]);
+        used[nid] = true; any = true;
+        if (def.ref) renamed[def.ref][String(it.id)] = nid;
+        it.id = nid;
+      });
+    });
+    if (!any) return renamed;
+    var E = renamed.episode, A = renamed.axis;
+    function re(x) { return x != null && E[String(x)] ? E[String(x)] : x; }
+    function rl(a) { return Array.isArray(a) ? a.map(re) : a; }
+    if (isObj(patch.traits)) Object.keys(patch.traits).forEach(function (k) { (Array.isArray(patch.traits[k]) ? patch.traits[k] : []).forEach(function (t) { if (isObj(t)) t.evidence = rl(t.evidence); }); });
+    (Array.isArray(patch.axes) ? patch.axes : []).forEach(function (a) { if (isObj(a)) a.evidence = rl(a.evidence); });
+    if (isObj(patch.interview)) Object.keys(patch.interview).forEach(function (k) { (Array.isArray(patch.interview[k]) ? patch.interview[k] : []).forEach(function (c) { if (isObj(c)) c.episode = re(c.episode); }); });
+    (Array.isArray(patch.deepDive) ? patch.deepDive : []).forEach(function (x) { if (!isObj(x) || x.target == null) return; var t = String(x.target); x.target = E[t] || A[t] || x.target; });
+    (Array.isArray(patch.requests) ? patch.requests : []).forEach(function (x) { if (!isObj(x) || x.target == null) return; x.target = retarget(String(x.target), E, A); });
+    (Array.isArray(patch.checks) ? patch.checks : []).forEach(function (x) { if (isObj(x)) x.targets = rl(x.targets); });
+    if (isObj(patch.outputs)) Object.keys(patch.outputs).forEach(function (k) { (Array.isArray(patch.outputs[k]) ? patch.outputs[k] : []).forEach(function (o) { if (isObj(o)) o.episodes = rl(o.episodes); }); });
+    return renamed;
+  }
+
+  // requests.target（e3／interview.setback.e3／a1 など）の中の episode・軸の id を付け替える
+  function retarget(t, E, A) {
+    if (E[t] || A[t]) return E[t] || A[t];
+    var m = /^(interview\.[^.]+\.)(.+)$/.exec(t);
+    if (m && E[m[2]]) return m[1] + E[m[2]];
+    return t;
+  }
+  function targetEpisode(t) { t = String(t == null ? '' : t); var m = /^interview\.[^.]+\.(.+)$/.exec(t); return m ? m[1] : t; }
+
+  // エピソードを消したら、残っている参照も消す
+  function removeEpisodeRefs(d, ids) {
+    if (!ids.length) return;
+    function keep(x) { return ids.indexOf(String(x)) < 0; }
+    TRAIT_KEYS.concat(Object.keys(d.traits).filter(function (k) { return TRAIT_KEYS.indexOf(k) < 0; })).forEach(function (k) {
+      (Array.isArray(d.traits[k]) ? d.traits[k] : []).forEach(function (t) { if (isObj(t) && Array.isArray(t.evidence)) t.evidence = t.evidence.filter(keep); });
+    });
+    d.axes.forEach(function (a) { if (isObj(a) && Array.isArray(a.evidence)) a.evidence = a.evidence.filter(keep); });
+    Object.keys(d.interview).forEach(function (k) { if (Array.isArray(d.interview[k])) d.interview[k] = d.interview[k].filter(function (c) { return !isObj(c) || keep(c.episode); }); });
+    Object.keys(d.outputs).forEach(function (k) { (Array.isArray(d.outputs[k]) ? d.outputs[k] : []).forEach(function (o) { if (isObj(o) && Array.isArray(o.episodes)) o.episodes = o.episodes.filter(keep); }); });
+    if (Array.isArray(d.deepDive)) d.deepDive = d.deepDive.filter(function (q) { return !isObj(q) || keep(q.target); });
+    // 依頼は消さずに「全体」あてに変える
+    if (Array.isArray(d.requests)) d.requests.forEach(function (r) { if (isObj(r) && r.target != null && r.target !== '' && !keep(targetEpisode(r.target))) r.target = ''; });
+    if (Array.isArray(d.checks)) d.checks = d.checks.filter(function (c) {
+      if (!isObj(c) || !Array.isArray(c.targets) || !c.targets.length) return true;
+      c.targets = c.targets.filter(keep);
+      return c.targets.length > 0;
+    });
+  }
+
+  function newChanges() {
+    return {
+      profile: false, periods: { added: [], updated: [] }, episodes: { added: [], updated: [] },
+      traits: { added: [], updated: [] }, axes: { added: [], updated: [] }, deepDive: { added: [], updated: [] },
+      requests: { added: [], updated: [] }, checks: { added: [], updated: [] }, reqDone: 0, checkDone: 0,
+      deepDone: 0, interview: [], outputs: [], progress: null, log: 0, deleted: {}, other: []
+    };
+  }
+
+  function addDeleted(c, key, n) { if (n > 0) c.deleted[key] = (c.deleted[key] || 0) + n; }
+
+  function removeIn(parent, key, v, c, labelKey) {
+    if (!parent || !(key in parent)) return;
+    var cur = parent[key];
+    if (Array.isArray(v)) {
+      var ids = v.map(String);
+      if (Array.isArray(cur)) {
+        var before = cur.length;
+        parent[key] = cur.filter(function (x) {
+          if (!isObj(x)) return true;
+          if (x.id !== undefined && ids.indexOf(String(x.id)) >= 0) return false;
+          if (x.id === undefined && x.episode !== undefined && ids.indexOf(String(x.episode)) >= 0) return false;
+          if (key === 'companyFit' && ids.indexOf(String(x.company)) >= 0) return false;
+          return true;
+        });
+        addDeleted(c, labelKey || key, before - parent[key].length);
+      } else if (isObj(cur)) {
+        ids.forEach(function (id) { if (id in cur) { delete cur[id]; addDeleted(c, labelKey || key, 1); } });
+      }
+    } else if (isObj(v) && isObj(cur)) {
+      Object.keys(v).forEach(function (k2) { removeIn(cur, k2, v[k2], c, k2); });
+    }
+  }
+
+  function applyDelete(d, del, c) {
+    if (!isObj(del)) return;
+    Object.keys(del).forEach(function (k) {
+      var path = k.split('.');
+      if (path.length === 1 && !(k in d)) {
+        if (TRAIT_KEYS.indexOf(k) >= 0) path = ['traits', k];
+        else if (k === 'es' || k === 'qa' || k === 'companyFit') path = ['outputs', k];
+      }
+      var parent = d;
+      for (var i = 0; i < path.length - 1; i++) parent = parent && parent[path[i]];
+      removeIn(parent, path[path.length - 1], del[k], c, path[path.length - 1]);
+    });
+    // 消えたエピソードの参照も消す
+    var asked = [];
+    if (Array.isArray(del.episodes)) asked = asked.concat(del.episodes);
+    var gone = asked.map(String).filter(function (id) { return indexById(d.episodes, id) < 0; });
+    removeEpisodeRefs(d, gone);
+  }
+
+  // パッチを今のデータにマージする（元のデータは変えない）
+  function applyPatch(current, patch) {
+    var d = normalize(current || emptyData());
+    var c = newChanges();
+    patch = clone(patch);
+    c.renamed = resolveIdCollisions(d, patch);
+    Object.keys(patch).forEach(function (k) {
+      var v = patch[k];
+      if (k === 'app' || k === 'version' || k === 'patch' || k === 'delete' || v === undefined) return;
+      if (k === 'updatedAt') { d.updatedAt = v; return; }
+      if (ID_ARRAYS.indexOf(k) >= 0) {
+        if ((k === 'deepDive' || k === 'requests' || k === 'checks') && Array.isArray(v)) {
+          var dk = { deepDive: 'deepDone', requests: 'reqDone', checks: 'checkDone' }[k];
+          v.forEach(function (it) {
+            if (!isObj(it) || it.done !== true) return;
+            var i = indexById(d[k], it.id);
+            if (i < 0 || d[k][i].done !== true) c[dk]++;
+          });
+          // 対応済み（done:true）は、古いデータの done:false で戻さない
+          v.forEach(function (it) {
+            if (!isObj(it) || it.done !== false) return;
+            var i = indexById(d[k], it.id);
+            if (i >= 0 && d[k][i].done === true) delete it.done;
+          });
+        }
+        mergeById(d[k], v, c[k]);
+        return;
+      }
+      if (k === 'profile' && isObj(v)) {
+        deepMerge(d.profile, v); c.profile = true;
+        if (v.level !== undefined) c.level = v.level;
+        if (v.embellish !== undefined) c.embellish = v.embellish;
+        return;
+      }
+      if (k === 'traits' && isObj(v)) {
+        Object.keys(v).forEach(function (tk) {
+          if (Array.isArray(v[tk])) {
+            if (!Array.isArray(d.traits[tk])) d.traits[tk] = [];
+            mergeById(d.traits[tk], v[tk], c.traits);
+          } else if (v[tk] !== undefined) { d.traits[tk] = clone(v[tk]); }
+        });
+        return;
+      }
+      if (k === 'interview' && isObj(v)) {
+        Object.keys(v).forEach(function (ik) {
+          if (!Array.isArray(v[ik])) return;
+          if (!Array.isArray(d.interview[ik])) d.interview[ik] = [];
+          var arr = d.interview[ik];
+          v[ik].forEach(function (it) {
+            if (!isObj(it)) return;
+            var j = -1;
+            for (var q = 0; q < arr.length; q++) if (isObj(arr[q]) && it.episode != null && String(arr[q].episode) === String(it.episode)) { j = q; break; }
+            if (j >= 0) deepMerge(arr[j], it); else arr.push(clone(it));
+          });
+          c.interview.push(ik);
+        });
+        return;
+      }
+      if (k === 'outputs' && isObj(v)) {
+        Object.keys(v).forEach(function (ok) {
+          var ov = v[ok];
+          if ((ok === 'es' || ok === 'qa') && Array.isArray(ov)) {
+            if (!Array.isArray(d.outputs[ok])) d.outputs[ok] = [];
+            mergeById(d.outputs[ok], ov, { added: [], updated: [] });
+          } else if (ok === 'companyFit' && Array.isArray(ov)) {
+            if (!Array.isArray(d.outputs.companyFit)) d.outputs.companyFit = [];
+            ov.forEach(function (it) {
+              if (!isObj(it)) return;
+              var arr = d.outputs.companyFit, j = -1;
+              for (var q = 0; q < arr.length; q++) if (isObj(arr[q]) && String(arr[q].company) === String(it.company)) { j = q; break; }
+              if (j >= 0) arr[j] = deepMerge(arr[j], it); else arr.push(clone(it));
+            });
+          } else if (isObj(ov) && isObj(d.outputs[ok])) {
+            deepMerge(d.outputs[ok], ov);
+          } else {
+            d.outputs[ok] = clone(ov);
+          }
+          c.outputs.push(ok);
+        });
+        return;
+      }
+      if (k === 'progress' && isObj(v)) {
+        var from = d.progress.overall, ses = d.progress.sessions;
+        deepMerge(d.progress, v);
+        if (typeof ses === 'number' && !(d.progress.sessions >= ses)) d.progress.sessions = ses;
+        c.progress = { from: from, to: d.progress.overall };
+        return;
+      }
+      if (k === 'log' && Array.isArray(v)) { c.log += appendUnique(d.log, v, logKey); return; }
+      // 仕様外のキー：オブジェクトなら深いマージ、それ以外は上書き
+      if (isObj(v) && isObj(d[k])) deepMerge(d[k], v); else d[k] = clone(v);
+      c.other.push(k);
+    });
+    applyDelete(d, patch['delete'], c);
+    return { data: d, changes: c, summary: summarize(c) };
+  }
+
+  var DEL_LABEL = { requests: 'AIへの依頼', checks: '確認待ち', episodes: 'エピソード', periods: '時期', deepDive: '深掘り', axes: '就活の軸', strengths: '強み', weaknesses: '弱み', values: '価値観', motivators: 'やる気スイッチ', demotivators: 'やる気が下がる条件', es: 'ES', qa: '想定問答', companyFit: '企業別のネタ', interview: '面接ネタ', outputs: '作れるもの', log: '記録' };
+
+  function summarize(c) {
+    var s = [];
+    function uniq(a) { return a.filter(function (x, i) { return a.indexOf(x) === i; }); }
+    if (c.episodes.added.length) s.push('エピソード+' + c.episodes.added.length);
+    if (c.episodes.updated.length) s.push('エピソード更新' + uniq(c.episodes.updated).length);
+    if (c.interview.length) s.push('面接ネタ更新：' + uniq(c.interview).map(function (k) { return INTERVIEW_LABEL[k] || k; }).join('・'));
+    if (c.traits.added.length) s.push('強み・価値観+' + c.traits.added.length);
+    if (c.traits.updated.length) s.push('強み・価値観 更新' + uniq(c.traits.updated).length);
+    if (c.axes.added.length) s.push('就活の軸+' + c.axes.added.length);
+    if (c.axes.updated.length) s.push('就活の軸 更新' + uniq(c.axes.updated).length);
+    if (c.deepDive.added.length) s.push('深掘り待ち+' + c.deepDive.added.length);
+    if (c.deepDone) s.push('深掘り完了' + c.deepDone);
+    if (c.reqDone) s.push('AIへの依頼 対応済み' + c.reqDone);
+    var newChecks = c.checks.added.length;
+    if (newChecks) s.push('確認待ち+' + newChecks);
+    if (c.checkDone) s.push('確認できた' + c.checkDone);
+    if (c.outputs.length) s.push('作れるもの：' + uniq(c.outputs).map(function (k) { return OUTPUT_LABEL[k] || k; }).join('・'));
+    if (c.progress) {
+      if (typeof c.progress.to === 'number' && c.progress.from !== c.progress.to) s.push('進み具合 ' + (typeof c.progress.from === 'number' ? c.progress.from + '%→' : '') + c.progress.to + '%');
+      else s.push('進み具合 更新');
+    }
+    if (c.level !== undefined && levelNum(c.level)) s.push('目標：レベル' + levelNum(c.level) + '（' + LEVELS[levelNum(c.level) - 1].name + '）');
+    if (c.embellish !== undefined) { var em = EMBELLISH.filter(function (x) { return x.key === c.embellish; })[0]; if (em) s.push('盛り方：' + em.name); }
+    if (c.profile) s.push('プロフィール更新');
+    if (c.periods.added.length) s.push('時期+' + c.periods.added.length);
+    if (c.log) s.push('記録+' + c.log);
+    Object.keys(c.deleted).forEach(function (k) { s.push((DEL_LABEL[k] || k) + 'を削除' + c.deleted[k]); });
+    if (!s.length) s.push('変更はありませんでした');
+    return s;
+  }
+
+  function describeFull(d) {
+    var nCat = INTERVIEW_KEYS.filter(function (k) { return (d.interview[k[0]] || []).length; }).length;
+    var nTr = TRAIT_KEYS.reduce(function (n, k) { return n + d.traits[k].length; }, 0);
+    var s = ['エピソード' + d.episodes.length + '件', '面接ネタ' + nCat + 'カテゴリ'];
+    if (nTr) s.push('強み・価値観' + nTr + '件');
+    if (d.deepDive.length) s.push('深掘り待ち' + d.deepDive.filter(function (x) { return !x.done; }).length + '件');
+    var nOut = Object.keys(d.outputs).filter(function (k) { var v = d.outputs[k]; return Array.isArray(v) ? v.length : v && v.text; }).length;
+    if (nOut) s.push('作れるもの' + nOut + '種類');
+    return s;
+  }
+
+  function hasContent(d) {
+    return isObj(d) && ((d.episodes && d.episodes.length) || (d.profile && d.profile.name) || (d.interview && Object.keys(d.interview).length)) ? true : false;
+  }
+
+  // 貼り付けられた文章を読み、パッチ／全体データを判定して結果を返す
+  function parseData(text) {
+    var first;
+    try { var o = parseLoose(text); if (looksLikeData(o)) return o; } catch (e) { first = e; }
+    // 前の文章に { が混ざっている時：データらしい始まり（{"app" など）から読み直す
+    var re = /\{\s*"(app|handoff|patch|version)"\s*:/g, m, b = String(text || '').lastIndexOf('}');
+    while ((m = re.exec(text))) {
+      var body = text.slice(m.index, b + 1);
+      try { return JSON.parse(body); } catch (e1) { /* つぎへ */ }
+      try { return JSON.parse(stripTrailingCommas(body)); } catch (e2) { /* つぎへ */ }
+    }
+    if (first) throw first;
+    return null;
+  }
+
+  var HANDOFF_MSG = 'これはAIに渡す用のコード（引き継ぎコード）です。ノートには読み込めません。ChatGPTなどの新しいチャットに貼り付けて送ってください。AIが最後に出す「セーブデータ」をここに貼ると、ノートが更新されます。';
+
+  function prepareImport(text, current) {
+    var o = parseData(text);
+    if (isObj(o) && (o.handoff === true || o.handoff === 'true')) { var he = new Error(HANDOFF_MSG); he.handoff = true; throw he; }
+    if (!looksLikeData(o)) throw new Error('じぶんノートのデータではないようです。AIが最後に出した「セーブデータ」を貼り付けてください。');
+    if (isPatch(o)) {
+      var r = applyPatch(current, o);
+      return { kind: 'patch', data: r.data, changes: r.changes, summary: r.summary, needsConfirm: false };
+    }
+    var full = normalize(o);
+    return { kind: 'full', data: full, changes: null, summary: describeFull(full), needsConfirm: hasContent(current) };
+  }
+
+  // 引き継ぎコード用の軽量版（下書きと作成物の本文は省く）
+  function makeHandoff(d) {
+    var src = normalize(d), o = { handoff: true };
+    Object.keys(src).forEach(function (k) { o[k] = src[k]; });
+    Object.keys(o.interview || {}).forEach(function (k) { (Array.isArray(o.interview[k]) ? o.interview[k] : []).forEach(function (c) { if (isObj(c)) delete c.draft; }); });
+    // 依頼と確認は、まだのものだけ渡す
+    o.requests = (o.requests || []).filter(function (r) { return isObj(r) && r.done !== true; });
+    o.checks = (o.checks || []).filter(function (c) { return isObj(c) && c.done !== true; });
+    Object.keys(o.outputs || {}).forEach(function (k) {
+      var v = o.outputs[k];
+      (Array.isArray(v) ? v : [v]).forEach(function (x) { if (isObj(x)) { delete x.text; delete x.answer; } });
+    });
+    return o;
+  }
+
+  // ---------- 目標レベルと到達度（SCHEMA「目標レベルと到達度」の採点表どおり） ----------
+  var LEVELS = [
+    { level: 1, name: 'はじめの一歩', target: '自己分析が初めて', need: '話せるネタを1つ。ガクチカか自己PRを、理由と結果まで' },
+    { level: 2, name: '面接で話せる', target: '中小・地元・ベンチャーの一般選考', need: 'ガクチカ・自己PR・長所・短所を、理由と結果まで話せる' },
+    { level: 3, name: '選考を勝ち抜く', target: '中堅〜人気企業、インターン・早期選考', need: '挫折やチームの話も。学びと「次もできる」まで言える' },
+    { level: 4, name: '大手・人気企業', target: '大手日系・メガベンチャー。深掘り面接が複数回', need: 'よく聞かれる10の質問ほぼ全部に、深掘りされても崩れない答え' },
+    { level: 5, name: '最難関', target: '外資コンサル・外銀・総合商社・大手広告など', need: '数字・比較・反論への備えまでそろった「最難関水準」の話' }
+  ];
+  var EMBELLISH = [
+    { key: 'fact', name: '事実のみ', desc: '話したことだけで作る。言い換えも最小限' },
+    { key: 'polish', name: '見せ方を磨く', desc: '切り取り方・順番・言葉選びを磨く。新しい事実は足さない' },
+    { key: 'boost', name: '盛る', desc: '規模・成果・役割を大きめに。小さな経験を大きく見せる' }
+  ];
+  var DEPTH_LABEL = ['出来事だけ', '行動と気持ちまで', '理由と結果まで', '学びと再現性まで', '最難関水準'];
+  var REACH_NEED = { A: [3, 5, 8, 12, 15], B: [1, 2, 3, 4, 5], D1: [1, 1, 2, 2, 3], D2: [0, 0, 1, 1, 2], E: [0, 1, 2, 3, 4], F: [0, 0, 1, 2, 2], G: [0, 0, 0, 0, 1] };
+  var SLOT_NEED = {
+    gakuchika: [2, 3, 3, 3, 4], self_pr: [0, 2, 3, 3, 4], strength: [0, 2, 2, 3, 3], weakness: [0, 2, 2, 3, 3], setback: [0, 0, 3, 3, 4],
+    team: [0, 0, 2, 3, 4], success: [0, 0, 0, 3, 3], challenge: [0, 0, 0, 3, 3], values: [0, 0, 0, 2, 3], axis: [0, 0, 0, 2, 3]
+  };
+  var PERIOD_DEPTH = [2, 2, 3, 3, 4];
+
+  function toNum(v) { if (v === '' || v == null || typeof v === 'boolean') return null; var n = Number(v); return isFinite(n) ? n : null; }
+  function levelNum(v) { var n = toNum(v); n = n == null ? NaN : Math.round(n); return n >= 1 && n <= 5 ? n : null; }
+  function levelOf(d) { return (isObj(d) && isObj(d.profile) && levelNum(d.profile.level)) || 2; }
+  function embellishOf(d) { var e = isObj(d) && isObj(d.profile) ? d.profile.embellish : ''; return e === 'fact' || e === 'boost' ? e : 'polish'; }
+  function depthOf(e) { var n = isObj(e) ? toNum(e.depth) : null; return n == null ? 0 : Math.max(0, Math.min(4, Math.round(n))); }
+  function hasMissing(c) { return Array.isArray(c.missing) && c.missing.some(function (m) { return String(m == null ? '' : m).trim(); }); }
+
+  // その枠の fit 2 以上の候補のうち、いちばん深いもの（L3以上は missing があると1段下げる）
+  function bestCand(d, key, lv, eps) {
+    var arr = Array.isArray(d.interview[key]) ? d.interview[key] : [], b = { key: key, index: -1, depth: 0, penalized: false };
+    arr.forEach(function (c, i) {
+      if (!isObj(c) || !((toNum(c.fit) || 0) >= 2)) return;
+      var dep = depthOf(eps[String(c.episode)]), pen = false;
+      if (lv >= 3 && hasMissing(c)) { pen = true; dep = Math.max(0, dep - 1); }
+      if (b.index < 0 || dep > b.depth) b = { key: key, index: i, depth: dep, penalized: pen };
+    });
+    return b;
+  }
+
+  function computeReach(data, opt) {
+    var d = normalize(data);
+    var lv = (opt && levelNum(opt.level)) || levelOf(d), li = lv - 1;
+    var eps = {};
+    d.episodes.forEach(function (e) { if (isObj(e) && e.id != null) eps[String(e.id)] = e; });
+    function realEv(a) { return (Array.isArray(a) ? a : []).filter(function (id) { return eps[String(id)]; }).length; }
+    function ratio(h, n) { return n > 0 ? Math.min(h / n, 1) : 1; }
+    var items = [], losses = [];
+    function item(key, label, w, score, have, need, extra) {
+      var it = { key: key, label: label, score: score, have: have, need: need, weight: w };
+      if (extra) Object.keys(extra).forEach(function (k) { it[k] = extra[k]; });
+      items.push(it);
+    }
+    function lose(loss, label, hint, go, key) { if (loss > 0) losses.push({ loss: loss, label: label, hint: hint, go: go, key: key }); }
+
+    // A. エピソード数
+    // A・B は AIの推測（source "ai"）以外のエピソードだけ数える
+    var counted = d.episodes.filter(function (e) { return isObj(e) && e.source !== 'ai'; });
+    var nA = REACH_NEED.A[li], hA = counted.length;
+    item('A', 'エピソード', 1, ratio(hA, nA), hA, nA);
+    lose(1 - ratio(hA, nA), 'エピソードをあと' + (nA - hA) + 'つ', '小さな出来事や、まだ話していない時期の話でもOK', 'timeline', 'A');
+
+    // B. 話した時期の数（標準5時期）
+    var nB = REACH_NEED.B[li];
+    var empty = DEFAULT_PERIODS.filter(function (p) { return !counted.some(function (e) { return e.period === p.id; }); });
+    var hB = DEFAULT_PERIODS.length - empty.length;
+    item('B', '話した時期', 1, ratio(hB, nB), hB, nB);
+    if (empty.length) lose(1 - ratio(hB, nB), 'まだ話していない時期をあと' + (nB - hB) + 'つ', '「' + empty.map(function (p) { return p.label; }).join('・') + '」の話がまだないよ', 'timeline/' + empty[0].id, 'B');
+
+    // C. 面接枠
+    var slots = {}, req = [];
+    INTERVIEW_KEYS.forEach(function (k) {
+      var key = k[0], need = SLOT_NEED[key][li], best = bestCand(d, key, lv, eps);
+      if (lv === 1 && key === 'gakuchika') { var alt = bestCand(d, 'self_pr', lv, eps); if (alt.index >= 0 && (best.index < 0 || alt.depth > best.depth)) best = alt; }
+      var needFor = need;
+      if (!needFor) for (var j = li + 1; j < 5 && !needFor; j++) needFor = SLOT_NEED[key][j];
+      if (!needFor) needFor = SLOT_NEED[key][4];
+      var sc = best.index < 0 ? 0 : ratio(best.depth, needFor);
+      slots[key] = {
+        key: key, label: k[1], need: need, needFor: needFor, have: best.depth, score: sc, pct: Math.round(sc * 100),
+        required: need > 0, hasCand: best.index >= 0, penalized: best.penalized, from: best.key,
+        go: best.index >= 0 ? 'cand/' + best.key + '/' + best.index : 'interview/' + key
+      };
+      if (need > 0) req.push(slots[key]);
+    });
+    var cSum = req.reduce(function (s, x) { return s + x.score; }, 0);
+    item('C', '面接ネタの深さ', 4, req.length ? cSum / req.length : 1, req.filter(function (x) { return x.score >= 1; }).length, req.length);
+    req.forEach(function (x) {
+      if (x.score >= 1) return;
+      var label, hint;
+      var name = lv === 1 && x.key === 'gakuchika' ? '「ガクチカ」か「自己PR」' : '「' + x.label + '」';
+      if (!x.hasCand) { label = name + 'のネタを見つける'; hint = 'まだ使える候補がないよ。AIに材料探しを頼もう'; }
+      else {
+        label = name + 'をあと' + (x.need - x.have) + '段深く';
+        hint = x.penalized ? '「足りない情報」を埋めると1段上がるよ（今は「' + DEPTH_LABEL[x.have] + '」扱い）' : '今は「' + DEPTH_LABEL[x.have] + '」。目標は「' + DEPTH_LABEL[x.need] + '」';
+      }
+      lose(4 * (1 - x.score) / req.length, label, hint, x.go, 'C.' + x.key);
+    });
+
+    // D. 強み（根拠1つ以上）／うち confidence high
+    var withEv = d.traits.strengths.filter(function (t) { return isObj(t) && realEv(t.evidence) >= 1; });
+    var hi = withEv.filter(function (t) { return t.confidence === 'high'; }).length;
+    var n1 = REACH_NEED.D1[li], n2 = REACH_NEED.D2[li], parts = [ratio(withEv.length, n1)];
+    if (n2 > 0) parts.push(ratio(hi, n2));
+    item('D', '強み（根拠つき）', 1, parts.reduce(function (s, x) { return s + x; }, 0) / parts.length, withEv.length, n1, { highHave: hi, highNeed: n2 });
+    lose((1 - parts[0]) / parts.length, '根拠のある強みをあと' + (n1 - withEv.length) + 'つ', '強みと、それが出ているエピソードをセットで', 'traits', 'D');
+    if (n2 > 0) lose((1 - parts[1]) / parts.length, '「根拠しっかり」の強みをあと' + (n2 - hi) + 'つ', '同じ強みが2つ以上のエピソードで出てくると「しっかり」になるよ', 'traits', 'D.high');
+
+    // E. 価値観・やる気の条件
+    var nE = REACH_NEED.E[li], hE = d.traits.values.filter(isObj).length + d.traits.motivators.filter(isObj).length;
+    if (nE > 0) {
+      item('E', '価値観・やる気の条件', 1, ratio(hE, nE), hE, nE);
+      lose(1 - ratio(hE, nE), '価値観・やる気の条件をあと' + (nE - hE) + 'つ', 'うれしかった時・頑張れた時の共通点を探そう', 'traits', 'E');
+    }
+    // F. 就活の軸（根拠1つ以上）
+    var nF = REACH_NEED.F[li], hF = d.axes.filter(function (a) { return isObj(a) && realEv(a.evidence) >= 1; }).length;
+    if (nF > 0) {
+      item('F', '就活の軸', 1, ratio(hF, nF), hF, nF);
+      lose(1 - ratio(hF, nF), '就活の軸をあと' + (nF - hF) + 'つ', '根拠になるエピソードとセットで', 'traits', 'F');
+    }
+    // G. 企業別ネタ
+    var nG = REACH_NEED.G[li], hG = (Array.isArray(d.outputs.companyFit) ? d.outputs.companyFit : []).filter(function (f) { return isObj(f) && f.company; }).length;
+    if (nG > 0) {
+      item('G', '企業別ネタ', 0.5, ratio(hG, nG), hG, nG);
+      lose(0.5 * (1 - ratio(hG, nG)), '企業別ネタを' + (nG - hG) + '社分つくる', '受ける企業に、刺さるエピソードを当ててもらおう', 'out/companyFit', 'G');
+    }
+
+    var W = items.reduce(function (s, x) { return s + x.weight; }, 0);
+    var got = items.reduce(function (s, x) { return s + x.weight * x.score; }, 0);
+    var gaps = losses.sort(function (a, b) { return b.loss - a.loss; }).map(function (g) {
+      return { label: g.label, hint: g.hint, go: g.go, key: g.key, gain: Math.max(1, Math.round(g.loss / W * 100)) };
+    });
+
+    // 時期ごと：その時期の深い順に必要数ぶん、目標の深さに対してどこまでか
+    var perN = Math.max(1, Math.ceil(REACH_NEED.A[li] / DEFAULT_PERIODS.length)), perD = PERIOD_DEPTH[li], periods = {};
+    d.periods.forEach(function (p) {
+      if (!isObj(p)) return;
+      var ds = d.episodes.filter(function (e) { return isObj(e) && e.period === p.id; }).map(depthOf).sort(function (a, b) { return b - a; }).slice(0, perN);
+      periods[p.id] = Math.round(ds.reduce(function (s, x) { return s + Math.min(x / perD, 1); }, 0) / perN * 100);
+    });
+
+    return {
+      level: lv, levelName: LEVELS[li].name, levelSet: !!(isObj(d.profile) && levelNum(d.profile.level)), embellish: embellishOf(d),
+      pct: W ? Math.round(got / W * 100) : 0, items: items, gaps: gaps, slots: slots, periods: periods, periodNeed: { count: perN, depth: perD }
+    };
+  }
+
+  // id の最大番号の続き（例 r3 → r4）
+  function nextId(prefix, lists) {
+    var max = 0, re = new RegExp('^' + prefix + '(\\d+)$');
+    lists.forEach(function (arr) { (Array.isArray(arr) ? arr : []).forEach(function (x) { var m = isObj(x) && re.exec(String(x.id)); if (m) max = Math.max(max, +m[1]); }); });
+    return prefix + (max + 1);
+  }
+  // requests.json 用：id で項目単位マージ（後ろが勝つ）。removeIds は消す
+  function mergeRequests(base, add, removeIds) {
+    var out = clone(Array.isArray(base) ? base.filter(isObj) : []);
+    mergeById(out, add || [], { added: [], updated: [] });
+    var rm = (removeIds || []).map(String);
+    return out.filter(function (r) { return rm.indexOf(String(r.id)) < 0; });
+  }
+
+  root.JibunCore = {
+    INTERVIEW_KEYS: INTERVIEW_KEYS, INTERVIEW_LABEL: INTERVIEW_LABEL, DEFAULT_PERIODS: DEFAULT_PERIODS,
+    TRAIT_KEYS: TRAIT_KEYS, TRAIT_LABEL: TRAIT_LABEL, OUTPUT_LABEL: OUTPUT_LABEL,
+    LEVELS: LEVELS, EMBELLISH: EMBELLISH, DEPTH_LABEL: DEPTH_LABEL, SLOT_NEED: SLOT_NEED,
+    emptyData: emptyData, normalize: normalize, stripTrailingCommas: stripTrailingCommas, parseLoose: parseLoose,
+    isPatch: isPatch, looksLikeData: looksLikeData, applyPatch: applyPatch, summarize: summarize,
+    describeFull: describeFull, hasContent: hasContent, prepareImport: prepareImport,
+    parseData: parseData, makeHandoff: makeHandoff, resolveIdCollisions: resolveIdCollisions,
+    levelOf: levelOf, embellishOf: embellishOf, computeReach: computeReach,
+    targetEpisode: targetEpisode, mergeRequests: mergeRequests, nextId: nextId
+  };
+})(typeof window !== 'undefined' ? window : globalThis);
+</script>
+<script src="sample-data.js" onerror="void 0"></script>
+<script src="prompts.enc.js" onerror="void 0"></script>
+</head>
+<body>
+<div class="app" id="app">
+  <div id="banner"></div>
+  <main id="view" tabindex="-1"></main>
+</div>
+<div class="tabbar" id="tabbar">
+  <nav aria-label="メインメニュー">
+    <button class="tab" data-go="home" data-tab="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 10.5 12 3.8l8.5 6.7V19a1.5 1.5 0 0 1-1.5 1.5h-4.2v-5.8H9.2v5.8H5A1.5 1.5 0 0 1 3.5 19z"/></svg>ホーム</button>
+    <button class="tab" data-go="timeline" data-tab="timeline"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M6 4v16"/><circle cx="6" cy="6.5" r="1.9" fill="var(--paper)"/><circle cx="6" cy="12" r="1.9" fill="var(--paper)"/><circle cx="6" cy="17.5" r="1.9" fill="var(--paper)"/><path d="M11 6.5h9M11 12h6.5M11 17.5h8"/></svg>年表</button>
+    <button class="tab" data-go="graph" data-tab="graph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 16.5c2.2 0 2.6-6 5-6s2.4 4.5 4.6 4.5S15.7 5 18.2 5 21 9 21 9"/><path d="M3 20.5h18"/></svg>グラフ</button>
+    <button class="tab" data-go="interview" data-tab="interview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true"><path d="M4 5.5h16v10.5H10l-4.5 3.5V16H4z"/><path d="M8 9.5h8M8 12.5h5" stroke-linecap="round"/></svg>面接ネタ</button>
+    <button class="tab" data-go="more" data-tab="more"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="4" y="4" width="6.5" height="6.5" rx="1.6"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.6"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.6"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.6"/></svg>もっと</button>
+  </nav>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div id="print" aria-hidden="true"></div>
+
+<script id="app-script">
+(function () {
+  'use strict';
+  var C = window.JibunCore;
+  var LS_KEY = 'jibun-note-v1';
+  var HANDOFF_HEAD = 'じぶんノートの続きをお願いします。以下が今までのデータです：';
+  var LS_TIP = 'jibun-note-tip-level';
+  var S = { data: null, mode: 'none', stack: [], scroll: {}, copies: [], openP: {}, openI: {}, importText: '', importErr: '', goalChanged: {}, goalPreview: {}, sendShown: false, tipShown: false, tipClosed: false };
+
+  // ---------- 小物 ----------
+  function $(s, r) { return (r || document).querySelector(s); }
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function nl(s) { return esc(s).replace(/\n/g, '<br>'); }
+  function num(v) { if (v === '' || v == null || typeof v === 'boolean') return null; var n = Number(v); return isFinite(n) ? n : null; }
+  function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
+  function pct(v) { var n = num(v); return n == null ? 0 : clamp(Math.round(n), 0, 100); }
+  function copyAttr(text, msg) { S.copies.push({ text: text, msg: msg || '' }); return 'data-copy="' + (S.copies.length - 1) + '"'; }
+  function trunc(s, n) { s = String(s || ''); return s.length > n ? s.slice(0, n - 1) + '…' : s; }
+  function today() { var d = new Date(); return d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2); }
+  function fmtDate(s) { var m = /^(\d{4})-(\d{2})-(\d{2})/.exec(s || ''); return m ? (+m[2]) + '/' + (+m[3]) : (s || ''); }
+  function readonly() { return S.mode === 'file'; }
+
+  var ICON = {
+    chev: '<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>',
+    right: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="arrow"><path d="M9 6l6 6-6 6"/></svg>',
+    left: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg>',
+    copy: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><rect x="8.5" y="8.5" width="11" height="11" rx="2"/><path d="M15.5 8.5V6a1.5 1.5 0 0 0-1.5-1.5H6A1.5 1.5 0 0 0 4.5 6v8A1.5 1.5 0 0 0 6 15.5h2.5"/></svg>',
+    dig: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="6"/><path d="M20 20l-4.3-4.3M11 8.5v5M8.5 11h5"/></svg>',
+    send: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h12M12 6l6 6-6 6"/></svg>',
+    in: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 19.5h14"/></svg>',
+    star: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.8l2.5 5.2 5.6.7-4.1 3.9 1 5.6L12 16.5l-5 2.7 1-5.6-4.1-3.9 5.6-.7z"/></svg>',
+    dive: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v14M6.5 11.5 12 17l5.5-5.5M5 21h14"/></svg>',
+    box: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M5 4.5h14v15H5z"/><path d="M8.5 9h7M8.5 12.5h7M8.5 16h4" stroke-linecap="round"/></svg>',
+    chat: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M4 5.5h16v10.5H10l-4.5 3.5V16H4z"/></svg>',
+    save: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v10M8 10l4 4 4-4M5 17v2.5h14V17"/></svg>',
+    print: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M7 9V4h10v5M7 17H4.5V9.5h15V17H17"/><path d="M7 14h10v6H7z"/></svg>',
+    trash: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 7h14M10 7V4.5h4V7M7 7l1 12.5h8L17 7"/></svg>',
+    file: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M6 3.5h8l4 4v13H6z"/><path d="M14 3.5v4h4"/></svg>',
+    flag: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 20.5V4"/><path d="M6 4.5c3-1.6 5.2 1.4 8.2 0s3.8-.6 3.8-.6v8.6s-1.2-.8-3.8.5-5.2-1.6-8.2 0"/></svg>',
+    merge: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 6.5h6v5h-6zM13.5 12.5h6v5h-6z"/><path d="M10.5 9h3.5a2 2 0 0 1 2 2v1.5M13.5 15H10a2 2 0 0 1-2-2v-1.5"/></svg>'
+  };
+
+  // ---------- データの読み取り ----------
+  function D() { return S.data; }
+  function periods(d) { return (d.periods && d.periods.length) ? d.periods : C.DEFAULT_PERIODS; }
+  function periodOf(d, id) { var p = periods(d).filter(function (x) { return x.id === id; })[0]; return p || { id: id, label: id || 'その他', range: '' }; }
+  function epsSorted(d) {
+    var idx = {}; periods(d).forEach(function (p, i) { idx[p.id] = i; });
+    return d.episodes.map(function (e, i) { return { e: e, i: i }; }).sort(function (a, b) {
+      var pa = idx[a.e.period] != null ? idx[a.e.period] : 99, pb = idx[b.e.period] != null ? idx[b.e.period] : 99;
+      if (pa !== pb) return pa - pb;
+      var oa = num(a.e.order), ob = num(b.e.order);
+      oa = oa == null ? 999 : oa; ob = ob == null ? 999 : ob;
+      return oa !== ob ? oa - ob : a.i - b.i;
+    }).map(function (x) { return x.e; });
+  }
+  function epById(d, id) { for (var i = 0; i < d.episodes.length; i++) if (String(d.episodes[i].id) === String(id)) return d.episodes[i]; return null; }
+  function cands(d, key) {
+    var arr = (d.interview && d.interview[key]) || [];
+    return arr.map(function (c, i) { return { c: c, i: i }; }).sort(function (a, b) { return (num(b.c.fit) || 0) - (num(a.c.fit) || 0); });
+  }
+  function fitSym(f) { f = num(f) || 0; return f >= 3 ? '◎' : f >= 2 ? '○' : f >= 1 ? '△' : '−'; }
+  function fitText(f) { f = num(f) || 0; return f >= 3 ? 'いちばんおすすめ' : f >= 2 ? '使える' : f >= 1 ? 'もう少し' : ''; }
+  function moodCls(m) { m = num(m); return m == null || m === 0 ? 'flat' : m > 0 ? 'up' : 'down'; }
+  function moodChip(m) { var n = num(m); if (n == null) return ''; return '<span class="mood ' + moodCls(n) + '" title="モチベーション">' + (n > 0 ? '+' + n : n) + '</span>'; }
+  var DEPTH_TXT = ['出来事だけ', '行動と気持ちまで', '理由と結果まで', '学びまで（面接で使える）', '最難関水準'];
+  var DEPTH_NEXT = [
+    '何をしたか・その時どう思ったか',
+    'なぜそうしたか・どうなったか',
+    '何を学んだか・別の場面でもできるか',
+    '数字・比べる基準・ほかの選択肢と選んだ理由・別の場面での再現・反論への備え'
+  ];
+  function depthN(v) { return clamp(Math.round(num(v) || 0), 0, 4); }
+  function depthMeter(v, withText) {
+    var n = depthN(v), h = '';
+    for (var i = 1; i <= 4; i++) h += '<b class="' + (i <= n ? 'on' : '') + '"></b>';
+    return '<span class="depth' + (n === 4 ? ' max' : '') + '" aria-label="掘れ具合 ' + n + '／4：' + DEPTH_TXT[n] + '">掘れ具合 <i>' + h + '</i>' + (withText && n < 4 ? '<span class="depth-txt">' + DEPTH_TXT[n] + '</span>' : '') + '</span>';
+  }
+  function aiBadge(o) {
+    if (o && o.source === 'ai') return '<span class="badge-ai" title="AIが推測して補った内容です（まだ本人が確認していません）">AIの推測</span>';
+    if (o && o.source === 'other') return '<span class="badge-other" title="他己分析で、友達や家族から聞いた話です">友達から</span>';
+    if (o && o.source === 'import') return importBadge();
+    return '';
+  }
+  function importBadge() { return '<span class="badge-import" title="過去のESや、ほかのAIとの会話から取り込んだ内容です（まだ本人が確認していません）">' + ICON.in + '取り込み・未確認</span>'; }
+  function isImportedEs(es) { return es && (es.source === 'import' || /^取り込み[：:]/.test(String(es.title || ''))); }
+
+  // ---------- 盛り（boosts） ----------
+  function boostsOf(o) { return (o && Array.isArray(o.boosts) ? o.boosts : []).filter(function (b) { return b && String(b.text || '').trim(); }); }
+  function boostBadge(o) { var n = boostsOf(o).length; return n ? '<span class="badge-boost" title="事実より大きく見せた所があります">盛りあり ×' + n + '</span>' : ''; }
+  // 本文の中の盛った表現を淡くハイライト（表示だけ。コピー・印刷は本文そのまま）
+  function boostText(text, o) {
+    text = String(text == null ? '' : text);
+    var bs = boostsOf(o), rs = [];
+    bs.forEach(function (b) { var t = String(b.text), i = text.indexOf(t); while (t && i >= 0) { rs.push([i, i + t.length, b]); i = text.indexOf(t, i + t.length); } });
+    if (!rs.length) return esc(text);
+    rs.sort(function (a, b) { return a[0] - b[0] || b[1] - a[1]; });
+    var out = '', at = 0;
+    rs.forEach(function (r) {
+      if (r[0] < at) return;
+      out += esc(text.slice(at, r[0])) + '<mark class="boost" title="' + esc('盛った所' + (r[2].fact ? '：実際は「' + r[2].fact + '」' : '')) + '">' + esc(text.slice(r[0], r[1])) + '</mark>';
+      at = r[1];
+    });
+    return out + esc(text.slice(at));
+  }
+  function boostItems(o) {
+    return '<ul>' + boostsOf(o).map(function (b) {
+      return '<li class="bst"><p class="said"><span><mark class="boost">' + esc(b.text) + '</mark></span>' + (b.type ? '<span class="chip">' + esc(b.type) + '</span>' : '') + '</p><dl>' +
+        '<dt>実際の事実</dt><dd>' + (b.fact ? nl(b.fact) : '<span class="muted">まだ書かれていません</span>') + '</dd>' +
+        '<dt>聞かれたら</dt><dd class="ans">' + (b.answer ? nl(b.answer) : '<span class="muted">答え方がまだありません。AIに聞いてみよう</span>') + '</dd></dl></li>';
+    }).join('') + '</ul>';
+  }
+  function boostSection(o) {
+    var n = boostsOf(o).length; if (!n) return '';
+    return '<div class="sec" id="boosts"><h2 class="sec-title">盛った所<small>' + n + 'か所</small></h2><p class="bst-note">突っ込まれたら「聞かれたら」の答えで返せればOK。自分の言葉で言えるか、声に出して確かめておこう</p><div class="card" style="padding:12px 16px">' + boostItems(o) + '</div></div>';
+  }
+  function boostFold(o) {
+    var n = boostsOf(o).length; if (!n) return '';
+    return '<details class="bst-fold"><summary>盛った所を見る（' + n + '）</summary>' + boostItems(o) + '</details>';
+  }
+  function boostPrint(o) {
+    var bs = boostsOf(o); if (!bs.length) return '';
+    return '<ul class="p-boost">' + bs.map(function (b) { return '<li>盛った所「' + esc(b.text) + '」→ 実際：' + esc(b.fact || '') + (b.answer ? '／聞かれたら：' + esc(b.answer) : '') + '</li>'; }).join('') + '</ul>';
+  }
+  var CONF = { high: ['high', '根拠しっかり'], mid: ['mid', '根拠1つ'], low: ['low', 'まだ仮説'] };
+  function confPill(c) { var x = CONF[c]; return x ? '<span class="conf ' + x[0] + '">' + x[1] + '</span>' : ''; }
+
+  // 到達度はノートがデータから計算する（AIの progress.overall などは使わない）
+  function reach(d, lv) { return C.computeReach(d || D(), lv ? { level: lv } : null); }
+  function lvName(n) { return C.LEVELS[n - 1].name; }
+  function slotSym(sl) { return !sl || !sl.hasCand ? '−' : sl.score >= 1 ? '◎' : sl.score >= 0.66 ? '○' : sl.score > 0 ? '△' : '−'; }
+  function gapRow(g) {
+    return '<li><button data-go="' + esc(g.go) + '"><span class="box" aria-hidden="true"></span><span><b>' + esc(g.label) + '</b><small>' + esc(g.hint) + '</small></span><span class="gr"><span class="gain" title="ここが埋まると到達度が上がる目安">+' + g.gain + '%</span>' + ICON.right + '</span></button></li>';
+  }
+  function dsteps(have, need) {
+    var h = '';
+    for (var i = 1; i <= 4; i++) h += '<i class="' + (i <= have ? 'on' + (i > need ? ' over' : '') : '') + (i <= need ? ' need' : '') + '"></i>';
+    return '<span class="dsteps" aria-hidden="true">' + h + '</span>';
+  }
+
+  // ---------- AIへの依頼文 ----------
+  function targetLabel(d, t) {
+    t = String(t == null ? '' : t);
+    if (t === '') return 'ノート全体';
+    if (t === 'axes') return '就活の軸';
+    var mi = /^interview\.([^.]+)\.(.+)$/.exec(t);
+    if (mi) { var ce = epById(d, mi[2]); return '面接ネタ『' + (C.INTERVIEW_LABEL[mi[1]] || mi[1]) + '』の候補' + (ce ? '「' + ce.title + '」' : ''); }
+    var mo = /^outputs\.(es|qa)\.(.+)$/.exec(t);
+    if (mo) { var ox = ((d.outputs || {})[mo[1]] || []).filter(function (x) { return String(x.id) === mo[2]; })[0]; return mo[1] === 'es' ? 'ES『' + (ox ? ox.title : mo[2]) + '』' : '想定問答『' + (ox ? ox.question : mo[2]) + '』'; }
+    var mt = /^traits\.([^.]+)\.(.+)$/.exec(t);
+    if (mt) { var tx = ((d.traits || {})[mt[1]] || []).filter(function (x) { return String(x.id) === mt[2]; })[0]; return (C.TRAIT_LABEL[mt[1]] || mt[1]) + '『' + (tx ? tx.name : mt[2]) + '』'; }
+    var ax = (d.axes || []).filter(function (a) { return String(a.id) === t; })[0];
+    if (ax) return '就活の軸『' + (ax.text || '') + '』';
+    if (t.indexOf('interview.') === 0) { var k = t.slice(10); return '面接ネタ『' + (C.INTERVIEW_LABEL[k] || k) + '』'; }
+    if (/^outputs\.[a-zA-Z0-9]+$/.test(t)) return C.OUTPUT_LABEL[t.slice(8)] || t;
+    var e = epById(d, t);
+    return e ? t + '『' + (e.title || '') + '』' : t;
+  }
+  function deepReq(d, target, q) {
+    q = String(q || '').trim();
+    return '深掘りしたい：' + targetLabel(d, target) + '。' + (q ? '「' + q + '」を聞いてほしい' : 'もう一段深く聞いてほしい');
+  }
+  var FIELDS = [['situation', '状況'], ['action', '行動'], ['reason', '理由'], ['feeling', '気持ち'], ['result', '結果'], ['learning', '学び']];
+  function epDeepReq(d, e) {
+    var miss = FIELDS.filter(function (f) { return !String(e[f[1] ? f[0] : ''] || '').trim(); }).map(function (f) { return f[1]; });
+    var base = '深掘りしたい：' + targetLabel(d, e.id) + '。';
+    if (miss.length) return base + 'まだ聞けていない「' + miss.join('・') + '」のところを聞いてほしい';
+    if (depthN(e.depth) >= 4) return base + '最難関水準まで来ているので、面接官の反論や意地悪な質問を想定して、答えの練習をしたい';
+    if (depthN(e.depth) >= 3 && C.levelOf(d) >= 4) return base + '最難関水準にしたい。数字・比べる基準・ほかの選択肢と選んだ理由・別の場面での再現・反論への備えを聞いてほしい';
+    return base + '面接で使えるように、具体的な数字や場面をもう少し聞いてほしい';
+  }
+  var IV_HINT = {
+    self_pr: '自分の強みがいちばん出ているエピソードを一緒に選んで、自己PRの形にしてほしい',
+    gakuchika: '大学でいちばん時間を使ったことを深掘りして、ガクチカにしてほしい',
+    setback: '今までで一番悔しかったこと・やめたくなったことを一緒に思い出したい',
+    success: 'うまくいった経験を、なぜうまくいったのかまで一緒に整理したい',
+    strength: '周りからよく言われる長所を、エピソード付きで整理してほしい',
+    weakness: '自分の短所と、それにどう向き合っているかを一緒に考えたい',
+    team: 'チームの中で自分がいつもどんな役割をしているか、一緒に振り返りたい',
+    challenge: '自分から何かに挑戦したことを思い出す手伝いをしてほしい。小さなことでもいい',
+    values: '今までのエピソードから、自分が大切にしている価値観を見つけてほしい',
+    axis: '今までの話から、自分に合う就活の軸を一緒に考えてほしい'
+  };
+  function ivReq(key) { return 'じぶんノートの続き：面接ネタ『' + C.INTERVIEW_LABEL[key] + '』の材料を探したい。' + IV_HINT[key]; }
+  var OUT_DEF = [
+    { key: 'intro1min', desc: '面接の最初に話す、約300字の台本', req: '今までのデータから、面接の最初に話す「1分自己紹介」（300字くらい）の台本を作ってほしい。本人の言葉をできるだけ残して、じぶんノートに読み込める形（outputs.intro1min）で出して' },
+    { key: 'manual', desc: '性格・強み・苦手・やる気スイッチを1枚に', req: '今までのデータから「自分の取扱説明書」（性格・強み・苦手・やる気スイッチ・付き合い方のコツ）を作ってほしい。じぶんノートに読み込める形（outputs.manual）で出して' },
+    { key: 'es', desc: '設問と文字数を伝えて、下書きを作る', req: 'ESの下書きを作ってほしい。設問は「（ここに設問）」、文字数は「（例：400字）」。今までのエピソードを使って、じぶんノートに読み込める形（outputs.es）で出して' },
+    { key: 'qa', desc: '聞かれそうな質問と、自分らしい答え', req: '今までのデータから、面接で聞かれそうな質問と答え（想定問答）を5つ作ってほしい。じぶんノートに読み込める形（outputs.qa）で出して' },
+    { key: 'otherRequest', desc: '友達に「私ってどんな人？」と聞くメッセージ', req: '友達や家族に他己分析をお願いするLINEのメッセージ文を作ってほしい。気軽に答えられる質問を3つくらい入れて、じぶんノートに読み込める形（outputs.otherRequest）で出して' },
+    { key: 'companyFit', desc: '受ける企業ごとに、刺さるエピソードを当てる', req: '' }
+  ];
+  function fitReq(company) { return '「' + company + '」を受けるなら、今までのエピソードのどれが一番刺さるか当ててほしい。理由と、話す時のポイントも。じぶんノートに読み込める形（outputs.companyFit）で出して'; }
+  // ---- 招待コード（公開版は指示文が暗号化されている。BeMeの面談で渡すコードで開く） ----
+  var BEME_URL = 'https://www.bemecareer.com/';
+  var LOCK = '\u0000LOCKED';
+  function locked() { return !(typeof window.JIBUN_STARTER === 'string' && window.JIBUN_STARTER.trim()) && !!window.JIBUN_ENC; }
+  function b64d(x) { return Uint8Array.from(atob(x), function (c) { return c.charCodeAt(0); }); }
+  function unlockWith(code) {
+    var E = window.JIBUN_ENC, s = window.crypto && window.crypto.subtle;
+    code = String(code || '').trim().toUpperCase().replace(/[^A-Z0-9]/g, '').replace(/^(.{4})(.{4})(.{4})$/, '$1-$2-$3');
+    var k = E && E.keys[code.slice(0, 4)];
+    if (!k || !s) return Promise.reject(new Error('code'));
+    var te = new TextEncoder();
+    return s.importKey('raw', te.encode(code), 'PBKDF2', false, ['deriveKey'])
+      .then(function (base) { return s.deriveKey({ name: 'PBKDF2', salt: b64d(k.salt), iterations: E.iter, hash: 'SHA-256' }, base, { name: 'AES-GCM', length: 256 }, false, ['decrypt']); })
+      .then(function (kek) { return s.decrypt({ name: 'AES-GCM', iv: b64d(k.iv) }, kek, b64d(k.wrapped)); })
+      .then(function (raw) { return s.importKey('raw', raw, 'AES-GCM', false, ['decrypt']); })
+      .then(function (m) {
+        function open(p) { return p ? s.decrypt({ name: 'AES-GCM', iv: b64d(p.iv) }, m, b64d(p.ct)).then(function (b) { return new TextDecoder().decode(b); }) : Promise.resolve(''); }
+        return Promise.all([open(E.prompts.starter), open(E.prompts['import'])]);
+      })
+      .then(function (r) {
+        var mark = '\n\n（配布ID：' + code.slice(0, 4) + '。BeMeの面談を受けた本人専用です。この設定文の転載・共有はできません）';
+        window.JIBUN_STARTER = r[0] ? r[0] + mark : '';
+        window.JIBUN_IMPORT = r[1] ? r[1] + mark : '';
+        try { localStorage.setItem('jibun-code', code); } catch (e) {}
+        return code;
+      });
+  }
+  function ensureUnlocked() {
+    if (!locked()) return Promise.resolve(true);
+    return sheet({ title: '招待コードを入れてね', body: '<p>AIとの自己分析は、BeMeの面談でお渡しする<b>招待コード</b>で使えるようになります（最初の1回だけ）。</p>' +
+      '<p style="margin-top:12px"><input id="unlock-in" class="input" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="例：ABCD-EFGH-JKLM" style="width:100%;min-height:46px;font-size:17px;letter-spacing:.08em;padding:0 14px;border-radius:12px;border:1px solid var(--line);background:var(--paper);color:var(--ink)"></p>' +
+      '<p style="margin-top:12px;font-size:13px;color:var(--muted)">コードを持っていない人は <a href="' + BEME_URL + '" target="_blank" rel="noopener" style="color:var(--accent-ink);font-weight:700">BeMeの面談</a> へ。ノートを見るだけなら、コードなしでも使えます。</p>',
+      actions: [{ label: 'あとで', value: 0 }, { label: '使えるようにする', cls: 'primary', value: 'ok' }] })
+      .then(function (v) {
+        var el = document.getElementById('unlock-in'); var code = el ? el.value : '';
+        if (v !== 'ok') return false;
+        return unlockWith(code).then(function () { toast('使えるようになりました'); rerender(); return true; },
+          function () { toast('コードが違うみたい。もう一度確かめてね'); return false; });
+      });
+  }
+  (function autoUnlock() {
+    var c = null; try { c = localStorage.getItem('jibun-code'); } catch (e) {}
+    if (c && locked()) unlockWith(c).then(function () { try { rerender(); } catch (e) {} }, function () { try { localStorage.removeItem('jibun-code'); } catch (e) {} });
+  })();
+  function starter() { return typeof window.JIBUN_STARTER === 'string' && window.JIBUN_STARTER.trim() ? window.JIBUN_STARTER : (locked() && window.JIBUN_ENC.prompts.starter ? LOCK : ''); }
+  function canStartChatGPT() { return S.mode !== 'file'; }
+  function importPrompt() { return typeof window.JIBUN_IMPORT === 'string' && window.JIBUN_IMPORT.trim() ? window.JIBUN_IMPORT : (locked() && window.JIBUN_ENC.prompts['import'] ? LOCK : ''); }
+  function importText() {
+    var t = importPrompt();
+    if (S.mode === 'local' && S.data && C.hasContent(S.data)) t += '\n以下が今までのデータです：' + JSON.stringify(C.makeHandoff(S.data));
+    return t;
+  }
+  function importBtn(cls) {
+    if (S.mode !== 'file' && !importPrompt()) return '<button class="btn block ' + (cls || '') + '" disabled aria-disabled="true" style="opacity:.55">' + ICON.merge + '他のAIから取り込む（準備中）</button>';
+    return '<button class="btn block ' + (cls || '') + '" data-act="importAI">' + ICON.merge + '他のAIから取り込む</button>';
+  }
+  function handoffText() {
+    var code = JSON.stringify(C.makeHandoff(D()));
+    var st = S.mode === 'file' ? '' : starter();
+    return st ? st + '\n以下が今までのデータです：' + code : HANDOFF_HEAD + code;
+  }
+  function startBtn(cls) {
+    if (!canStartChatGPT()) return '';
+    if (!starter()) return '<button class="btn block ' + (cls || '') + '" disabled aria-disabled="true" style="opacity:.55">ChatGPTではじめる（準備中）</button>';
+    return '<button class="btn block ' + (cls || '') + '" data-act="startGPT">' + ICON.chat + 'ChatGPTではじめる</button>';
+  }
+  function openGPTSheet(title, body) {
+    return sheet({ title: title, body: body + '<p style="margin-top:14px"><a class="btn primary block" href="https://chatgpt.com/" target="_blank" rel="noopener" data-close="1">ChatGPTを開く ↗</a></p>', actions: [{ label: 'もう一度コピー', value: 'again' }, { label: '閉じる', value: 0 }] });
+  }
+
+  // ---------- 照合（checks） ----------
+  var CHECK_KIND = {
+    conflict: ['食い違い', '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4v16M17 4v16M4 9h6M14 15h6"/></svg>', 'w'],
+    unconfirmed: ['未確認', '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M9.6 9.6a2.5 2.5 0 1 1 3.4 2.3c-.6.3-1 .8-1 1.5v.4M12 16.8v.1"/></svg>', ''],
+    duplicate: ['重複かも', '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="11" height="11" rx="2"/><rect x="9" y="9" width="11" height="11" rx="2"/></svg>', ''],
+    boost: ['盛りの確認', '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5h16"/><path d="M14.5 4.5l5 5L10 19H5v-5z"/></svg>', 'h']
+  };
+  function openChecks(d) { return ((d || D()).checks || []).filter(function (c) { return c && c.done !== true; }); }
+  function checkBadge(id) {
+    var n = openChecks().filter(function (c) { return (c.targets || []).map(String).indexOf(String(id)) >= 0; }).length;
+    return n ? '<span class="badge-check" title="AIが本人に確かめたいことがあります">確認待ち' + (n > 1 ? ' ' + n : '') + '</span>' : '';
+  }
+  function checkRow(c) {
+    var k = CHECK_KIND[c.kind] || ['確認', CHECK_KIND.unconfirmed[1], ''], d = D();
+    var tg = (c.targets || []).filter(function (id) { return epById(d, id); });
+    return '<div class="ck"><span class="ck-ic ' + k[2] + '">' + k[1] + '</span><span><span class="ck-k">' + esc(k[0]) + '</span><b>' + esc(c.question || '') + '</b>' +
+      (tg.length ? '<span class="chips" style="margin-top:6px">' + tg.map(function (id) { return '<button class="chip ac" data-go="ep/' + esc(id) + '">' + esc(trunc(epById(d, id).title, 14)) + '</button>'; }).join('') + '</span>' : '') +
+      (c.done && c.answer ? '<span class="ck-a">→ ' + esc(c.answer) + '</span>' : '') + '</span></div>';
+  }
+  function handoffLabel() { var n = openChecks().length; return 'AIに続きを頼む' + (n ? '（確認' + n + '件あり）' : ''); }
+
+  // ---------- 依頼（requests） ----------
+  var LS_CCREQ = 'jibun-note-cc-requests';
+  var REQ_CHIPS = ['もっと深掘りしたい', 'ここ事実と違う', 'もっと盛って', '言い方を変えたい'];
+  function ccLocal() { try { var a = JSON.parse(localStorage.getItem(LS_CCREQ) || '[]'); return Array.isArray(a) ? a : []; } catch (e) { return []; } }
+  function ccSaveLocal(a) { try { localStorage.setItem(LS_CCREQ, JSON.stringify(a)); } catch (e) { /* なし */ } }
+  // 表示用：Claude Code版は data の requests ＋ ローカルの未取り込み分
+  function allRequests() {
+    var d = D(), base = (d.requests || []).filter(Boolean);
+    if (!readonly()) return base;
+    var ids = base.map(function (r) { return String(r.id); });
+    var loc = ccLocal().filter(function (r) { return ids.indexOf(String(r.id)) < 0; });
+    if (loc.length !== ccLocal().length) ccSaveLocal(loc); // 取り込まれた分はローカルから消す
+    return base.concat(loc.map(function (r) { var x = JSON.parse(JSON.stringify(r)); x._local = true; return x; }));
+  }
+  function openRequests() { return allRequests().filter(function (r) { return r.done !== true; }); }
+  function askBtn(target, label) { return '<button class="mini-btn ask" data-act="ask" data-t="' + esc(target) + '">' + ICON.chat + esc(label || 'AIに頼む') + '</button>'; }
+  function askSheet(target) {
+    var d = D();
+    var body = '<p class="small muted" style="margin-bottom:10px">対象：' + esc(targetLabel(d, target)) + '</p><div class="chips" style="margin-bottom:10px">' +
+      REQ_CHIPS.map(function (c) { return '<button class="chip req-chip" type="button" data-chip="' + esc(c) + '">' + esc(c) + '</button>'; }).join('') + '</div>' +
+      '<label class="sr" for="req-text">AIへの依頼</label><textarea id="req-text" class="paste" style="min-height:110px" placeholder="例：監督とのやりとりを、もっと掘りたい"></textarea>' +
+      '<p class="small muted" style="margin-top:8px">' + (readonly() ? '保存すると、Claude Codeが次に読む場所に置きます。' : '保存すると、次に「AIに続きを頼む」で一緒に渡るよ。') + '</p>';
+    var sp = sheet({ title: 'AIに頼む', body: body, actions: [{ label: 'やめる', value: 0 }, { label: '保存する', cls: 'primary', value: 1 }] });
+    setTimeout(function () {
+      var ta = $('#req-text'); if (!ta) return;
+      document.querySelectorAll('.req-chip').forEach(function (b) { b.addEventListener('click', function () { var c = b.getAttribute('data-chip'); ta.value = ta.value.trim() ? ta.value.replace(/\s*$/, '。' + c) : c; ta.focus(); }); });
+    }, 0);
+    sp.then(function (v) {
+      var ta = $('#req-text'), text = ta ? ta.value.trim() : '';
+      if (!v) return;
+      if (!text) { toast('依頼の内容を書いてね'); return; }
+      addRequest(target, text);
+    });
+  }
+  function addRequest(target, text) {
+    var d = D(), r = { id: '', target: target, text: text, createdAt: today(), done: false, doneAt: '', result: '' };
+    if (readonly()) {
+      var loc = ccLocal();
+      r.id = C.nextId('r', [d.requests, loc, S.ccFileReqs || []]);
+      loc.push(r); ccSaveLocal(loc);
+      sendToClaudeCode();
+    } else {
+      if (!Array.isArray(d.requests)) d.requests = [];
+      r.id = C.nextId('r', [d.requests]);
+      d.requests.push(r); save();
+      toast('依頼を保存したよ。「AIに続きを頼む」で一緒に渡ります');
+    }
+    rerender();
+  }
+  function delRequest(id) {
+    if (readonly()) {
+      ccSaveLocal(ccLocal().filter(function (r) { return String(r.id) !== String(id); }));
+      sendToClaudeCode([id]);
+    } else {
+      D().requests = (D().requests || []).filter(function (r) { return String(r.id) !== String(id); }); save();
+      toast('依頼を消しました');
+    }
+    rerender();
+  }
+
+  // Claude Code版：data/requests.json に書く（File System Access API）。書けない時はダウンロード
+  var IDB = { db: 'jibun-note', store: 'handles', key: 'cc-dir' };
+  function idb(mode, fn) {
+    return new Promise(function (res, rej) {
+      if (!window.indexedDB) return rej(new Error('no idb'));
+      var rq = indexedDB.open(IDB.db, 1);
+      rq.onupgradeneeded = function () { rq.result.createObjectStore(IDB.store); };
+      rq.onerror = function () { rej(rq.error); };
+      rq.onsuccess = function () { var tx = rq.result.transaction(IDB.store, mode), st = tx.objectStore(IDB.store), r = fn(st); tx.oncomplete = function () { res(r && r.result); }; tx.onerror = function () { rej(tx.error); }; };
+    });
+  }
+  function dataDir() {
+    function useHandle(h) {
+      return (h.queryPermission ? h.queryPermission({ mode: 'readwrite' }) : Promise.resolve('granted')).then(function (p) {
+        return p === 'granted' ? p : h.requestPermission({ mode: 'readwrite' });
+      }).then(function (p) {
+        if (p !== 'granted') throw new Error('denied');
+        return h.name === 'data' ? h : h.getDirectoryHandle('data', { create: true });
+      });
+    }
+    return idb('readonly', function (st) { return st.get(IDB.key); }).catch(function () { return null; }).then(function (h) {
+      if (h) return useHandle(h);
+      return window.showDirectoryPicker({ id: 'jibun-note', mode: 'readwrite' }).then(function (nh) {
+        return idb('readwrite', function (st) { return st.put(nh, IDB.key); }).catch(function () { /* 保存できなくても続ける */ }).then(function () { return useHandle(nh); });
+      });
+    });
+  }
+  function sendToClaudeCode(removeIds) {
+    var loc = ccLocal();
+    if (!window.showDirectoryPicker) return downloadRequests(loc);
+    dataDir().then(function (dir) {
+      return dir.getFileHandle('requests.json', { create: true }).then(function (fh) {
+        return fh.getFile().then(function (f) { return f.text(); }).then(function (txt) {
+          var cur = []; try { var o = JSON.parse(txt || '{}'); cur = Array.isArray(o.requests) ? o.requests : []; } catch (e) { cur = []; }
+          var merged = C.mergeRequests(cur, loc, removeIds);
+          S.ccFileReqs = merged;
+          return fh.createWritable().then(function (w) { return w.write(JSON.stringify({ requests: merged }, null, 2) + '\n').then(function () { return w.close(); }); });
+        });
+      });
+    }).then(function () {
+      sheet({ title: removeIds ? '依頼を消しました' : 'Claude Codeに依頼を置きました', body: '<p><code>data/requests.json</code> に書きました。Claude Codeに「ノートの依頼を見て」と言ってね。</p><div class="cc-box">ノートの依頼を見て</div>', actions: [{ label: 'この文をコピー', value: 'copy' }, { label: 'OK', cls: 'primary', value: 1 }] })
+        .then(function (v) { if (v === 'copy') copyText('ノートの依頼を見て'); });
+    }, function () { downloadRequests(loc); });
+  }
+  function downloadRequests(loc) {
+    var blob = new Blob([JSON.stringify({ requests: loc }, null, 2) + '\n'], { type: 'application/json' });
+    var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'jibun-requests.json';
+    document.body.appendChild(a); a.click(); setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+    sheet({ title: '依頼をファイルで保存しました', body: '<p>このブラウザではフォルダに直接書けないので、<b>jibun-requests.json</b> をダウンロードしました。</p><div class="cc-box">Claude Code に『ノートの依頼を見て』と言ってね（ダウンロードフォルダも探します）</div>', actions: [{ label: '「ノートの依頼を見て」をコピー', value: 'copy' }, { label: 'OK', cls: 'primary', value: 1 }] })
+      .then(function (v) { if (v === 'copy') copyText('ノートの依頼を見て'); });
+  }
+
+  // ---------- 保存 ----------
+  function save() {
+    if (S.mode !== 'local') return;
+    try { localStorage.setItem(LS_KEY, JSON.stringify(S.data)); } catch (e) { toast('この端末に保存できませんでした'); }
+  }
+  function loadLocal() {
+    try { var t = localStorage.getItem(LS_KEY); return t ? C.normalize(JSON.parse(t)) : null; } catch (e) { return null; }
+  }
+
+  // ---------- トースト・シート ----------
+  var toastTimer;
+  function toast(msg) {
+    var t = $('#toast'); t.textContent = msg; t.classList.add('show');
+    clearTimeout(toastTimer); toastTimer = setTimeout(function () { t.classList.remove('show'); }, 2200);
+  }
+  function sheet(o) {
+    return new Promise(function (resolve) {
+      var sc = document.createElement('div');
+      sc.className = 'scrim';
+      sc.innerHTML = '<div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sh-t"><div class="grab"></div><h2 id="sh-t">' + esc(o.title) + '</h2>' +
+        (o.body ? '<div class="body">' + o.body + '</div>' : '') +
+        '<div class="btn-row">' + (o.actions || []).map(function (a, i) { return '<button class="btn ' + (a.cls || '') + '" data-i="' + i + '">' + esc(a.label) + '</button>'; }).join('') + '</div></div>';
+      document.body.appendChild(sc);
+      var prev = document.activeElement;
+      requestAnimationFrame(function () { sc.classList.add('show'); var b = sc.querySelector('.btn.primary,.btn.danger') || sc.querySelector('.btn'); if (b) b.focus(); });
+      function close(v) {
+        sc.classList.remove('show');
+        document.removeEventListener('keydown', onKey);
+        setTimeout(function () { sc.remove(); if (prev && prev.focus) prev.focus(); }, 240);
+        resolve(v);
+      }
+      function onKey(e) { if (e.key === 'Escape') close(null); }
+      document.addEventListener('keydown', onKey);
+      sc.addEventListener('click', function (e) {
+        if (e.target === sc) return close(null);
+        if (e.target.closest('a[data-close]')) { close(null); return; }
+        var b = e.target.closest('[data-i]');
+        if (b) close(o.actions[+b.getAttribute('data-i')].value);
+      });
+    });
+  }
+  function copyText(text, msg) {
+    function ok() { toast(msg || 'コピーしました'); }
+    function fallback() {
+      var ta = document.createElement('textarea');
+      ta.value = text; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.top = '0'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.focus(); ta.select(); ta.setSelectionRange(0, text.length);
+      var r = false; try { r = document.execCommand('copy'); } catch (e) { r = false; }
+      ta.remove();
+      if (r) ok(); else toast('コピーできませんでした。長押しでコピーしてね');
+    }
+    if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(text).then(ok, fallback);
+    else fallback();
+  }
+
+  // ---------- 共通パーツ ----------
+  function subhead(right) { return '<div class="subhead"><button class="back" data-act="back">' + ICON.left + '戻る</button>' + (right || '') + '</div>'; }
+  function pagehead(t, sub) { return '<header class="pagehead"><h1>' + t + '</h1>' + (sub ? '<p>' + sub + '</p>' : '') + '</header>'; }
+  function digBtn(text, label) { return '<button class="mini-btn" ' + copyAttr(text, 'コピーしました。AIとのチャットに貼り付けてね') + '>' + ICON.dig + esc(label || 'ここを深掘り') + '</button>'; }
+  function ringSVG(p, size, stroke) {
+    var r = (size - stroke) / 2, c = 2 * Math.PI * r, h = size / 2;
+    return '<svg width="' + size + '" height="' + size + '" viewBox="0 0 ' + size + ' ' + size + '" aria-hidden="true"><circle class="ring-bg" cx="' + h + '" cy="' + h + '" r="' + r + '" fill="none" stroke-width="' + stroke + '"/>' +
+      '<circle class="ring-fg" cx="' + h + '" cy="' + h + '" r="' + r + '" fill="none" stroke-width="' + stroke + '" stroke-linecap="round" transform="rotate(-90 ' + h + ' ' + h + ')" stroke-dasharray="' + c.toFixed(2) + '" stroke-dashoffset="' + c.toFixed(2) + '" data-off="' + (c * (1 - p / 100)).toFixed(2) + '"/></svg>';
+  }
+  function bar(p) { return '<div class="bar" role="presentation"><i data-w="' + pct(p) + '"></i></div>'; }
+  function viewWidth() { var v = $('#view'); var w = v ? v.clientWidth : 360; var cs = v ? getComputedStyle(v) : null; return w - (cs ? parseFloat(cs.paddingLeft) + parseFloat(cs.paddingRight) : 36); }
+
+  // ---------- モチベーショングラフ ----------
+  function graphSVG(d, o) {
+    var eps = epsSorted(d).filter(function (e) { return num(e.motivation) != null; });
+    var n = eps.length; if (!n) return '';
+    var W = Math.round(o.w), H = o.h, mini = !!o.mini;
+    var L = mini ? 4 : 26, R = mini ? 4 : 8, T = mini ? 8 : 30, B = mini ? 6 : 42;
+    var pw = W - L - R, ph = H - T - B, step = pw / n;
+    function X(i) { return L + (i + 0.5) * step; }
+    var inner = mini ? 0 : 22; // 谷のラベルが時期名とぶつからないよう、下に余白を取る
+    function Y(m) { return T + (5 - clamp(m, -5, 5)) / 10 * (ph - inner); }
+    var pts = eps.map(function (e, i) { return [X(i), Y(num(e.motivation)), e]; });
+    var zy = Y(0), id = o.id || 'g', s = '';
+    s += '<svg class="gsvg" viewBox="0 0 ' + W + ' ' + H + '" width="' + W + '" height="' + H + '" role="img" aria-label="モチベーショングラフ（' + n + '個のエピソード）">';
+    s += '<defs><clipPath id="' + id + 'u"><rect x="0" y="0" width="' + W + '" height="' + zy + '"/></clipPath><clipPath id="' + id + 'd"><rect x="0" y="' + zy + '" width="' + W + '" height="' + (H - zy) + '"/></clipPath></defs>';
+    if (!mini) {
+      var groups = [];
+      eps.forEach(function (e, i) { var g = groups[groups.length - 1]; if (g && g.p === e.period) g.end = i; else groups.push({ p: e.period, start: i, end: i }); });
+      groups.forEach(function (g, gi) {
+        var x0 = L + g.start * step, x1 = L + (g.end + 1) * step, pe = periodOf(d, g.p);
+        if (gi % 2 === 0) s += '<rect class="g-band" x="' + x0 + '" y="' + T + '" width="' + (x1 - x0) + '" height="' + ph + '" rx="3"/>';
+        var lab = (x1 - x0) < 34 ? pe.label.slice(0, 2) : pe.label;
+        s += '<text class="g-plabel" x="' + ((x0 + x1) / 2) + '" y="' + (H - B + 18) + '" text-anchor="middle">' + esc(lab) + '</text>';
+        if (x1 - x0 > 46 && pe.range) s += '<text class="g-prange" x="' + ((x0 + x1) / 2) + '" y="' + (H - B + 32) + '" text-anchor="middle">' + esc(pe.range) + '</text>';
+      });
+      [5, -5].forEach(function (m) { s += '<line class="g-grid" x1="' + L + '" x2="' + (W - R) + '" y1="' + Y(m) + '" y2="' + Y(m) + '" opacity=".6"/>'; });
+      s += '<text class="g-axis" x="' + (L - 6) + '" y="' + (Y(5) + 3.5) + '" text-anchor="end">+5</text>';
+      s += '<text class="g-axis" x="' + (L - 6) + '" y="' + (zy + 3.5) + '" text-anchor="end">0</text>';
+      s += '<text class="g-axis" x="' + (L - 6) + '" y="' + (Y(-5) + 3.5) + '" text-anchor="end">−5</text>';
+    }
+    s += '<line class="g-zero" x1="' + L + '" x2="' + (W - R) + '" y1="' + zy + '" y2="' + zy + '"/>';
+    // なめらかな線
+    // 単調な3次曲線（点を行き過ぎない、なめらかな線）
+    var path = 'M' + pts[0][0].toFixed(1) + ',' + pts[0][1].toFixed(1);
+    var ds = [], tg = [];
+    for (var i = 0; i < n - 1; i++) ds.push((pts[i + 1][1] - pts[i][1]) / (pts[i + 1][0] - pts[i][0]));
+    for (i = 0; i < n; i++) {
+      if (i === 0) tg.push(n > 1 ? ds[0] / 2 : 0);
+      else if (i === n - 1) tg.push(ds[n - 2] / 2);
+      else tg.push(ds[i - 1] * ds[i] <= 0 ? 0 : 2 / (1 / ds[i - 1] + 1 / ds[i]));
+    }
+    for (i = 0; i < n - 1; i++) {
+      var p1 = pts[i], p2 = pts[i + 1], hh = (p2[0] - p1[0]) / 3;
+      path += ' C' + (p1[0] + hh).toFixed(1) + ',' + (p1[1] + tg[i] * hh).toFixed(1) + ' ' + (p2[0] - hh).toFixed(1) + ',' + (p2[1] - tg[i + 1] * hh).toFixed(1) + ' ' + p2[0].toFixed(1) + ',' + p2[1].toFixed(1);
+    }
+    var area = path + ' L' + pts[n - 1][0].toFixed(1) + ',' + zy + ' L' + pts[0][0].toFixed(1) + ',' + zy + ' Z';
+    s += '<path class="g-up" d="' + area + '" clip-path="url(#' + id + 'u)"/><path class="g-down" d="' + area + '" clip-path="url(#' + id + 'd)"/>';
+    s += '<path class="g-line' + (o.animate ? ' g-draw' : '') + '" d="' + path + '" pathLength="1"' + (mini ? ' style="stroke-width:1.8"' : '') + '/>';
+    if (mini) { pts.forEach(function (p) { var m = num(p[2].motivation); if (Math.abs(m) >= 4) s += '<circle cx="' + p[0] + '" cy="' + p[1] + '" r="2.6" class="' + (m > 0 ? 'g-dotu' : 'g-dotd') + '" fill="' + (m > 0 ? 'var(--accent)' : 'var(--warm)') + '"/>'; }); return s + '</svg>'; }
+    // 山・谷のラベル
+    var labels = pickExtremes(eps);
+    labels.forEach(function (l) {
+      var p = pts[l.i], up = l.type === 'up', x = p[0], anchor = 'middle', txt = trunc(p[2].title, 9);
+      var half = txt.length * 5.6;
+      if (x - half < 2) anchor = 'start', x = Math.max(2, x - 8);
+      else if (x + half > W - 2) anchor = 'end', x = Math.min(W - 2, x + 8);
+      var y = up ? p[1] - 11 : p[1] + 20;
+      s += '<text class="g-lab g-fade ' + (up ? 'up' : 'down') + '" x="' + x.toFixed(1) + '" y="' + y.toFixed(1) + '" text-anchor="' + anchor + '">' + esc(txt) + '</text>';
+    });
+    pts.forEach(function (p) {
+      var e = p[2], m = num(e.motivation);
+      s += '<g class="pt" role="button" tabindex="0" data-go="ep/' + esc(e.id) + '" aria-label="' + esc((e.when || periodOf(d, e.period).label) + '：' + e.title + '（' + (m > 0 ? '+' + m : m) + '）') + '">' +
+        '<circle class="hit" cx="' + p[0].toFixed(1) + '" cy="' + p[1].toFixed(1) + '" r="' + Math.max(10, Math.min(16, step / 2 + 2)).toFixed(1) + '"/>' +
+        '<circle class="dot ' + moodCls(m) + '" cx="' + p[0].toFixed(1) + '" cy="' + p[1].toFixed(1) + '" r="4.6"/></g>';
+    });
+    return s + '</svg>';
+  }
+  function pickExtremes(eps) {
+    var n = eps.length, m = eps.map(function (e) { return num(e.motivation); }), peaks = [], vals = [];
+    for (var i = 0; i < n; i++) {
+      var l = i > 0 ? m[i - 1] : -Infinity, r = i < n - 1 ? m[i + 1] : -Infinity;
+      if (m[i] >= 2 && m[i] >= l && m[i] >= r) peaks.push(i);
+      var l2 = i > 0 ? m[i - 1] : Infinity, r2 = i < n - 1 ? m[i + 1] : Infinity;
+      if (m[i] <= -2 && m[i] <= l2 && m[i] <= r2) vals.push(i);
+    }
+    var gap = n > 12 ? 4 : n > 6 ? 3 : 2;
+    function pick(list, sign) {
+      list.sort(function (a, b) { return sign * (m[b] - m[a]) || a - b; });
+      var out = [];
+      list.forEach(function (i) { if (out.length < 3 && out.every(function (j) { return Math.abs(i - j) >= gap; })) out.push(i); });
+      return out;
+    }
+    return pick(peaks, 1).map(function (i) { return { i: i, type: 'up' }; }).concat(pick(vals, -1).map(function (i) { return { i: i, type: 'down' }; }));
+  }
+
+  // ---------- 画面：初回 ----------
+  function vWelcome() {
+    var hasSample = !!window.JIBUN_SAMPLE;
+    var demo = '<svg viewBox="0 0 320 120" aria-hidden="true"><path d="M10 80 C40 80 45 40 70 40 S100 100 125 100 S160 20 190 22 S220 90 245 88 S285 30 310 34" fill="none" stroke="var(--ink2)" stroke-width="2.2" stroke-linecap="round" class="g-draw" pathLength="1"/>' +
+      '<line x1="10" x2="310" y1="62" y2="62" class="g-zero"/>' +
+      '<circle cx="70" cy="40" r="4.5" fill="var(--accent)"/><circle cx="125" cy="100" r="4.5" fill="var(--warm)"/><circle cx="190" cy="22" r="4.5" fill="var(--accent)"/><circle cx="245" cy="88" r="4.5" fill="var(--warm)"/><circle cx="310" cy="34" r="4.5" fill="var(--accent)"/>' +
+      '<text x="190" y="12" text-anchor="middle" class="g-lab up g-fade">文化祭で1位</text><text x="125" y="118" text-anchor="middle" class="g-lab down g-fade">受験に失敗</text></svg>';
+    return '<section class="welcome">' +
+      '<p class="eyebrow">就活の自己分析ノート</p>' +
+      '<h1 class="logo">じぶんノート</h1>' +
+      '<p class="tag">AIとの自己分析で話したことが、<br>見返せる「自分のノート」になる。</p>' +
+      '<div class="card preview">' + demo + '<p class="small muted" style="margin-top:6px">モチベーショングラフ・年表・面接ネタ帳が、自動でできあがります。</p></div>' +
+      '<div class="btn-row" style="flex-direction:column">' +
+      (canStartChatGPT() && starter() ? startBtn('primary') : startBtn()) +
+      '<button class="btn block' + (starter() ? '' : ' primary') + '" data-go="import">' + ICON.in + 'AIの出力を貼り付け</button>' +
+      (hasSample ? '<button class="btn block" data-act="sample">サンプルを見る（架空の大学3年生）</button>' : '') +
+      '</div>' +
+      (importPrompt() ? '<button class="textlink" data-act="importAI">過去のESや、ほかのAIとの会話から取り込む ›</button>' : '<button class="textlink" disabled>過去のESや、ほかのAIとの会話から取り込む（準備中）</button>') +
+      '<div class="sec"><h2 class="sec-title">使い方</h2><ol class="steps card">' +
+      '<li><b>「ChatGPTではじめる」を押す</b><span>はじめるプロンプトがコピーされます。ChatGPT（無料でOK）の新しいチャットに貼って送信。</span></li>' +
+      '<li><b>AIと自己分析ラリーをする</b><span>子どもの頃から今までのことを、1問ずつ答えていきます。区切りでAIが「セーブデータ」を出してくれます。</span></li>' +
+      '<li><b>「AIの出力を貼り付け」で読み込む</b><span>前後の文章ごと貼ってOK。貼るたびに、ノートが少しずつ育っていきます。</span></li>' +
+      '<li><b>続きは「AIに続きを頼む」</b><span>今までのデータごとコピーされるので、新しいチャットでも続きから話せます。</span></li>' +
+      '</ol></div>' +
+      '<p class="small muted" style="margin-top:14px;text-align:center">データはこの端末の中だけに保存されます。</p>' +
+      '<p class="foot-note">made by BeMe</p></section>';
+  }
+
+  // ---------- 画面：ホーム ----------
+  function showLevelTip(R) {
+    if (R.levelSet || S.tipClosed) return false;
+    if (S.tipShown) return true;
+    var seen = false; try { seen = localStorage.getItem(LS_TIP) === '1'; localStorage.setItem(LS_TIP, '1'); } catch (e) { /* なし */ }
+    if (seen) return false;
+    S.tipShown = true; return true;
+  }
+  function vHome() {
+    var d = D(), R = reach(d), p = d.profile || {};
+    var nEp = d.episodes.length;
+    var nCat = C.INTERVIEW_KEYS.filter(function (k) { return (d.interview[k[0]] || []).length; }).length;
+    var nDeep = d.deepDive.filter(function (x) { return !x.done; }).length;
+    var tg = p.targets || {};
+    var chips = (tg.industries || []).map(function (x) { return '<span class="chip ac">' + esc(x) + '</span>'; }).join('') + (tg.jobs || []).map(function (x) { return '<span class="chip">' + esc(x) + '</span>'; }).join('');
+    var meta = [p.university, p.faculty, p.grad].filter(Boolean).map(function (x) { return '<span style="white-space:nowrap">' + esc(x) + '</span>'; }).join(' ');
+    var pill = R.levelSet ? '<button class="lvl-pill" data-go="goal">' + ICON.flag + '目標：レベル' + R.level + ' ' + esc(R.levelName) + '</button>'
+      : '<button class="lvl-pill unset" data-go="goal">' + ICON.flag + '目標：まだ決めてない</button>';
+    var h = '<div class="top"><span class="brand">じぶんノート</span>' + (d.updatedAt ? '<time datetime="' + esc(d.updatedAt) + '">' + fmtDate(d.updatedAt) + ' 更新</time>' : '') + '</div>';
+    h += '<section class="card hero"><div class="hero-main"><h1 class="name">' + esc(p.name || 'わたし') + '<span>のノート</span></h1>' + (meta ? '<p class="meta">' + meta + '</p>' : '') + (chips ? '<div class="chips">' + chips + '</div>' : '') + '</div>' +
+      '<button class="ringbox" data-go="goal" aria-label="到達度 ' + R.pct + '%（レベル' + R.level + 'の基準）。タップで目標と盛り方を変える">' + ringSVG(R.pct, 96, 8) + '<div class="ring-num"><b>' + R.pct + '<small>%</small></b><span>到達度</span><em>L' + R.level + 'の基準</em></div></button><div class="lvl-row">' + pill + '</div></section>';
+    if (showLevelTip(R)) h += '<div class="tipline"><button data-go="goal">目標レベルを決めると、％の基準が合います<b>決める ›</b></button><button class="x" data-act="tipClose" aria-label="この案内を閉じる">×</button></div>';
+    if (p.goal) h += '<p class="goal">' + esc(p.goal) + '</p>';
+    var next = (d.progress && d.progress.nextStep) || 'AIとの自己分析を続けて、エピソードを増やしていこう';
+    h += '<section class="card next" style="margin-top:16px"><p class="eyebrow">次にやること</p><p class="next-text">' + esc(next) + '</p>' +
+      '<button class="btn primary block" data-act="handoff">' + ICON.send + esc(handoffLabel()) + '</button>' +
+      '<div class="next-sub">' + askBtn('', 'ノート全体についてAIに頼む') + '</div></section>';
+    var nCk = openChecks(d).length, nRq = openRequests().length;
+    if (nCk || nRq) h += '<div class="pend">' + (nCk ? '<button data-go="checks"><span class="ck-ic w">' + CHECK_KIND.conflict[1] + '</span>確認待ち <b>' + nCk + '</b></button>' : '') + (nRq ? '<button data-go="requests"><span class="ck-ic">' + ICON.chat + '</span>AIへの依頼 <b>' + nRq + '</b></button>' : '') + '</div>';
+    h += '<div class="sec"><h2 class="sec-title"><span>足りないもの <small>レベル' + R.level + 'まで</small></span>' + (R.gaps.length ? '<button class="link" data-go="reach">ぜんぶ見る ›</button>' : '') + '</h2>' +
+      (R.gaps.length ? '<div class="card gaps"><ul>' + R.gaps.slice(0, 4).map(gapRow).join('') + '</ul></div>'
+        : '<div class="card"><p class="gaps-done">レベル' + R.level + 'の基準は、ぜんぶそろったよ。' + (R.level < 5 ? 'もう一段上を目指すなら、目標を上げてみよう。' : '') + '</p>' + (R.level < 5 ? '<button class="mini-btn" data-go="goal">' + ICON.flag + '目標を変える</button>' : '') + '</div>') + '</div>';
+    h += '<div class="stats">' +
+      '<button class="stat" data-go="timeline"><b>' + nEp + '</b><span>エピソード</span></button>' +
+      '<button class="stat" data-go="interview"><b>' + nCat + '<small>/10</small></b><span>面接ネタ</span></button>' +
+      '<button class="stat" data-go="deep"><b>' + nDeep + '</b><span>深掘り待ち</span></button></div>';
+    if (nEp) h += '<div class="sec"><button class="card minigraph" data-go="graph" aria-label="モチベーショングラフを開く"><div class="mg-head"><b>モチベーショングラフ</b><span>くわしく見る ›</span></div>' + graphSVG(d, { w: viewWidth() - 30, h: 70, mini: true, animate: true, id: 'mg' }) + '</button></div>';
+    h += '<div class="sec"><h2 class="sec-title">時期ごとの進み具合<button class="link" data-go="timeline">年表へ ›</button></h2><div class="card">' +
+      periods(d).map(function (pe) { var v = R.periods[pe.id] || 0; return '<div class="prow"><span>' + esc(pe.label) + '</span>' + bar(v) + '<span class="pv">' + v + '%</span></div>'; }).join('') +
+      '<p class="small muted" style="margin-top:6px">各時期に「' + esc(C.DEPTH_LABEL[R.periodNeed.depth]) + '」の話が' + R.periodNeed.count + 'つあると100%</p></div></div>';
+    h += '<div class="sec"><h2 class="sec-title">面接ネタの進み具合<button class="link" data-go="interview">ネタ帳へ ›</button></h2><div class="card"><div class="pgrid">' +
+      C.INTERVIEW_KEYS.map(function (k) { var sl = R.slots[k[0]]; return '<button class="prow' + (sl.required ? '' : ' opt') + '" data-go="interview/' + k[0] + '"' + (sl.required ? '' : ' style="opacity:.55"') + '><span>' + k[1] + '</span><span class="pv">' + sl.pct + '%</span>' + bar(sl.pct) + '</button>'; }).join('') + '</div>' +
+      '<p class="small muted" style="margin-top:8px">必要な深さに対して、今どこまで掘れているか' + (C.INTERVIEW_KEYS.some(function (k) { return !R.slots[k[0]].required; }) ? '。うすい枠は、今の目標では無くてもOK' : '') + '</p></div></div>';
+    var logs = (d.log || []).slice().sort(function (a, b) { return String(b.date || '').localeCompare(String(a.date || '')); }).slice(0, 4);
+    if (logs.length) h += '<div class="sec"><h2 class="sec-title">最近の記録<small>' + (num(d.progress.sessions) ? d.progress.sessions + '回話した' : '') + '</small></h2><div class="card"><ul class="loglist">' +
+      logs.map(function (l) { return '<li><time>' + esc(fmtDate(l.date)) + '</time><span>' + esc(l.summary) + '</span></li>'; }).join('') + '</ul></div></div>';
+    h += '<div class="sec btn-row" style="flex-direction:column">' + (readonly() ? '' : '<button class="btn soft block" data-go="import">' + ICON.in + 'AIの出力を貼り付け</button>') + importBtn() + '<button class="btn block" data-go="outputs">' + ICON.box + '作れるもの</button></div>';
+    if (canStartChatGPT()) h += '<div class="sec" style="margin-top:12px">' + startBtn() + '<p class="small muted" style="margin-top:6px;text-align:center">はじめから話す時はこちら。続きなら上の「AIに続きを頼む」がおすすめ</p></div>';
+    return h;
+  }
+
+  // ---------- 画面：到達度 ----------
+  function vReach() {
+    var d = D(), R = reach(d);
+    var h = subhead('<button class="mini-btn" data-go="goal">' + ICON.flag + '目標を変える</button>') + pagehead('到達度', 'レベル' + R.level + '「' + esc(R.levelName) + '」の基準で、ノートがデータから計算しています');
+    h += '<div class="card reach-top"><div class="ringbox" role="img" aria-label="到達度 ' + R.pct + '%">' + ringSVG(R.pct, 84, 7) + '<div class="ring-num"><b>' + R.pct + '<small>%</small></b></div></div><p><b>' + (R.gaps.length ? '足りないものは あと' + R.gaps.length + 'つ' : 'ぜんぶそろったよ') + '</b>' + esc(C.LEVELS[R.level - 1].need) + '</p></div>';
+    h += '<div class="sec"><h2 class="sec-title">内わけ<small>面接ネタは4倍で数えます</small></h2><div class="card" style="padding:6px 16px">' + R.items.map(function (it) {
+      var v = it.key === 'C' ? it.have + '／' + it.need + '枠' : it.have + '／' + it.need;
+      if (it.key === 'D' && it.highNeed) v += '<span class="w">しっかり' + it.highHave + '／' + it.highNeed + '</span>';
+      return '<div class="irow"><span>' + esc(it.label) + (it.weight !== 1 ? '<span class="w">×' + it.weight + '</span>' : '') + '</span>' + bar(it.score * 100) + '<span class="pv">' + v + '</span></div>';
+    }).join('') + '</div></div>';
+    h += '<div class="sec"><h2 class="sec-title">面接ネタの深さ<small>●今の深さ　○必要な深さ</small></h2><div class="card" style="padding:4px 16px"><ul class="slotlist">' + C.INTERVIEW_KEYS.map(function (k) {
+      var sl = R.slots[k[0]], ok = sl.required && sl.score >= 1;
+      var sub = !sl.hasCand ? 'まだ候補なし' : C.DEPTH_LABEL[sl.have] + (sl.penalized ? '（足りない情報ありで1段下げ）' : '');
+      return '<li><button data-go="' + esc(sl.go) + '"' + (sl.required ? '' : ' class="opt"') + '><span>' + esc(k[1]) + '<small>' + esc(sub) + '</small></span>' + dsteps(sl.have, sl.required ? sl.need : 0) +
+        '<span class="dnum' + (ok ? ' ok' : '') + '">' + (sl.required ? (ok ? 'OK' : sl.have + '／' + sl.need + '段') : '今は不要') + '</span></button></li>';
+    }).join('') + '</ul></div></div>';
+    if (R.gaps.length) h += '<div class="sec"><h2 class="sec-title">足りないもの<small>上から順にやると早い</small></h2><div class="card gaps"><ul>' + R.gaps.map(gapRow).join('') + '</ul></div></div>';
+    h += '<p class="small muted" style="margin-top:16px">％はAIの目安ではなく、ノートの中のデータから計算しています。足りない情報（面接ネタの「足りない情報」）が残っている話は、レベル3以上では1段下げて数えます。</p>';
+    return h;
+  }
+
+  // ---------- 画面：目標と盛り方 ----------
+  function goalMsg() {
+    var g = S.goalChanged, lv = g.level, em = g.embellish && C.EMBELLISH.filter(function (x) { return x.key === g.embellish; })[0];
+    if (readonly()) {
+      if (lv && em) return '目標をレベル' + lv + 'にして、盛り方は「' + em.name + '」にして';
+      if (lv) return '目標をレベル' + lv + 'にして';
+      if (em) return '盛り方を「' + em.name + '」にして';
+      return '';
+    }
+    if (lv && em) return '目標をレベル' + lv + '（' + lvName(lv) + '）に、盛り方を「' + em.name + '」に変えたので、これに合わせて進めて';
+    if (lv) return '目標をレベル' + lv + '（' + lvName(lv) + '）に変えたので、これに合わせて進めて';
+    if (em) return '盛り方を「' + em.name + '」に変えたので、これに合わせて進めて';
+    return '';
+  }
+  function vGoal() {
+    var d = D(), R = reach(d);
+    var curLv = readonly() && S.goalPreview.level ? S.goalPreview.level : (R.levelSet ? R.level : 0);
+    var curEm = readonly() && S.goalPreview.embellish ? S.goalPreview.embellish : C.embellishOf(d);
+    var shownR = curLv && curLv !== R.level ? reach(d, curLv) : R;
+    var h = subhead() + pagehead('目標と盛り方', '目標に合わせて、％の基準とAIの聞き方が変わるよ。あとからいつでも変えられます');
+    h += '<button class="card reach-mini" data-go="reach"><span class="rm-num">' + shownR.pct + '<small>%</small></span><span><b>レベル' + shownR.level + 'の基準での到達度</b>' + bar(shownR.pct) + '<em>' + (shownR.gaps.length ? '足りないもの ' + shownR.gaps.length + 'つ' : 'ぜんぶそろってる') + '</em></span>' + ICON.right + '</button>';
+    h += '<div class="sec"><h2 class="sec-title">目標レベル<small>受ける企業に合わせて</small></h2><div role="radiogroup" aria-label="目標レベル">' + C.LEVELS.map(function (L) {
+      var on = L.level === curLv, p = reach(d, L.level).pct;
+      var tag = on ? '<span class="now">いまの目標</span>' : (!curLv && L.level === 2 ? '<span class="now tmp">未設定なのでこれで計算中</span>' : '');
+      return '<button class="lv-card" role="radio" aria-checked="' + on + '" data-act="setLevel" data-n="' + L.level + '"><span class="no">' + L.level + '<small>LEVEL</small></span><span><span class="t"><b>' + esc(L.name) + tag + '</b><span>今 ' + p + '%</span></span>' +
+        '<span class="for">' + esc(L.target) + '</span><span class="ask">' + esc(L.need) + '</span></span></button>';
+    }).join('') + '</div></div>';
+    h += '<div class="sec"><h2 class="sec-title">盛り方<small>ESや面接の下書きの作り方</small></h2><div role="radiogroup" aria-label="盛り方">' + C.EMBELLISH.map(function (E) {
+      var on = E.key === curEm;
+      return '<button class="em-card" role="radio" aria-checked="' + on + '" data-act="setEmb" data-k="' + E.key + '"><span class="rd" aria-hidden="true"></span><span><b>' + esc(E.name) + (E.key === 'polish' ? '<small>ふつうはこれ</small>' : '') + '</b><span class="d">' + esc(E.desc) + '</span>' +
+        (E.key === 'boost' ? '<span class="warn">盛った所は<mark>色付き</mark>で表示し、突っ込まれた時の答えも付けます。資格・成績など確かめられることは盛りません</span>' : '') + '</span></button>';
+    }).join('') + '</div></div>';
+    if (readonly()) h += '<p class="small muted" style="margin-top:14px">このノートはClaude Codeが更新しているので、ここで選んでも保存はされないよ。選んだら、Claude Codeに伝えてね。</p>';
+    var msg = goalMsg();
+    if (msg) {
+      h += '<div class="card sendbar" role="status">' + (readonly()
+        ? '<p class="eyebrow">Claude Codeに伝えてね</p><p class="send-text">Claude Codeに『' + esc(msg) + '』と言ってね</p>'
+        : '<p class="eyebrow">ChatGPTと話している途中なら、これを送ってね</p><p class="send-text">「' + esc(msg) + '」</p>') +
+        '<div class="btn-row"><button class="btn primary sm" ' + copyAttr(msg, readonly() ? 'コピーしました。Claude Codeに貼ってね' : 'コピーしました。ChatGPTに送ってね') + '>' + ICON.copy + 'この文をコピー</button><button class="x" data-act="sendClose">閉じる</button></div></div>';
+    }
+    return h;
+  }
+
+  // ---------- 画面：年表 ----------
+  function vTimeline(open) {
+    var d = D(), R = reach(d), eps = epsSorted(d);
+    if (open) S.openP[open] = true;
+    var h = pagehead('年表', '時期をタップすると、その頃のエピソードが開きます');
+    h += '<ol class="tl">';
+    periods(d).forEach(function (pe) {
+      var list = eps.filter(function (e) { return e.period === pe.id; });
+      var isOpen = !!S.openP[pe.id];
+      h += '<li class="tl-period' + (isOpen ? ' open' : '') + (list.length ? '' : ' empty') + '" id="p-' + esc(pe.id) + '">' +
+        '<button class="tl-head" data-act="toggleP" data-id="' + esc(pe.id) + '" aria-expanded="' + isOpen + '"><span class="tl-dot"></span>' +
+        '<span class="tl-title"><b>' + esc(pe.label) + '</b><small>' + esc(pe.range || '') + '</small></span>' +
+        '<span class="tl-meta">' + list.length + '話・' + (R.periods[pe.id] || 0) + '%<span class="moods">' + list.map(function (e) { return '<i class="' + moodCls(e.motivation) + '"></i>'; }).join('') + '</span></span>' + ICON.chev + '</button>' +
+        '<div class="acc"><div><div class="tl-eps">';
+      if (list.length) list.forEach(function (e) { h += epRow(e); });
+      else h += '<div class="empty-note">まだこの時期のエピソードはありません。<br>' + digBtn('じぶんノートの続き：' + pe.label + '（' + (pe.range || '') + '）の頃の話を聞いてほしい。覚えていることが少なくても大丈夫なように、思い出しやすい質問からお願い', 'この時期の話をAIに聞いてもらう') + '</div>';
+      h += '</div></div></div></li>';
+    });
+    return h + '</ol>';
+  }
+  function epRow(e) {
+    return '<button class="ep-row" data-go="ep/' + esc(e.id) + '"><span class="when"><span>' + esc(e.when || '') + '</span><span style="display:inline-flex;gap:4px;flex-wrap:wrap;justify-content:flex-end">' + checkBadge(e.id) + aiBadge(e) + '</span></span>' +
+      '<h3>' + esc(e.title) + '</h3>' + (e.summary ? '<p>' + esc(e.summary) + '</p>' : '') +
+      '<span class="foot">' + moodChip(e.motivation) + depthMeter(e.depth) + '</span></button>';
+  }
+
+  // ---------- 画面：エピソード詳細 ----------
+  function vEpisode(id) {
+    var d = D(), e = epById(d, id);
+    if (!e) return subhead() + '<p class="muted" style="padding:40px 0">このエピソードは見つかりませんでした。</p>';
+    var pe = periodOf(d, e.period), eps = epsSorted(d), idx = eps.indexOf(e);
+    var h = subhead('<span style="display:flex;gap:6px">' + askBtn(String(e.id)) + digBtn(epDeepReq(d, e)) + '</span>');
+    h += '<article><div class="ep-head"><p class="eyebrow">' + esc(pe.label) + (e.when ? '・' + esc(e.when) : '') + '</p><h1>' + esc(e.title) + '</h1>' + (e.summary ? '<p class="lead">' + esc(e.summary) + '</p>' : '') + '</div>';
+    var dn = depthN(e.depth);
+    h += '<div class="ep-meta">' + (num(e.motivation) != null ? '<span><span class="lbl">気持ち</span>' + moodChip(e.motivation) + '</span>' : '') + depthMeter(e.depth, true) + (dn === 4 ? '<span class="stamp">最難関水準</span>' : '') + checkBadge(e.id) + aiBadge(e) + '</div>';
+    h += '<p class="depth-next">' + (dn === 4 ? '<b>最難関水準：</b>' + esc(DEPTH_NEXT[3]) + '、がそろっています。深掘りが何回あっても崩れにくい話です'
+      : '<b>次の段「' + esc(C.DEPTH_LABEL[dn + 1]) + '」：</b>' + esc(DEPTH_NEXT[dn])) + '</p>';
+    var ck = openChecks(d).filter(function (c) { return (c.targets || []).map(String).indexOf(String(e.id)) >= 0; });
+    if (ck.length) h += '<div class="card checks-mini" style="margin-top:14px">' + ck.map(checkRow).join('') + '<p class="small muted" style="margin-top:8px">AIに続きを頼むと、最初に聞いてくれるよ</p></div>';
+    if (e.source === 'import') h += '<div class="note-import">過去のESや、ほかのAIとの会話から取り込んだ話です。まだ本人が確かめていないので、合っているか確認して、自分の言葉で話し直すと「本人の話」になるよ。<br>' + digBtn('じぶんノートの続き：取り込んだ ' + e.id + '『' + (e.title || '') + '』の話を確かめたい。合っているか1つずつ聞いて、自分の言葉で話し直させて', 'AIと確かめる') + '</div>';
+    if (e.quotes && e.quotes.length) h += '<div class="quotes" aria-label="本人の言葉">' + e.quotes.map(function (q) { return '<blockquote class="quote">' + esc(q) + '</blockquote>'; }).join('') + '</div>';
+    h += '<dl class="fields">' + FIELDS.map(function (f) {
+      var v = String(e[f[0]] || '').trim();
+      return '<div class="field"><dt>' + f[1] + '</dt>' + (v ? '<dd>' + nl(v) + '</dd>' : '<dd class="none">まだ聞けていない</dd>') + '</div>';
+    }).join('') + '</dl>';
+    if (e.tags && e.tags.length) h += '<div class="chips" style="margin-top:14px">' + e.tags.map(function (t) { return '<span class="chip">#' + esc(t) + '</span>'; }).join('') + '</div>';
+    // 関連
+    var rel = [];
+    C.INTERVIEW_KEYS.forEach(function (k) { (d.interview[k[0]] || []).forEach(function (c, i) { if (String(c.episode) === String(e.id)) rel.push('<button class="rel" data-go="cand/' + k[0] + '/' + i + '"><span>' + k[1] + '<small>　おすすめ度 ' + fitSym(c.fit) + '</small></span>' + ICON.right + '</button>'); }); });
+    if (rel.length) h += '<div class="sec"><h2 class="sec-title">この話が使える面接ネタ</h2><div class="card related" style="padding:4px 16px">' + rel.join('') + '</div></div>';
+    var tr = [];
+    C.TRAIT_KEYS.forEach(function (k) { d.traits[k].forEach(function (t) { if ((t.evidence || []).map(String).indexOf(String(e.id)) >= 0) tr.push('<button class="chip ac" data-go="traits">' + C.TRAIT_LABEL[k] + '：' + esc(t.name) + '</button>'); }); });
+    if (tr.length) h += '<div class="sec"><h2 class="sec-title">この話からわかること</h2><div class="chips">' + tr.join('') + '</div></div>';
+    var dd = d.deepDive.filter(function (x) { return String(x.target) === String(e.id) && !x.done; });
+    h += '<div class="sec"><h2 class="sec-title">まだ掘れるところ</h2>' + (dd.length ? dd.map(deepCard).join('') : '<div class="card"><p class="small muted" style="margin-bottom:10px">' + esc(epDeepReq(d, e).split('。')[1] || '') + '</p>' + digBtn(epDeepReq(d, e), 'AIに深掘りを頼む') + '</div>') + '</div>';
+    var pv = eps[idx - 1], nx = eps[idx + 1];
+    h += '<nav class="pager" aria-label="前後のエピソード">' + (pv ? '<button data-go="ep/' + esc(pv.id) + '" data-replace="1">‹ 前の話<b>' + esc(pv.title) + '</b></button>' : '<span></span>') + (nx ? '<button data-go="ep/' + esc(nx.id) + '" data-replace="1">次の話 ›<b>' + esc(nx.title) + '</b></button>' : '<span></span>') + '</nav>';
+    return h + '</article>';
+  }
+
+  // ---------- 画面：グラフ ----------
+  function vGraph() {
+    var d = D(), eps = epsSorted(d).filter(function (e) { return num(e.motivation) != null; });
+    var h = pagehead('モチベーショングラフ', '点をタップすると、そのエピソードが開きます');
+    if (!eps.length) return h + '<div class="card"><p class="muted small" style="margin-bottom:10px">まだ点がありません。AIと話してエピソードが増えると、ここに線が引かれていきます。</p>' + digBtn('じぶんノートの続き：モチベーショングラフを作りたい。子どもの頃から順に、気持ちが上がった時・下がった時を聞いてほしい', 'AIにグラフ作りを頼む') + '</div>';
+    h += '<div class="card graphcard">' + graphSVG(d, { w: viewWidth() - 14, h: 300, animate: true, id: 'gf' }) + '</div>';
+    var hi = eps.slice().sort(function (a, b) { return num(b.motivation) - num(a.motivation); })[0];
+    var lo = eps.slice().sort(function (a, b) { return num(a.motivation) - num(b.motivation); })[0];
+    h += '<div class="hilo"><button data-go="ep/' + esc(hi.id) + '"><span class="k up">いちばん上がった時 ' + moodChip(hi.motivation) + '</span><b>' + esc(hi.title) + '</b><span>' + esc(hi.when || periodOf(d, hi.period).label) + '</span></button>' +
+      '<button data-go="ep/' + esc(lo.id) + '"><span class="k down">いちばん下がった時 ' + moodChip(lo.motivation) + '</span><b>' + esc(lo.title) + '</b><span>' + esc(lo.when || periodOf(d, lo.period).label) + '</span></button></div>';
+    h += '<div class="sec"><h2 class="sec-title">点の一覧</h2><div class="card" style="padding:4px 14px 8px">';
+    var cur = null;
+    eps.forEach(function (e) {
+      if (e.period !== cur) { if (cur !== null) h += '</ul>'; cur = e.period; h += '<p class="gperiod">' + esc(periodOf(d, e.period).label) + '</p><ul class="glist">'; }
+      h += '<li><button data-go="ep/' + esc(e.id) + '">' + moodChip(e.motivation) + '<span>' + esc(e.title) + '<small>' + esc(e.when || '') + '</small></span>' + ICON.right + '</button></li>';
+    });
+    return h + '</ul></div></div>';
+  }
+
+  // ---------- 画面：面接ネタ帳 ----------
+  function vInterview(open) {
+    var d = D(), R = reach(d);
+    if (open) S.openI[open] = true;
+    var h = pagehead('面接ネタ帳', 'よく聞かれる10の質問に、使えるエピソードを当てはめています');
+    C.INTERVIEW_KEYS.forEach(function (k) {
+      var cs = cands(d, k[0]), isOpen = !!S.openI[k[0]], sl = R.slots[k[0]];
+      h += '<section class="iv' + (isOpen ? ' open' : '') + (cs.length ? '' : ' none') + '" id="iv-' + k[0] + '">' +
+        '<button class="iv-head" data-act="toggleI" data-id="' + k[0] + '" aria-expanded="' + isOpen + '"><span><b>' + k[1] + '</b><span class="sub">' + (cs.length ? '候補' + cs.length + 'つ' : 'まだ材料なし') + bar(sl.pct) + '</span></span>' +
+        '<span class="iv-rec" aria-label="仕上がり ' + sl.pct + '%"' + (sl.required ? '' : ' style="opacity:.55"') + '><span class="sym">' + slotSym(sl) + '</span><small>' + (sl.required ? '仕上がり' : '今は不要') + '</small></span>' + ICON.chev + '</button>' +
+        '<div class="acc"><div><div class="iv-body">';
+      if (cs.length) cs.forEach(function (x) {
+        var e = epById(d, x.c.episode);
+        h += '<button class="cand" data-go="cand/' + k[0] + '/' + x.i + '"><span class="ct"><b>' + esc(e ? e.title : (x.c.episode || 'エピソード')) + '</b><span class="fit" aria-label="おすすめ度">' + fitSym(x.c.fit) + '</span></span>' +
+          (boostsOf(x.c).length ? '<span style="display:block;margin-top:4px">' + boostBadge(x.c) + '</span>' : '') +
+          (x.c.points && x.c.points.length ? '<ul>' + x.c.points.map(function (pt) { return '<li>' + esc(pt) + '</li>'; }).join('') + '</ul>' : '') +
+          '<span class="more">' + (x.c.draft ? '下書きを見る ›' : 'くわしく見る ›') + '</span></button>';
+      });
+      else h += '<div class="hint"><p>まだ材料がありません。AIにこう聞くと見つかります：</p><p class="ask">' + esc(IV_HINT[k[0]]) + '</p>' + digBtn(ivReq(k[0]), 'この聞き方をコピー') + '</div>';
+      h += '</div></div></div></section>';
+    });
+    return h;
+  }
+  function vCand(key, i) {
+    var d = D(), c = (d.interview[key] || [])[+i];
+    if (!c) return subhead() + '<p class="muted" style="padding:40px 0">この候補は見つかりませんでした。</p>';
+    var e = epById(d, c.episode), label = C.INTERVIEW_LABEL[key] || key, R = reach(d), sl = R.slots[key];
+    var h = subhead(askBtn('interview.' + key + '.' + c.episode));
+    h += '<div class="ep-head"><p class="eyebrow">' + esc(label) + 'のネタ</p><h1>' + esc(e ? e.title : c.episode) + '</h1></div>';
+    h += '<div class="ep-meta"><span><span class="lbl">おすすめ度</span><span class="fit">' + fitSym(c.fit) + '</span> <span class="small muted">' + fitText(c.fit) + '</span></span>' + (e ? depthMeter(e.depth) : '') + boostBadge(c) + aiBadge(c) + '</div>';
+    if (sl && e) {
+      var need = sl.required ? sl.need : sl.needFor, pen = R.level >= 3 && c.missing && c.missing.some(function (m) { return String(m || '').trim(); });
+      var eff = Math.max(0, depthN(e.depth) - (pen ? 1 : 0)), ok = eff >= need && num(c.fit) >= 2;
+      h += '<p class="slot-note">レベル' + R.level + 'の「' + esc(label) + '」に必要なのは<b>「' + esc(C.DEPTH_LABEL[need]) + '」</b>' + (sl.required ? '' : '（今の目標では無くてもOK）') + '。この話は今<b>「' + esc(C.DEPTH_LABEL[eff]) + '」</b>' +
+        (pen ? '（足りない情報があるので1段下げて判定）' : '') + (num(c.fit) < 2 ? '。おすすめ度が△なので、到達度には数えていません' : '') + ' → ' + (ok ? '<span class="ok">クリア</span>' : 'あと' + Math.max(1, need - eff) + '段') + '</p>';
+    }
+    if (c.points && c.points.length) h += '<div class="sec"><h2 class="sec-title">話すポイント</h2><div class="card"><ul class="dots">' + c.points.map(function (p) { return '<li style="font-size:14.5px;color:var(--ink)">' + esc(p) + '</li>'; }).join('') + '</ul></div></div>';
+    h += '<div class="sec"><h2 class="sec-title">面接で話す下書き' + (c.draft ? '<small class="cnt">' + c.draft.length + '字</small>' : '') + '</h2>';
+    if (c.draft) h += '<div class="draft">' + boostText(c.draft, c) + '</div><div class="btn-row" style="margin-top:10px"><button class="btn sm" ' + copyAttr(c.draft) + '>' + ICON.copy + '下書きをコピー</button></div>' + (boostsOf(c).length ? '<p class="small muted" style="margin-top:6px">色の付いた所は盛った表現。コピーすると本文だけになります</p>' : '');
+    else h += '<div class="card"><p class="small muted" style="margin-bottom:10px">まだ下書きはありません。足りない情報が埋まると、AIが作ってくれます。</p>' + digBtn(ivReq(key).replace('の材料を探したい。' + IV_HINT[key], '：' + targetLabel(d, c.episode) + 'を使って、面接で話す下書き（200〜300字）を作ってほしい'), '下書きをAIに頼む') + '</div>';
+    h += '</div>' + boostSection(c);
+    if (c.missing && c.missing.length) h += '<div class="sec"><h2 class="sec-title">足りない情報<small>ここが埋まると強くなる</small></h2><div class="card" style="padding:6px 16px"><ul class="missing">' +
+      c.missing.map(function (m) { return '<li><span>' + esc(m) + '</span>' + digBtn('深掘りしたい：' + targetLabel(d, c.episode) + '（' + label + 'のネタ）。「' + m + '」を聞いてほしい') + '</li>'; }).join('') + '</ul></div></div>';
+    if (e) h += '<div class="sec"><h2 class="sec-title">元のエピソード</h2><button class="card linkcard" data-go="ep/' + esc(e.id) + '"><span><small>' + esc(periodOf(d, e.period).label + (e.when ? '・' + e.when : '')) + '</small><b>' + esc(e.title) + '</b></span>' + ICON.right + '</button></div>';
+    return h;
+  }
+
+  // ---------- 画面：強み・価値観 ----------
+  function evChips(d, ev) {
+    ev = (ev || []).filter(function (id) { return epById(d, id); });
+    if (!ev.length) return '<div class="chips"><span class="ev-label">根拠なし</span></div>';
+    return '<div class="chips"><span class="ev-label">根拠</span>' + ev.map(function (id) { var e = epById(d, id); return e ? '<button class="chip ac" data-go="ep/' + esc(id) + '">' + esc(trunc(e.title, 14)) + '</button>' : ''; }).join('') + '</div>';
+  }
+  function vTraits() {
+    var d = D();
+    var h = pagehead('強み・価値観', 'エピソードから見えてきた「じぶん」のまとめ');
+    var any = false;
+    C.TRAIT_KEYS.forEach(function (k) {
+      var arr = d.traits[k]; if (!arr.length) return; any = true;
+      h += '<div class="sec"><h2 class="sec-title">' + C.TRAIT_LABEL[k] + '<small>' + arr.length + '</small></h2>' + arr.map(function (t) {
+        return '<div class="card tr"><div class="tr-top"><b>' + esc(t.name) + '</b><span class="badges">' + confPill(t.confidence) + aiBadge(t) + '</span></div>' + (t.description ? '<p>' + esc(t.description) + '</p>' : '') + evChips(d, t.evidence) + '<div style="margin-top:10px">' + askBtn('traits.' + k + '.' + t.id) + '</div></div>';
+      }).join('') + '</div>';
+    });
+    if (d.axes.length) {
+      any = true;
+      h += '<div class="sec"><h2 class="sec-title">就活の軸<small>' + d.axes.length + '</small></h2>' + d.axes.map(function (a, i) {
+        return '<div class="card tr"><div class="tr-top"><b><span class="axis-num">' + (i + 1) + '</span>' + esc(a.text) + '</b><span class="badges">' + aiBadge(a) + '</span></div>' + (a.reason ? '<p>' + esc(a.reason) + '</p>' : '') + evChips(d, a.evidence) + '<div style="margin-top:10px">' + askBtn(String(a.id)) + '</div></div>';
+      }).join('') + '</div>';
+    }
+    if (!any) h += '<div class="card"><p class="small muted" style="margin-bottom:10px">エピソードが集まると、AIが強みや価値観をまとめてくれます。</p>' + digBtn('じぶんノートの続き：今までのエピソードから、強み・弱み・価値観・就活の軸をまとめてほしい', 'AIにまとめを頼む') + '</div>';
+    return h;
+  }
+
+  // ---------- 画面：深掘りリスト ----------
+  function deepCard(x) {
+    var d = D(), t = String(x.target || ''), go = epById(d, t) ? 'ep/' + t : t.indexOf('interview.') === 0 ? 'interview/' + t.slice(10) : (t === 'axes' || d.axes.some(function (a) { return String(a.id) === t; })) ? 'traits' : '';
+    var pr = clamp(num(x.priority) || 3, 1, 3);
+    return '<div class="card dd' + (x.done ? ' done' : '') + '"><div class="tgt">' + (go ? '<button data-go="' + esc(go) + '">' + esc(targetLabel(d, t)) + ' ›</button>' : '<span>' + esc(targetLabel(d, t)) + '</span>') +
+      (x.done ? '<span class="prio p3">聞けた</span>' : '<span class="prio p' + pr + '">' + ['', '最優先', 'ふつう', 'あとで'][pr] + '</span>') + '</div>' +
+      '<h3>' + esc(x.question) + '</h3>' + (x.why && !x.done ? '<p class="why">' + esc(x.why) + '</p>' : '') +
+      (x.done ? '' : digBtn(deepReq(d, t, x.question), 'AIに深掘りを頼む')) + '</div>';
+  }
+  function vDeep() {
+    var d = D();
+    var todo = d.deepDive.filter(function (x) { return !x.done; }).sort(function (a, b) { return (num(a.priority) || 3) - (num(b.priority) || 3); });
+    var done = d.deepDive.filter(function (x) { return x.done; });
+    var h = subhead() + pagehead('深掘りリスト', 'ここを聞けると、面接で話せる話が強くなります。ボタンで依頼文がコピーされるので、AIとのチャットに貼ってね');
+    h += todo.length ? todo.map(deepCard).join('') : '<div class="card"><p class="small muted">いま深掘り待ちはありません。</p></div>';
+    if (done.length) h += '<div class="sec"><h2 class="sec-title">聞けたこと<small>' + done.length + '</small></h2>' + done.map(deepCard).join('') + '</div>';
+    return h;
+  }
+
+  // ---------- 画面：もっと ----------
+  function menuItem(go, ic, title, sub, end, cls, act) {
+    return '<button ' + (act ? 'data-act="' + act + '"' : 'data-go="' + go + '"') + '><span class="ic ' + (cls || '') + '">' + ic + '</span><span><b>' + title + '</b>' + (sub ? '<small>' + sub + '</small>' : '') + '</span><span class="end">' + (end || '') + ICON.right + '</span></button>';
+  }
+  function vMore() {
+    var d = D(), nDeep = d.deepDive.filter(function (x) { return !x.done; }).length;
+    var nTr = C.TRAIT_KEYS.reduce(function (n, k) { return n + d.traits[k].length; }, 0);
+    var h = pagehead('もっと');
+    h += '<div class="menu">' +
+      menuItem('traits', ICON.star, '強み・価値観', '強み・弱み・やる気スイッチ・就活の軸', nTr ? nTr + '件' : '') +
+      menuItem('deep', ICON.dive, '深掘りリスト', 'AIに聞いてもらうと強くなるところ', nDeep ? nDeep + '件' : '') +
+      menuItem('outputs', ICON.box, '作れるもの', '自己紹介・ES・想定問答など') +
+      menuItem('goal', ICON.flag, '目標と盛り方', 'レベル' + C.levelOf(d) + '・' + C.EMBELLISH.filter(function (x) { return x.key === C.embellishOf(d); })[0].name, '') +
+      menuItem('reach', ICON.star, '到達度と足りないもの', '目標までに、あと何が必要か', reach(d).pct + '%') + '</div>';
+    var nRq = openRequests().length, nCk = openChecks(d).length;
+    h += '<div class="sec"><div class="menu">' +
+      menuItem('requests', ICON.chat, 'AIへの依頼', 'ノートから書いた「ここ頼む」のメモ', nRq ? nRq + '件' : '') +
+      menuItem('checks', CHECK_KIND.unconfirmed[1], '確認待ち', 'AIが本人に確かめたいこと', nCk ? nCk + '件' : '', nCk ? 'w' : '') + '</div></div>';
+    h += '<div class="sec"><div class="menu">' +
+      menuItem('', ICON.send, esc(handoffLabel()), '今までのデータをコピーして、新しいチャットへ', '', '', 'handoff') +
+      (readonly() ? '' : menuItem('import', ICON.in, 'AIの出力を貼り付け', 'セーブデータを貼り付けて、ノートを更新')) +
+      ((importPrompt() || readonly()) ? menuItem('', ICON.merge, '他のAIから取り込む', '過去のESや、ほかのAIとの会話から', '', '', 'importAI') : menuItem('', ICON.merge, '他のAIから取り込む', '準備中', '', '', 'noop')) +
+      (canStartChatGPT() && starter() ? menuItem('', ICON.chat, 'ChatGPTではじめる', 'はじめるプロンプトをコピー', '', '', 'startGPT') : '') +
+      menuItem('data', ICON.file, 'バックアップ・印刷・データ管理', 'バックアップ、PDFで保存、削除') + '</div></div>';
+    h += '<p class="foot-note">じぶんノート　made by BeMe</p>';
+    return h;
+  }
+
+  // ---------- 画面：AIへの依頼 ----------
+  function reqCard(r) {
+    var d = D(), t = String(r.target == null ? '' : r.target), te = C.targetEpisode(t);
+    var go = epById(d, te) ? (t === te ? 'ep/' + te : '') : /^outputs\.(es|qa)\./.test(t) ? 'out/' + t.split('.')[1] : /^traits\./.test(t) || d.axes.some(function (a) { return String(a.id) === t; }) ? 'traits' : '';
+    var mi = /^interview\.([^.]+)\.(.+)$/.exec(t);
+    if (mi) { var arr = d.interview[mi[1]] || [], ix = -1; arr.forEach(function (c, i) { if (String(c.episode) === mi[2]) ix = i; }); go = ix >= 0 ? 'cand/' + mi[1] + '/' + ix : 'interview/' + mi[1]; }
+    return '<div class="card dd' + (r.done ? ' done' : '') + '"><div class="tgt">' + (go ? '<button data-go="' + esc(go) + '">' + esc(targetLabel(d, t)) + ' ›</button>' : '<span>' + esc(targetLabel(d, t)) + '</span>') +
+      '<span class="cnt">' + esc(fmtDate(r.createdAt)) + (r._local ? '・未取り込み' : '') + '</span></div>' +
+      '<h3>' + esc(r.text) + '</h3>' +
+      (r.done ? '<p class="why" style="margin-bottom:0">→ ' + esc(r.result || '対応済み') + (r.doneAt ? '（' + esc(fmtDate(r.doneAt)) + '）' : '') + '</p>'
+        : ((!readonly() || r._local) ? '<button class="mini-btn" data-act="delReq" data-id="' + esc(r.id) + '" style="color:var(--warm);background:transparent;border-color:var(--warm-line)">' + ICON.trash + '消す</button>' : '')) + '</div>';
+  }
+  function vRequests() {
+    var all = allRequests(), todo = all.filter(function (r) { return r.done !== true; }), done = all.filter(function (r) { return r.done === true; });
+    var h = subhead(askBtn('', '新しく頼む')) + pagehead('AIへの依頼', readonly() ? 'ノートから書いた依頼は、Claude Codeが次に読んで対応します' : 'ここに書いた依頼は、次に「AIに続きを頼む」でAIに渡ります。AIが対応すると「対応済み」に移るよ');
+    h += '<div class="sec" style="margin-top:4px"><h2 class="sec-title">まだ<small>' + todo.length + '</small></h2>' + (todo.length ? todo.map(reqCard).join('') : '<div class="card"><p class="small muted">いま待っている依頼はありません。エピソードや下書きの「AIに頼む」から書けます。</p></div>') + '</div>';
+    if (done.length) h += '<div class="sec"><h2 class="sec-title">対応済み<small>' + done.length + '</small></h2>' + done.map(reqCard).join('') + '</div>';
+    if (readonly() && todo.some(function (r) { return r._local; })) h += '<div class="sec"><button class="btn soft block" data-act="ccSend">' + ICON.send + 'Claude Codeに渡す（もう一度）</button></div>';
+    return h;
+  }
+  // ---------- 画面：確認待ち ----------
+  function vChecks() {
+    var d = D(), todo = openChecks(d), done = (d.checks || []).filter(function (c) { return c && c.done === true; });
+    var h = subhead() + pagehead('確認待ち', 'AIが取り込みや見直しで見つけた「本人に確かめたいこと」。ノートでは答えず、AIと話して解決します');
+    h += todo.length ? '<div class="card" style="padding:4px 16px">' + todo.map(checkRow).join('') + '</div>' : '<div class="card"><p class="small muted">いま確認待ちはありません。</p></div>';
+    if (todo.length) h += '<div class="sec" style="margin-top:14px"><button class="btn primary block" data-act="handoff">' + ICON.send + esc(handoffLabel()) + '</button><p class="small muted" style="margin-top:6px;text-align:center">' + (readonly() ? 'Claude Codeを起動すると、最初に聞いてくれます' : '新しいチャットに貼ると、AIが最初に1つずつ聞いてくれます') + '</p></div>';
+    if (done.length) h += '<div class="sec"><h2 class="sec-title">確認できた<small>' + done.length + '</small></h2><div class="card" style="padding:4px 16px;opacity:.75">' + done.map(checkRow).join('') + '</div></div>';
+    return h;
+  }
+
+  // ---------- 画面：作れるもの ----------
+  function outDone(d, k) { var v = d.outputs[k]; return Array.isArray(v) ? v.length > 0 : !!(v && v.text); }
+  function vOutputs() {
+    var d = D();
+    var h = subhead() + pagehead('作れるもの', 'ノートが自動で作るものと、AIに作ってもらうもの');
+    h += '<div class="sec" style="margin-top:6px"><h2 class="sec-title">ノートが自動で作る</h2><div class="menu">' +
+      menuItem('graph', ICON.chat.replace('M4 5.5h16v10.5H10l-4.5 3.5V16H4z', 'M3 16c2.2 0 2.6-6 5-6s2.4 4.5 4.6 4.5S15.7 5 18.2 5 21 9 21 9'), 'モチベーショングラフ', '気持ちの山と谷が一目でわかる', '<span class="st ok">できてる</span>') +
+      menuItem('timeline', ICON.box, '年表', '幼少期から今までのエピソード', '<span class="st ok">できてる</span>') +
+      menuItem('traits', ICON.star, '強みマップ', '強み・価値観を根拠つきで', '<span class="st ok">できてる</span>') + '</div></div>';
+    h += '<div class="sec"><h2 class="sec-title">AIに作ってもらう</h2><div class="menu">' +
+      OUT_DEF.map(function (o) {
+        var ok = outDone(d, o.key), v = d.outputs[o.key];
+        var cnt = Array.isArray(v) && v.length ? v.length + '件 ' : '';
+        return menuItem('out/' + o.key, o.key === 'qa' ? ICON.chat : o.key === 'companyFit' ? ICON.star : ICON.file, C.OUTPUT_LABEL[o.key], o.desc, ok ? '<span class="st ok">' + cnt + '作成済み</span>' : '<span class="st no">まだ</span>', ok ? '' : 'w');
+      }).join('') + '</div></div>';
+    return h;
+  }
+  function vOut(key) {
+    var d = D(), def = OUT_DEF.filter(function (o) { return o.key === key; })[0];
+    if (!def) return subhead() + '<p class="muted" style="padding:40px 0">見つかりませんでした。</p>';
+    var v = d.outputs[key], ok = outDone(d, key);
+    var h = subhead() + pagehead(C.OUTPUT_LABEL[key], def.desc);
+    if (key === 'companyFit') {
+      var comps = ((d.profile.targets || {}).companies || []);
+      if (ok) h += v.map(function (f) {
+        return '<div class="card tr"><div class="tr-top"><b>' + esc(f.company) + '</b>' + (f.updatedAt ? '<span class="cnt">' + fmtDate(f.updatedAt) + '</span>' : '') + '</div><ul class="dots" style="margin-top:8px">' + (f.points || []).map(function (p) { return '<li>' + esc(p) + '</li>'; }).join('') + '</ul>' + evChips(d, f.episodes) + '</div>';
+      }).join('');
+      h += '<div class="sec"><h2 class="sec-title">' + (ok ? 'ほかの企業も当ててもらう' : '企業を選んで、AIに当ててもらう') + '</h2><div class="card">' +
+        (comps.length ? '<div class="btn-row" style="margin-bottom:12px">' + comps.map(function (c) { return '<button class="mini-btn" ' + copyAttr(fitReq(c), '依頼文をコピーしました') + '>' + ICON.copy + esc(c) + '</button>'; }).join('') + '</div>' : '') +
+        '<label class="small muted" for="fitname">企業名を入れる</label><input id="fitname" class="field-input" placeholder="例：博報堂" style="margin:6px 0 10px"><button class="btn soft block" data-act="fitcopy">' + ICON.copy + 'AIへの依頼文をコピー</button></div></div>';
+      return h;
+    }
+    if (!ok) {
+      return h + '<div class="card"><p class="small" style="margin-bottom:6px;font-weight:700">まだ作っていません</p><p class="small muted" style="margin-bottom:14px">下のボタンで依頼文をコピーして、AIとのチャットに貼り付けてね。できあがったら、セーブデータをノートに読み込めば、ここに表示されます。</p>' +
+        '<p class="ask hint" style="border:1px dashed var(--line);border-radius:8px;padding:10px 12px;font-size:13.5px;margin-bottom:12px">' + esc(def.req) + '</p>' +
+        '<button class="btn primary block" ' + copyAttr(def.req, '依頼文をコピーしました') + '>' + ICON.copy + 'AIへの依頼文をコピー</button></div>';
+    }
+    if (key === 'es') {
+      h += v.map(function (es) {
+        var len = String(es.text || '').replace(/\s/g, '').length;
+        var badges = (isImportedEs(es) ? importBadge() : '') + boostBadge(es);
+        return '<div class="sec" style="margin-top:14px"><h2 class="sec-title">' + esc(es.title || 'ES') + '<small class="cnt">' + len + (num(es.chars) ? '／' + es.chars : '') + '字</small></h2>' + (badges ? '<div class="chips" style="margin:-4px 2px 8px">' + badges + '</div>' : '') + '<div class="draft">' + boostText(es.text, es) + '</div>' +
+          '<div class="btn-row" style="margin-top:10px;align-items:center"><button class="btn sm" ' + copyAttr(es.text || '') + '>' + ICON.copy + 'コピー</button>' + askBtn('outputs.es.' + es.id) + '</div>' + (es.episodes && es.episodes.length ? '<div style="margin-top:10px">' + evChips(d, es.episodes) + '</div>' : '') + boostSection(es).replace('id="boosts"', '') + '</div>';
+      }).join('');
+    } else if (key === 'qa') {
+      h += v.map(function (q) {
+        return '<div class="card qa"><h3>' + esc(q.question) + '</h3>' + (boostsOf(q).length ? '<div style="margin:6px 0 0 22px">' + boostBadge(q) + '</div>' : '') + '<p class="a">' + boostText(q.answer, q) + '</p><div class="btn-row" style="margin-top:10px;align-items:center"><button class="mini-btn" ' + copyAttr(q.answer || '') + '>' + ICON.copy + '答えをコピー</button>' + askBtn('outputs.qa.' + q.id) + '</div>' + (q.episodes && q.episodes.length ? '<div style="margin-top:10px">' + evChips(d, q.episodes) + '</div>' : '') + boostFold(q) + '</div>';
+      }).join('');
+    } else {
+      var t = String(v.text || '');
+      if (boostsOf(v).length) h += '<div class="chips" style="margin-bottom:8px">' + boostBadge(v) + '</div>';
+      h += '<div class="' + (key === 'intro1min' ? 'draft' : 'card outbox') + '">' + boostText(t, v) + '</div>' +
+        '<div class="btn-row" style="margin-top:12px;align-items:center;justify-content:space-between"><button class="btn sm" ' + copyAttr(t) + '>' + ICON.copy + 'コピー</button><span class="cnt">' + t.replace(/\s/g, '').length + '字' + (v.updatedAt ? '・' + fmtDate(v.updatedAt) + ' 作成' : '') + '</span></div>' + boostSection(v);
+    }
+    h += '<div class="sec"><button class="mini-btn" ' + copyAttr(def.req.replace('作ってほしい', '作り直してほしい（もっと自分らしく）'), '依頼文をコピーしました') + '>' + ICON.copy + (key === 'es' ? '別の設問で作ってもらう' : '作り直しを頼む') + '</button></div>';
+    return h;
+  }
+
+  // ---------- 画面：読み込み ----------
+  function vImport() {
+    var h = (S.data ? subhead() : subhead()) + pagehead('AIの出力を貼り付け', 'AIが出した「セーブデータ」を貼り付けてください。前後の文章や ``` が混ざっていても大丈夫です');
+    if (readonly()) return h + '<div class="card"><p class="small">このノートはClaude Codeが直接更新しています。ページを再読み込みすると、最新の内容になります。</p></div>';
+    h += '<label class="sr" for="paste">AIの出力を貼り付け</label><textarea id="paste" class="paste" placeholder="ここにAIの出力を貼り付け" autocomplete="off" autocapitalize="off" spellcheck="false">' + esc(S.importText) + '</textarea>';
+    if (S.importErr) h += '<p class="err" role="alert">' + esc(S.importErr) + '</p>';
+    h += '<div class="btn-row" style="margin-top:12px">' + (navigator.clipboard && navigator.clipboard.readText ? '<button class="btn" data-act="paste">貼り付け</button>' : '') + '<button class="btn primary" data-act="runImport">' + ICON.in + '読み込む</button></div>';
+    h += '<div class="sec"><button class="btn sm" data-act="pickFile">' + ICON.file + 'バックアップから戻す</button><input type="file" id="fileIn" accept=".json,application/json,text/plain" hidden></div>';
+    if (S.mode === 'sample') h += '<p class="small muted" style="margin-top:16px">※ 読み込むと、サンプルではなく「あなたのノート」として保存されます。</p>';
+    return h;
+  }
+  function doImport(text) {
+    var current = S.mode === 'local' ? S.data : null, r;
+    try { r = C.prepareImport(text, current); } catch (e) { S.importErr = e.message; S.importText = text; render(); return; }
+    var go = function () {
+      S.data = r.data; S.mode = 'local'; S.importText = ''; S.importErr = '';
+      if (!S.data.updatedAt) S.data.updatedAt = today();
+      save(); renderBanner();
+      sheet({ title: r.kind === 'patch' ? 'ノートを更新しました' : 'ノートを読み込みました', body: '<ul class="changes">' + r.summary.map(function (s) { return '<li>' + esc(s) + '</li>'; }).join('') + '</ul>', actions: [{ label: 'ノートを見る', cls: 'primary', value: 1 }] })
+        .then(function () { S.stack = []; location.hash = 'home'; if (location.hash === '#home') onRoute(); });
+    };
+    if (r.needsConfirm) {
+      sheet({ title: '今のノートを置き換えますか？', body: '貼り付けたのは「まるごとのデータ」でした。今のノートの中身は、このデータで置き換わります。<ul class="changes">' + r.summary.map(function (s) { return '<li>' + esc(s) + '</li>'; }).join('') + '</ul>', actions: [{ label: 'やめる', value: 0 }, { label: '置き換える', cls: 'primary', value: 1 }] })
+        .then(function (v) { if (v) go(); });
+    } else go();
+  }
+
+  // ---------- 画面：データ管理 ----------
+  function vData() {
+    var h = subhead() + pagehead('バックアップ・印刷・データ管理');
+    h += '<div class="menu">' +
+      menuItem('', ICON.send, esc(handoffLabel()), '引き継ぎ用に、全部のデータをコピー', '', '', 'handoff') +
+      menuItem('', ICON.save, 'バックアップ', '全部のデータをファイルに保存', '', '', 'export') +
+      (readonly() ? '' : menuItem('', ICON.in, 'バックアップから戻す', '保存したファイルを選ぶ（貼り付けでも戻せます）', '', '', 'pickFile')) +
+      menuItem('', ICON.print, '印刷・PDFで保存', 'ノート全体を見やすい形で', '', '', 'print') + '</div>';
+    h += '<input type="file" id="fileIn" accept=".json,application/json,text/plain" hidden>';
+    if (S.mode === 'sample') h += '<div class="sec"><div class="menu">' + menuItem('', ICON.left, 'サンプルを閉じる', '自分のノートを始める', '', 'w', 'exitSample') + '</div></div>';
+    else if (S.mode === 'local') h += '<div class="sec"><div class="menu">' + menuItem('', ICON.trash, 'データを消す', 'この端末に保存したノートを削除します', '', 'w', 'wipe') + '</div></div>';
+    else if (readonly()) h += '<p class="small muted" style="margin-top:16px">このノートはClaude Codeのフォルダにあるデータを表示しています（読み取り専用）。</p>';
+    h += '<p class="small muted" style="margin-top:18px">データはこの端末のブラウザの中だけに保存されています。ブラウザの履歴を消すと消えることがあるので、ときどき「バックアップ」しておくと安心です。戻す時は「バックアップから戻す」でファイルを選ぶか、ファイルの中身を「AIの出力を貼り付け」に貼ってください。</p>';
+    return h;
+  }
+
+  // ---------- 印刷 ----------
+  function buildPrint() {
+    var d = D(); if (!d) return;
+    var p = d.profile || {}, R = reach(d), eps = epsSorted(d);
+    var h = '<div class="p-cover"><h1>' + esc(p.name || 'わたし') + ' のじぶんノート</h1><p>' + esc([p.university, p.faculty, p.grad].filter(Boolean).join('・')) + (d.updatedAt ? '　' + esc(d.updatedAt) + ' 更新' : '') + '　目標：レベル' + R.level + ' ' + esc(R.levelName) + '　到達度 ' + R.pct + '%</p>' + (p.goal ? '<p>目標：' + esc(p.goal) + '</p>' : '') + '</div>';
+    if (eps.length) h += '<div class="p-sec"><h2>モチベーショングラフ</h2><div class="p-graph">' + graphSVG(d, { w: 660, h: 260, id: 'pg' }) + '</div></div>';
+    h += '<div class="p-sec"><h2>年表とエピソード</h2>';
+    periods(d).forEach(function (pe) {
+      var list = eps.filter(function (e) { return e.period === pe.id; }); if (!list.length) return;
+      h += '<p class="p-period">' + esc(pe.label) + '（' + esc(pe.range || '') + '）</p>';
+      list.forEach(function (e) {
+        h += '<div class="p-ep"><p class="p-when">' + esc(e.when || '') + (num(e.motivation) != null ? '　気持ち ' + (num(e.motivation) > 0 ? '+' : '') + esc(e.motivation) : '') + '　掘れ具合 ' + esc(DEPTH_TXT[depthN(e.depth)]) + ' ' + aiBadge(e) + '</p><h3>' + esc(e.title) + '</h3>' + (e.summary ? '<p>' + esc(e.summary) + '</p>' : '') +
+          '<dl>' + FIELDS.map(function (f) { return e[f[0]] ? '<dt>' + f[1] + '</dt><dd>' + esc(e[f[0]]) + '</dd>' : ''; }).join('') + '</dl>' +
+          (e.quotes && e.quotes.length ? e.quotes.map(function (q) { return '<blockquote>「' + esc(q) + '」</blockquote>'; }).join('') : '') + '</div>';
+      });
+    });
+    h += '</div><div class="p-sec"><h2>面接ネタ帳</h2>';
+    C.INTERVIEW_KEYS.forEach(function (k) {
+      var cs = cands(d, k[0]); if (!cs.length) return;
+      h += '<p class="p-period">' + k[1] + '</p>';
+      cs.forEach(function (x) { var e = epById(d, x.c.episode); h += '<div class="p-item"><h3>' + fitSym(x.c.fit) + ' ' + esc(e ? e.title : x.c.episode) + '</h3><p>' + (x.c.points || []).map(esc).join(' ／ ') + '</p>' + (x.c.draft ? '<p class="p-text">' + esc(x.c.draft) + '</p>' : '') + boostPrint(x.c) + '</div>'; });
+    });
+    h += '</div><div class="p-sec"><h2>強み・価値観・就活の軸</h2><div class="p-grid">';
+    C.TRAIT_KEYS.forEach(function (k) { d.traits[k].forEach(function (t) { h += '<div class="p-item"><h3>' + C.TRAIT_LABEL[k] + '：' + esc(t.name) + '</h3><p>' + esc(t.description || '') + '</p></div>'; }); });
+    d.axes.forEach(function (a) { h += '<div class="p-item"><h3>軸：' + esc(a.text) + '</h3><p>' + esc(a.reason || '') + '</p></div>'; });
+    h += '</div></div>';
+    var o = d.outputs || {};
+    if (o.intro1min && o.intro1min.text) h += '<div class="p-sec"><h2>1分自己紹介</h2><p class="p-text">' + esc(o.intro1min.text) + '</p>' + boostPrint(o.intro1min) + '</div>';
+    if (o.manual && o.manual.text) h += '<div class="p-sec"><h2>自分の取扱説明書</h2><p class="p-text">' + esc(o.manual.text) + '</p></div>';
+    (o.es || []).forEach(function (es) { h += '<div class="p-sec"><h2>ES：' + esc(es.title) + '</h2><p class="p-text">' + esc(es.text) + '</p>' + boostPrint(es) + '</div>'; });
+    if ((o.qa || []).length) h += '<div class="p-sec"><h2>想定問答</h2>' + o.qa.map(function (q) { return '<div class="p-item"><h3>Q. ' + esc(q.question) + '</h3><p class="p-text">A. ' + esc(q.answer) + '</p>' + boostPrint(q) + '</div>'; }).join('') + '</div>';
+    h += '<p class="p-foot">じぶんノート　made by BeMe</p>';
+    $('#print').innerHTML = h;
+  }
+
+  // ---------- 描画 ----------
+  function renderBanner() {
+    var b = $('#banner'), app = $('#app');
+    if (S.mode === 'sample') b.innerHTML = '<div class="banner"><span><b>これはサンプルです</b><span class="bn-sub">（架空の学生）</span></span><button data-act="exitSample">自分のをはじめる</button></div>';
+    else if (S.mode === 'file') b.innerHTML = '<div class="banner info"><span>Claude Codeのデータを表示中。再読み込みで最新になります</span></div>';
+    else b.innerHTML = '';
+    app.classList.toggle('has-banner', !!b.innerHTML);
+    requestAnimationFrame(function () { var bb = b.firstChild; document.documentElement.style.setProperty('--bannerh', (bb ? bb.offsetHeight : 0) + 'px'); });
+  }
+  function routeParts() { return (location.hash.slice(1) || '').split('/').map(function (x) { try { return decodeURIComponent(x); } catch (e) { return x; } }); }
+  function rerender() { render(false, true); }
+  function render(back, keep) {
+    var parts = routeParts(), r = parts[0] || (S.data ? 'home' : 'welcome'), html, keepY = window.scrollY;
+    S.copies = [];
+    if (!S.data && r !== 'import') r = 'welcome';
+    if (S.data && r === 'welcome') r = 'home';
+    switch (r) {
+      case 'welcome': html = vWelcome(); break;
+      case 'timeline': html = vTimeline(parts[1]); break;
+      case 'ep': html = vEpisode(parts[1]); break;
+      case 'graph': html = vGraph(); break;
+      case 'interview': html = vInterview(parts[1]); break;
+      case 'cand': html = vCand(parts[1], parts[2]); break;
+      case 'traits': html = subhead() + vTraits(); break;
+      case 'deep': html = vDeep(); break;
+      case 'more': html = vMore(); break;
+      case 'outputs': html = vOutputs(); break;
+      case 'out': html = vOut(parts[1]); break;
+      case 'import': html = vImport(); break;
+      case 'data': html = vData(); break;
+      case 'goal': html = vGoal(); break;
+      case 'reach': html = vReach(); break;
+      case 'requests': html = vRequests(); break;
+      case 'checks': html = vChecks(); break;
+      default: html = vHome(); r = 'home';
+    }
+    var v = $('#view');
+    v.innerHTML = html;
+    v.classList.remove('view-in', 'view-back');
+    if (!keep) { void v.offsetWidth; v.classList.add(back ? 'view-back' : 'view-in'); }
+    var tab = { home: 'home', timeline: 'timeline', ep: 'timeline', graph: 'graph', interview: 'interview', cand: 'interview' }[r] || 'more';
+    document.querySelectorAll('.tab').forEach(function (t) { if (t.getAttribute('data-tab') === tab) t.setAttribute('aria-current', 'page'); else t.removeAttribute('aria-current'); });
+    $('#tabbar').classList.toggle('hide', r === 'welcome' || (!S.data && r === 'import'));
+    var titles = { home: 'ホーム', timeline: '年表', ep: 'エピソード', graph: 'モチベーショングラフ', interview: '面接ネタ帳', cand: '面接ネタ', traits: '強み・価値観', deep: '深掘りリスト', more: 'もっと', outputs: '作れるもの', out: '作れるもの', import: 'AIの出力を貼り付け', data: 'バックアップ', goal: '目標と盛り方', reach: '到達度', requests: 'AIへの依頼', checks: '確認待ち' };
+    document.title = (titles[r] ? titles[r] + '｜' : '') + 'じぶんノート';
+    // スクロール位置
+    var h = location.hash.slice(1);
+    if (keep) window.scrollTo(0, keepY);
+    else if (back && S.scroll[h] != null) window.scrollTo(0, S.scroll[h]);
+    else if ((r === 'timeline' || r === 'interview') && parts[1]) {
+      var el = document.getElementById((r === 'timeline' ? 'p-' : 'iv-') + parts[1]);
+      window.scrollTo(0, 0);
+      if (el) setTimeout(function () { var y = el.getBoundingClientRect().top + window.scrollY - 70; window.scrollTo(0, Math.max(0, y)); }, 30);
+    } else window.scrollTo(0, 0);
+    // アニメーション（リング・バー）
+    requestAnimationFrame(function () { requestAnimationFrame(function () {
+      v.querySelectorAll('.ring-fg').forEach(function (c) { c.style.strokeDashoffset = c.getAttribute('data-off'); });
+      v.querySelectorAll('.bar>i').forEach(function (i) { i.style.width = i.getAttribute('data-w') + '%'; });
+    }); });
+  }
+  function onRoute() {
+    var h = location.hash.slice(1);
+    var prev = S.stack[S.stack.length - 1];
+    if (prev !== undefined) S.scroll[prev] = window.scrollY;
+    var back = S.stack.length >= 2 && S.stack[S.stack.length - 2] === h;
+    if (back) S.stack.pop();
+    else if (S.replaceNext && S.stack.length) { S.stack[S.stack.length - 1] = h; }
+    else S.stack.push(h);
+    S.replaceNext = false;
+    render(back);
+  }
+  function go(h, replace) {
+    if (location.hash.slice(1) === h) { render(false); return; }
+    if (replace) { S.replaceNext = true; }
+    location.hash = h;
+  }
+
+  // ---------- 操作 ----------
+  function toggle(el, store, id) {
+    var open = !el.classList.contains('open');
+    el.classList.toggle('open', open);
+    store[id] = open;
+    var b = el.querySelector('[aria-expanded]'); if (b) b.setAttribute('aria-expanded', open);
+  }
+  var ACT = {
+    noop: function () { toast('もうすぐ使えるようになるよ'); },
+    back: function () { if (S.stack.length >= 2) history.back(); else go('home'); },
+    ask: function (b) { askSheet(b.getAttribute('data-t') || ''); },
+    delReq: function (b) {
+      var id = b.getAttribute('data-id');
+      sheet({ title: 'この依頼を消しますか？', body: 'まだAIに渡していない依頼なら、消しても大丈夫です。', actions: [{ label: 'やめる', value: 0 }, { label: '消す', cls: 'danger', value: 1 }] }).then(function (v) { if (v) delRequest(id); });
+    },
+    ccSend: function () { sendToClaudeCode(); },
+    tipClose: function () { S.tipClosed = true; rerender(); },
+    sendClose: function () { S.goalChanged = {}; rerender(); },
+    setLevel: function (b) {
+      var n = +b.getAttribute('data-n');
+      if (readonly()) { S.goalPreview.level = n; S.goalChanged.level = n; rerender(); return; }
+      if (C.levelOf(D()) === n && D().profile.level) return;
+      D().profile.level = n; save(); S.goalChanged.level = n;
+      rerender(); toast('目標をレベル' + n + 'にしたよ。％を計算し直しました');
+    },
+    setEmb: function (b) {
+      var k = b.getAttribute('data-k');
+      if (readonly()) { S.goalPreview.embellish = k; S.goalChanged.embellish = k; rerender(); return; }
+      if (D().profile.embellish === k) return;
+      D().profile.embellish = k; save(); S.goalChanged.embellish = k;
+      rerender(); toast('盛り方を「' + C.EMBELLISH.filter(function (x) { return x.key === k; })[0].name + '」にしたよ');
+    },
+    importAI: function () {
+      if (readonly()) {
+        sheet({ title: '他のAIから取り込む', body: '<p>Claude Code版では、ファイルを置いて頼むだけでOK。</p><ol class="steps" style="margin-top:12px"><li><b>data/import フォルダにファイルを入れる</b><span>過去のES、ほかのAIとの会話を書き出したテキストなど。</span></li><li><b>Claude Codeに「取り込んで」と言う</b><span>今のノートと照らし合わせて、食い違いは「確認待ち」に積んでくれます。</span></li></ol><div class="cc-box">data/import フォルダにファイルを入れて『取り込んで』と言ってね</div>', actions: [{ label: '「取り込んで」をコピー', value: 'copy' }, { label: 'OK', cls: 'primary', value: 1 }] })
+          .then(function (v) { if (v === 'copy') copyText('取り込んで'); });
+        return;
+      }
+      if (!importPrompt()) return;
+      if (locked()) { ensureUnlocked().then(function (ok) { if (ok) ACT.importAI(); }); return; }
+      var t = importText();
+      copyText(t, '取り込み用の指示文をコピーしました');
+      sheet({ title: '取り込み用の指示文をコピーしました', body: '<ol class="steps" style="margin-top:12px">' +
+        '<li><b>好きなAIの新しいチャットに貼る</b><span>ChatGPT・Claude・Geminiなど、どれでもOK。' + (S.mode === 'local' && C.hasContent(S.data) ? '今までのノートのデータも一緒に入っています。' : '') + '</span></li>' +
+        '<li><b>続けて、過去のESや会話を貼る</b><span>長い時は何回かに分けて貼ってね。AIが今のノートと照らし合わせます。</span></li>' +
+        '<li><b>出てきたセーブを「AIの出力を貼り付け」に貼る</b><span>取り込んだ話は「取り込み・未確認」になります。食い違いは「確認待ち」に入るよ。</span></li></ol>',
+        actions: [{ label: 'もう一度コピー', value: 'again' }, { label: '貼り付けへ', cls: 'primary', value: 'paste' }] })
+        .then(function (v) { if (v === 'again') copyText(importText(), 'もう一度コピーしました'); else if (v === 'paste') go('import'); });
+    },
+    toggleP: function (b) { toggle(b.closest('.tl-period'), S.openP, b.getAttribute('data-id')); },
+    toggleI: function (b) { toggle(b.closest('.iv'), S.openI, b.getAttribute('data-id')); },
+    handoff: function () {
+      if (S.mode !== 'file' && locked()) { ensureUnlocked().then(function (ok) { if (ok) ACT.handoff(); }); return; }
+      copyText(handoffText(), 'コピーしました');
+      if (S.mode === 'file') {
+        sheet({ title: '引き継ぎコードをコピーしました', body: 'Claude Code版では、Claude Codeがこのノートのデータを直接読んで続きをします。別のAIで続けたい時は、新しいチャットに貼り付けて送ってください。', actions: [{ label: 'OK', cls: 'primary', value: 1 }] });
+        return;
+      }
+      openGPTSheet('続きの準備ができました', '<ol class="steps" style="margin-top:12px"><li><b>ChatGPTで新しいチャットを開く</b><span>無料のままでOK。下のボタンから開けます。</span></li><li><b>コピーしたものを貼って送信</b><span>今までのデータごと渡っているので、AIが続きから話を聞いてくれます。</span></li></ol>')
+        .then(function (v) { if (v === 'again') copyText(handoffText()); });
+    },
+    startGPT: function () {
+      var st = starter(); if (!st) return;
+      if (st === LOCK) { ensureUnlocked().then(function (ok) { if (ok) ACT.startGPT(); }); return; }
+      copyText(st, 'はじめるプロンプトをコピーしました');
+      openGPTSheet('はじめるプロンプトをコピーしました', '<ol class="steps" style="margin-top:12px"><li><b>ChatGPTの新しいチャットを開く</b><span>無料のままでOK。下のボタンから開けます。</span></li><li><b>貼り付けて送信する</b><span>コピーしたらChatGPTの新しいチャットに貼って送信してね。AIが1問ずつ質問してくれます。</span></li><li><b>最後に出る「セーブデータ」をここへ</b><span>「AIの出力を貼り付け」から読み込むと、ノートができあがります。</span></li></ol>')
+        .then(function (v) { if (v === 'again') copyText(st, 'もう一度コピーしました'); });
+    },
+    sample: function () { S.data = C.normalize(window.JIBUN_SAMPLE); S.mode = 'sample'; renderBanner(); S.stack = []; go('home'); },
+    exitSample: function () {
+      var local = loadLocal();
+      S.data = local; S.mode = local ? 'local' : 'none'; renderBanner(); S.stack = [];
+      if (/[?&]sample=1/.test(location.search)) { history.replaceState(null, '', location.pathname + (local ? '#home' : '#welcome')); }
+      go(local ? 'home' : 'welcome');
+    },
+    paste: function () { navigator.clipboard.readText().then(function (t) { var ta = $('#paste'); if (ta) { ta.value = t; S.importText = t; } }, function () { toast('貼り付けできませんでした。長押しで貼り付けてね'); }); },
+    runImport: function () { var t = ($('#paste') || {}).value || ''; if (!t.trim()) { S.importErr = 'まだ何も貼り付けられていません。'; render(); return; } doImport(t); },
+    pickFile: function () { var f = $('#fileIn'); if (f) f.click(); },
+    fitcopy: function () { var n = ($('#fitname') || {}).value || ''; if (!n.trim()) { toast('企業名を入れてね'); return; } copyText(fitReq(n.trim()), '依頼文をコピーしました'); },
+    export: function () {
+      var blob = new Blob([JSON.stringify(D(), null, 2)], { type: 'application/json' });
+      var a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+      a.download = 'jibun-note-' + today() + '.json'; document.body.appendChild(a); a.click();
+      setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+      toast('バックアップを保存しました');
+    },
+    print: function () { buildPrint(); window.print(); },
+    wipe: function () {
+      sheet({ title: 'データを消しますか？', body: 'この端末に保存したノートがすべて消えます。元に戻せません。心配なら、先に「バックアップ」しておいてください。', actions: [{ label: 'やめる', value: 0 }, { label: '消す', cls: 'danger', value: 1 }] })
+        .then(function (v) { if (!v) return; try { localStorage.removeItem(LS_KEY); } catch (e) { /* なし */ } S.data = null; S.mode = 'none'; renderBanner(); S.stack = []; go('welcome'); toast('データを消しました'); });
+    }
+  };
+  document.addEventListener('click', function (e) {
+    var c = e.target.closest('[data-copy]');
+    if (c) { var x = S.copies[+c.getAttribute('data-copy')]; if (x) copyText(x.text, x.msg); return; }
+    var a = e.target.closest('[data-act]');
+    if (a && ACT[a.getAttribute('data-act')]) { ACT[a.getAttribute('data-act')](a, e); return; }
+    var g = e.target.closest('[data-go]');
+    if (g) go(g.getAttribute('data-go'), g.hasAttribute('data-replace'));
+  });
+  document.addEventListener('keydown', function (e) {
+    if ((e.key === 'Enter' || e.key === ' ') && e.target.matches && e.target.matches('g[role="button"]')) { e.preventDefault(); go(e.target.getAttribute('data-go')); }
+  });
+  document.addEventListener('input', function (e) { if (e.target.id === 'paste') S.importText = e.target.value; });
+  document.addEventListener('change', function (e) {
+    if (e.target.id !== 'fileIn' || !e.target.files[0]) return;
+    var fr = new FileReader(); fr.onload = function () { doImport(String(fr.result || '')); }; fr.readAsText(e.target.files[0]);
+  });
+  window.addEventListener('beforeprint', buildPrint);
+  var rt; window.addEventListener('resize', function () { clearTimeout(rt); rt = setTimeout(function () { var r = routeParts()[0]; if (r === 'graph' || r === 'home' || r === '') render(false); }, 200); });
+  window.addEventListener('hashchange', onRoute);
+
+  // ---------- 起動 ----------
+  function boot() {
+    var sample = /[?&]sample=1/.test(location.search) && window.JIBUN_SAMPLE;
+    if (sample) { S.data = C.normalize(window.JIBUN_SAMPLE); S.mode = 'sample'; }
+    else if (window.JIBUN_DATA) { S.data = C.normalize(window.JIBUN_DATA); S.mode = 'file'; }
+    else { var l = loadLocal(); if (l) { S.data = l; S.mode = 'local'; } }
+    renderBanner();
+    S.stack = [location.hash.slice(1)];
+    render(false);
+  }
+  // Claude Code版：同じフォルダの data/jibun-data.js があれば読む（ローカルで開いた時だけ）
+  var local = location.protocol === 'file:' || /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname);
+  if (local && !/[?&]sample=1/.test(location.search)) {
+    var s = document.createElement('script');
+    s.src = 'data/jibun-data.js?t=' + Date.now();
+    s.onload = boot; s.onerror = boot;
+    document.head.appendChild(s);
+  } else boot();
+})();
+</script>
+</body>
+</html>
