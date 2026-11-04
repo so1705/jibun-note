@@ -8,6 +8,13 @@
 <meta name="theme-color" content="#161716" media="(prefers-color-scheme: dark)">
 <meta name="description" content="AIとの自己分析ラリーで見つけた「じぶん」を、きれいに見返せるノート。">
 <title>じぶんノート</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="じぶんノート">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <style>
 :root{
   --bg:#F7F5F0; --paper:#FFFFFF; --paper2:#FBFAF7; --ink:#26251F; --ink2:#55524A; --muted:#736F66;
@@ -386,6 +393,10 @@ textarea.paste::placeholder{color:var(--muted)}
 .sheet h2{font-size:19px;font-weight:800;line-height:1.5}
 .sheet .body{font-size:14px;color:var(--ink2);margin-top:8px}
 .sheet .btn-row{margin-top:20px}
+.sheet .btn-row>.btn{flex:1 1 auto;white-space:nowrap}
+a.btn{text-decoration:none}
+.reveal .rv-h,.headline q,.ins-t{text-wrap:pretty}
+.reveal .rv-h{text-wrap:balance}
 .changes{margin-top:12px}
 .changes li{display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-top:1px solid var(--line2);font-size:14.5px;color:var(--ink);font-weight:600}
 .changes li:first-child{border-top:0}
@@ -573,6 +584,75 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
 .fsum dd{font-size:13.5px;color:var(--ink);line-height:1.65;margin:1px 0 8px}
 .fsum .more{font-size:12px;font-weight:700;color:var(--accent-ink);min-height:32px;display:inline-flex;align-items:center}
 
+/* 人物像の一文・気づき */
+.headline{margin-top:6px;line-height:1.6}
+.headline q{-webkit-box-decoration-break:clone;box-decoration-break:clone;quotes:"「" "」";font-family:var(--serif);font-size:15.5px;font-weight:700;line-height:1.6;color:var(--ink);background:linear-gradient(transparent 62%,var(--hl-soft) 62%)}
+.headline q::before,.headline q::after{color:var(--warm)}
+.share-ic{display:inline-grid;vertical-align:-10px;width:34px;height:32px;margin-left:2px;border-radius:50%;place-items:center;color:var(--accent-ink)}
+.share-ic:active{background:var(--line2)}
+.share-ic svg{width:18px;height:18px}
+.ins{position:relative;padding:14px 16px 13px}
+.ins .eyebrow{display:flex;justify-content:space-between;align-items:center;gap:8px;color:var(--accent-ink)}
+.ins .eyebrow small{font-weight:600;color:var(--muted);letter-spacing:.02em}
+.ins-t{font-size:15.5px;font-weight:700;line-height:1.7;margin-top:6px}
+.ins.ok .ins-t span{background:linear-gradient(transparent 58%,var(--hl) 58%);padding:0 1px}
+.ins-r{display:block;font-size:12.5px;color:var(--muted);margin-top:6px;font-family:var(--serif)}
+.ins-r::before{content:"あなた：「"}
+.ins-r::after{content:"」"}
+.ins .stamp{position:absolute;right:12px;top:11px}
+.ins.gap{border-style:dashed}
+.ins.no .ins-t{color:var(--ink2);font-weight:600}
+.ins.no{opacity:.82}
+.ins-no{display:inline-block;margin-top:6px;font-size:11px;font-weight:700;color:var(--muted);border:1px dashed var(--line);border-radius:999px;padding:0 8px}
+.ins+.ins{margin-top:10px}
+.ins .more{display:inline-flex;align-items:center;min-height:32px;margin-top:4px;font-size:12.5px;font-weight:700;color:var(--accent-ink)}
+/* 価値観の順位・意思決定 */
+.rank{flex:none;font-family:var(--serif);font-size:13px;font-weight:700;color:var(--accent-ink);border:1px solid var(--accent-line);border-radius:5px;padding:0 6px;margin-right:8px;line-height:1.7;vertical-align:2px}
+.tradeoff{margin-top:8px;padding:8px 11px;border-radius:var(--r-sm);background:var(--paper2);border-left:3px solid var(--accent-line);font-size:13px;color:var(--ink2);line-height:1.65}
+.tradeoff b{display:block;font-size:11px;color:var(--muted);font-weight:700;letter-spacing:.04em}
+.dc{padding:14px 16px}
+.dc+.dc{margin-top:10px}
+.dc .when{font-size:11.5px;color:var(--muted);font-weight:700;letter-spacing:.04em}
+.dc>b{display:block;font-size:15.5px;font-weight:800;line-height:1.5;margin-top:2px}
+.dc dl{display:grid;grid-template-columns:auto 1fr;gap:4px 10px;margin-top:8px;font-size:13.5px;line-height:1.65}
+.dc dt{font-size:11.5px;font-weight:700;color:var(--accent-ink);padding-top:2px;white-space:nowrap}
+.dc dd{color:var(--ink2)}
+.habit{border-color:var(--hl-line);background:linear-gradient(var(--hl-soft),var(--hl-soft)) top/100% 4px no-repeat,var(--paper);margin-bottom:10px}
+.habit .eyebrow{color:var(--hl-ink)}
+/* コピーしたセーブを読み込む（戻ってきた時） */
+.clipbar{display:flex;align-items:center;gap:6px;margin:14px 0 2px;animation:viewIn .3s cubic-bezier(.2,.75,.25,1) both}
+.clipbar .btn{flex:1;min-height:56px;font-size:15.5px;box-shadow:0 6px 22px rgba(47,122,104,.22)}
+.clipbar .x{flex:none;width:40px;min-height:44px;color:var(--muted);font-size:18px;text-align:center}
+.notice{display:flex;align-items:center;gap:10px;justify-content:space-between;margin-top:12px;padding:9px 6px 9px 12px;border-radius:var(--r);border:1px dashed var(--line);font-size:12.5px;color:var(--ink2);line-height:1.55}
+.notice .mini-btn{flex:none}
+.notice .x{flex:none;width:32px;min-height:36px;color:var(--muted);font-size:16px;text-align:center}
+/* 読み込んだ後のシート */
+.back-note{margin-top:14px;padding:12px 14px;border-radius:var(--r);background:var(--accent-soft);border:1px solid var(--accent-line);color:var(--accent-ink);font-size:14px;line-height:1.65}
+.back-note b{display:block;font-size:15.5px;color:var(--ink)}
+.reveal{margin-top:6px;text-align:center}
+.reveal .rv-g{margin:4px -4px 0;padding:10px 6px 4px;border-radius:var(--r);background:var(--paper2);border:1px solid var(--line2)}
+.reveal .rv-h{font-family:var(--serif);font-size:19px;font-weight:700;line-height:1.6;margin-top:14px;opacity:0;animation:fade .6s ease 1.2s forwards}
+.reveal .rv-h::before{content:"「";color:var(--warm)}
+.reveal .rv-h::after{content:"」";color:var(--warm)}
+.reveal .rv-chips{justify-content:center;margin-top:10px;opacity:0;animation:fade .5s ease 1.5s forwards}
+.reveal .ins{text-align:left;margin-top:12px;opacity:0;animation:fade .6s ease 1.8s forwards}
+.a2hs{margin-top:12px;padding:10px 12px;border-radius:var(--r-sm);border:1px dashed var(--line);font-size:12.5px;color:var(--ink2);line-height:1.6;text-align:left}
+.a2hs .mini-btn{margin-top:8px}
+.manual-ta{width:100%;min-height:150px;margin-top:10px;border:1px solid var(--line);border-radius:var(--r-sm);padding:10px;font:inherit;font-size:13px;line-height:1.5;color:var(--ink);background:var(--paper2)}
+.gpt-steps{margin-top:12px}
+.err .btn{margin-top:10px}
+/* シェア用カード */
+.cardprev{display:flex;justify-content:center;margin:2px 0 6px}
+.cardprev img,.cardprev .ph{width:min(62vw,260px);aspect-ratio:9/16;border-radius:14px;box-shadow:0 2px 6px rgba(40,35,20,.08),0 14px 40px rgba(40,35,20,.16);background:var(--paper2);display:block}
+.seg{display:flex;gap:4px;padding:3px;border-radius:999px;background:var(--line2)}
+.seg button{flex:1;min-height:38px;border-radius:999px;font-size:13px;font-weight:700;color:var(--ink2);text-align:center}
+.seg button[aria-pressed="true"]{background:var(--paper);color:var(--accent-ink);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.optrow{margin-top:14px}
+.optrow>label,.optrow>span.l{display:block;font-size:12px;font-weight:700;color:var(--muted);margin:0 4px 6px;letter-spacing:.04em}
+.masked{font-size:12px;color:var(--muted);margin-top:12px;line-height:1.6}
+.masked::before{content:"";display:inline-block;width:12px;height:8px;border-radius:2px;background:var(--ink2);margin-right:6px;vertical-align:0}
+.tabbar nav .tab small{font-size:inherit}
+
 #print{display:none}
 
 @media (min-width:760px){
@@ -638,10 +718,11 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
     { id: 'hs', label: '高校', range: '15〜18歳' },
     { id: 'univ', label: '大学', range: '18歳〜' }
   ];
-  var TRAIT_KEYS = ['strengths', 'weaknesses', 'values', 'motivators', 'demotivators'];
-  var TRAIT_LABEL = { strengths: '強み', weaknesses: '弱み', values: '価値観', motivators: 'やる気スイッチ', demotivators: 'やる気が下がる条件' };
-  var OUTPUT_LABEL = { intro1min: '1分自己紹介', manual: '自分の取扱説明書', es: 'ES下書き', qa: '想定問答', otherRequest: '他己分析の依頼文', companyFit: '企業別のネタ当て' };
-  var ID_ARRAYS = ['periods', 'episodes', 'deepDive', 'requests', 'checks', 'axes', 'future'];
+  var TRAIT_KEYS = ['strengths', 'weaknesses', 'values', 'motivators', 'demotivators', 'recovery'];
+  var TRAIT_LABEL = { strengths: '強み', weaknesses: '弱み', values: '価値観', motivators: 'やる気スイッチ', demotivators: 'やる気が下がる条件', recovery: '立ち直り方' };
+  var OUTPUT_LABEL = { intro1min: '1分自己紹介', manual: '自分の取扱説明書', es: '取り込んだ資料', qa: '想定問答', otherRequest: '他己分析の依頼文', companyFit: '企業別のネタ当て' };
+  var ID_ARRAYS = ['periods', 'episodes', 'deepDive', 'requests', 'checks', 'axes', 'future', 'insights', 'decisions'];
+  var INSIGHT_KIND = { pattern: 'くり返し出てくる共通点', contrast: '上がる時と下がる時', word: 'よく使う言葉', gap: '自分の見方とのズレ' };
   // 未来（Will）の8領域。[area, 表示名, 聞くこと, 「AIで続ける時に〜と言えばOK」の言い方]
   var FUTURE_AREAS = [
     ['vision', 'なりたい姿・ビジョン', 'どんな人になりたい？誰にどう言われたい？', 'どんな人になりたいか話したい'],
@@ -665,11 +746,23 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
       profile: { name: '', university: '', faculty: '', grad: '', targets: { industries: [], companies: [], jobs: [] }, goal: '', mode: 'beginner' },
       periods: clone(DEFAULT_PERIODS),
       episodes: [],
-      traits: { strengths: [], weaknesses: [], values: [], motivators: [], demotivators: [] },
-      axes: [], future: [], interview: {}, deepDive: [], requests: [], checks: [], outputs: {}, progress: {}, log: []
+      traits: { strengths: [], weaknesses: [], values: [], motivators: [], demotivators: [], recovery: [] },
+      axes: [], future: [], insights: [], decisions: [], interview: {}, deepDive: [], requests: [], checks: [], outputs: {}, progress: {}, log: []
     };
   }
 
+  // エピソードの欠けたキーを空として補う（パッチでは空の項目が省かれていることがある）
+  var EP_TEXT = ['when', 'title', 'summary', 'situation', 'action', 'reason', 'feeling', 'result', 'learning'];
+  function fillEpisodes(d) {
+    (Array.isArray(d.episodes) ? d.episodes : []).forEach(function (e) {
+      if (!isObj(e)) return;
+      EP_TEXT.forEach(function (k) { if (e[k] === undefined || e[k] === null) e[k] = ''; });
+      ['quotes', 'tags'].forEach(function (k) { if (!Array.isArray(e[k])) e[k] = []; });
+      if (e.motivation === undefined || e.motivation === null) e.motivation = '';
+      if (e.depth === undefined || e.depth === null || e.depth === '') e.depth = 0;
+    });
+    return d;
+  }
   // 足りない枠を補う（中身は変えない）
   function normalize(src) {
     var base = emptyData();
@@ -683,7 +776,7 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
     if (!d.periods.length) d.periods = clone(DEFAULT_PERIODS);
     if (!isObj(d.profile.targets)) d.profile.targets = base.profile.targets;
     TRAIT_KEYS.forEach(function (k) { if (!Array.isArray(d.traits[k])) d.traits[k] = []; });
-    return d;
+    return fillEpisodes(d);
   }
 
   // 文字列の外にある末尾カンマ・全角スペースを取り除く
@@ -710,17 +803,108 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
     return out;
   }
 
-  // 寛容な読み込み：最初の { から最後の } までを取り出して読む
-  function parseLoose(text) {
-    if (typeof text !== 'string') throw new Error('読み込む文章がありません。');
-    var t = text.replace(/^﻿/, '');
-    var a = t.indexOf('{'), b = t.lastIndexOf('}');
-    if (a < 0 || b <= a) throw new Error('データが見つかりませんでした。AIの出力を、{ から } までまるごと貼り付けてください。');
-    var body = t.slice(a, b + 1);
-    try { return JSON.parse(body); } catch (e) { /* つぎへ */ }
-    try { return JSON.parse(stripTrailingCommas(body)); } catch (e2) {
-      throw new Error('データの形が途中で崩れていて読めませんでした。AIに「セーブデータをもう一度出して」と頼んでみてください。');
+  // 崩れかけのJSONを直す（ルール8）：スマートクォート、// と /* */ のコメント、文字列の中の裸の "、
+  // 文字列の中の改行、全角のコロン・カンマ・スペース、末尾カンマ
+  function isQ(c) { return c === '"' || c === '“' || c === '”' || c === '„' || c === '＂'; }
+  function repairJson(s) {
+    var out = '', inStr = false, n = s.length;
+    for (var i = 0; i < n; i++) {
+      var c = s[i];
+      if (inStr) {
+        if (c === '\\') { out += c + (i + 1 < n ? s[++i] : ''); continue; }
+        if (isQ(c)) {
+          // 次の空白以外の文字が , : } ] か終わりなら「閉じ」。それ以外は中身の引用符として残す
+          var j = i + 1; while (j < n && /[\s　]/.test(s[j])) j++;
+          if (j >= n || ',:}]，：'.indexOf(s[j]) >= 0) { out += '"'; inStr = false; }
+          else out += c === '"' || c === '＂' ? '\\"' : c;
+          continue;
+        }
+        if (c === '\n') { out += '\\n'; continue; }
+        if (c === '\r') continue;
+        if (c === '\t') { out += '\\t'; continue; }
+        out += c; continue;
+      }
+      if (isQ(c)) { out += '"'; inStr = true; continue; }
+      if (c === '/' && s[i + 1] === '/') { while (i < n && s[i] !== '\n') i++; out += '\n'; continue; }
+      if (c === '/' && s[i + 1] === '*') { var e = s.indexOf('*/', i + 2); i = e < 0 ? n : e + 1; continue; }
+      if (c === '　' || c === ' ') { out += ' '; continue; }
+      if (c === '：') { out += ':'; continue; }
+      if (c === '，') { out += ','; continue; }
+      out += c;
     }
+    return stripTrailingCommas(out);
+  }
+  function tryParse(body) {
+    try { return JSON.parse(body); } catch (e) { /* つぎへ */ }
+    try { return JSON.parse(stripTrailingCommas(body)); } catch (e2) { /* つぎへ */ }
+    try { return JSON.parse(repairJson(body)); } catch (e3) { return undefined; }
+  }
+  // 読み込みのエラー（kind で種類を分ける。fix は「AIへの直し方」としてコピーさせる文）
+  var FIX_TRUNC = 'セーブが途中で切れたから、もう一度出して。説明なしで、```json のコードブロックだけで。長い時は「1/2」「2/2」のように分けてOK';
+  var FIX_BROKEN = 'さっきのセーブが壊れてた。説明なしで、正しいJSONを```jsonで1つだけ出し直して';
+  function loadErr(kind, msg, fix) { var e = new Error(msg); e.kind = kind; if (fix) e.fix = fix; return e; }
+  function errNotFound() { return loadErr('notfound', 'データが見つかりませんでした。AIの出力を、{ から } までまるごと貼り付けてください。'); }
+  function errTruncated() { return loadErr('truncated', 'セーブが途中で切れていて、読み込めませんでした（ノートは何も変えていません）。AIに「セーブが途中で切れたから、もう一度出して」と送ってね。', FIX_TRUNC); }
+  function errBroken() { return loadErr('broken', 'データの形が崩れていて、読み込めませんでした（ノートは何も変えていません）。AIに直してもらおう。', FIX_BROKEN); }
+
+  // { に対応する } の位置（文字列の中は数えない）。見つからなければ -1
+  function matchBrace(t, a, strAware) {
+    var depth = 0, inStr = false;
+    for (var i = a; i < t.length; i++) {
+      var c = t[i];
+      if (strAware) {
+        if (inStr) { if (c === '\\') i++; else if (c === '"') inStr = false; continue; }
+        if (c === '"') { inStr = true; continue; }
+      }
+      if (c === '{') depth++;
+      else if (c === '}' && --depth === 0) return i;
+    }
+    return -1;
+  }
+  var DATA_HEAD = /^\{\s*["“”＂]?(app|patch|handoff|version|profile|episodes|traits|updatedAt)["“”＂]?\s*[:：]/;
+  var DATA_KEY = /["“”＂](app|patch|handoff)["“”＂]\s*[:：]/;
+  // 文章の中から、いちばん外側の { … } を順に取り出す。データらしい始まりで閉じていなければ「途中で切れた」
+  function scanObjects(t) {
+    var res = [], i = 0;
+    while (i < t.length) {
+      var a = t.indexOf('{', i); if (a < 0) break;
+      var end = matchBrace(t, a, true);
+      if (end < 0) end = matchBrace(t, a, false);
+      if (end < 0) {
+        if (DATA_HEAD.test(t.slice(a, a + 80))) { res.push({ text: t.slice(a), open: true }); break; }
+        i = a + 1; continue;
+      }
+      res.push({ text: t.slice(a, end + 1), open: false });
+      i = end + 1;
+    }
+    return res;
+  }
+  // 貼られた文章の中のデータを全部読む（複数のコードブロック「1/2」「2/2」も順に）
+  function parseAll(text) {
+    if (typeof text !== 'string') throw loadErr('notfound', '読み込む文章がありません。');
+    var t = text.replace(/^﻿/, ''), r = { list: [], truncated: false, broken: false, other: 0, any: t.indexOf('{') >= 0 };
+    scanObjects(t).forEach(function (s) {
+      var dataish = DATA_HEAD.test(s.text.slice(0, 80)) || DATA_KEY.test(s.text);
+      if (s.open) { r.truncated = true; return; }
+      var o = tryParse(s.text);
+      if (o === undefined) { if (dataish) r.broken = true; return; }
+      if (isObj(o) && (looksLikeData(o) || o.handoff === true || o.handoff === 'true')) r.list.push(o);
+      else r.other++;
+    });
+    return r;
+  }
+  // 寛容な読み込み（1つだけ取り出す）
+  function parseLoose(text) {
+    var r = parseAll(text);
+    if (r.list.length) return r.list[0];
+    if (r.truncated) throw errTruncated();
+    if (r.broken) throw errBroken();
+    if (!r.any) throw errNotFound();
+    // データらしくない JSON でも、読めればそのまま返す
+    var t = String(text), a = t.indexOf('{'), b = t.lastIndexOf('}');
+    var o = a >= 0 && b > a ? tryParse(t.slice(a, b + 1)) : undefined;
+    if (o === undefined) throw errBroken();
+    return o;
   }
 
   function isPatch(o) { return isObj(o) && (o.patch === true || o.patch === 'true'); }
@@ -781,8 +965,11 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
     { path: ['traits', 'values'], head: 'name', prefix: 'v' },
     { path: ['traits', 'motivators'], head: 'name', prefix: 'm' },
     { path: ['traits', 'demotivators'], head: 'name', prefix: 'n' },
+    { path: ['traits', 'recovery'], head: 'name', prefix: 'h' },
     { path: ['axes'], head: 'text', prefix: 'a', ref: 'axis' },
     { path: ['future'], head: 'text', prefix: 'f', ref: 'future' },
+    { path: ['insights'], head: 'text', prefix: 'i' },
+    { path: ['decisions'], head: 'choice', prefix: 'k' },
     { path: ['deepDive'], head: 'question', prefix: 'd' },
     { path: ['requests'], head: 'text', prefix: 'r' },
     { path: ['checks'], head: 'question', prefix: 'c' },
@@ -814,7 +1001,7 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
     function rl(a) { return Array.isArray(a) ? a.map(re) : a; }
     if (isObj(patch.traits)) Object.keys(patch.traits).forEach(function (k) { (Array.isArray(patch.traits[k]) ? patch.traits[k] : []).forEach(function (t) { if (isObj(t)) t.evidence = rl(t.evidence); }); });
     (Array.isArray(patch.axes) ? patch.axes : []).forEach(function (a) { if (isObj(a)) a.evidence = rl(a.evidence); });
-    (Array.isArray(patch.future) ? patch.future : []).forEach(function (f) { if (isObj(f)) f.evidence = rl(f.evidence); });
+    ['future', 'insights', 'decisions'].forEach(function (k) { (Array.isArray(patch[k]) ? patch[k] : []).forEach(function (f) { if (isObj(f)) f.evidence = rl(f.evidence); }); });
     if (isObj(patch.interview)) Object.keys(patch.interview).forEach(function (k) { (Array.isArray(patch.interview[k]) ? patch.interview[k] : []).forEach(function (c) { if (isObj(c)) c.episode = re(c.episode); }); });
     (Array.isArray(patch.deepDive) ? patch.deepDive : []).forEach(function (x) { if (!isObj(x) || x.target == null) return; var t = String(x.target); x.target = E[t] || A[t] || x.target; });
     (Array.isArray(patch.requests) ? patch.requests : []).forEach(function (x) { if (!isObj(x) || x.target == null) return; x.target = retarget(String(x.target), E, A, F); });
@@ -842,7 +1029,7 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
       (Array.isArray(d.traits[k]) ? d.traits[k] : []).forEach(function (t) { if (isObj(t) && Array.isArray(t.evidence)) t.evidence = t.evidence.filter(keep); });
     });
     d.axes.forEach(function (a) { if (isObj(a) && Array.isArray(a.evidence)) a.evidence = a.evidence.filter(keep); });
-    d.future.forEach(function (f) { if (isObj(f) && Array.isArray(f.evidence)) f.evidence = f.evidence.filter(keep); });
+    d.future.concat(d.insights, d.decisions).forEach(function (f) { if (isObj(f) && Array.isArray(f.evidence)) f.evidence = f.evidence.filter(keep); });
     Object.keys(d.interview).forEach(function (k) { if (Array.isArray(d.interview[k])) d.interview[k] = d.interview[k].filter(function (c) { return !isObj(c) || keep(c.episode); }); });
     Object.keys(d.outputs).forEach(function (k) { (Array.isArray(d.outputs[k]) ? d.outputs[k] : []).forEach(function (o) { if (isObj(o) && Array.isArray(o.episodes)) o.episodes = o.episodes.filter(keep); }); });
     if (Array.isArray(d.deepDive)) d.deepDive = d.deepDive.filter(function (q) { return !isObj(q) || keep(q.target); });
@@ -859,6 +1046,7 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
     return {
       profile: false, periods: { added: [], updated: [] }, episodes: { added: [], updated: [] },
       traits: { added: [], updated: [] }, axes: { added: [], updated: [] }, future: { added: [], updated: [] }, deepDive: { added: [], updated: [] },
+      insights: { added: [], updated: [] }, decisions: { added: [], updated: [] },
       requests: { added: [], updated: [] }, checks: { added: [], updated: [] }, reqDone: 0, checkDone: 0,
       deepDone: 0, interview: [], outputs: [], progress: null, log: 0, deleted: {}, other: []
     };
@@ -943,6 +1131,7 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
       }
       if (k === 'profile' && isObj(v)) {
         deepMerge(d.profile, v); c.profile = true;
+        if (typeof v.headline === 'string' && v.headline.trim()) c.headline = v.headline;
         if (v.level !== undefined) c.level = v.level;
         if (v.embellish !== undefined) c.embellish = v.embellish;
         return;
@@ -1007,28 +1196,31 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
       c.other.push(k);
     });
     applyDelete(d, patch['delete'], c);
+    fillEpisodes(d);
     return { data: d, changes: c, summary: summarize(c) };
   }
 
-  var DEL_LABEL = { requests: 'AIへの依頼', checks: '確認待ち', episodes: 'エピソード', periods: '時期', deepDive: '深掘り', axes: '就活の軸', future: '未来（Will）', strengths: '強み', weaknesses: '弱み', values: '価値観', motivators: 'やる気スイッチ', demotivators: 'やる気が下がる条件', es: 'ES', qa: '想定問答', companyFit: '企業別のネタ', interview: '面接ネタ', outputs: '作れるもの', log: '記録' };
+  var DEL_LABEL = { requests: 'AIへのメモ', checks: 'AIからの確認', episodes: 'エピソード', periods: '時期', deepDive: '深掘り', axes: '就活の軸', future: '未来（これから）', insights: 'AIの気づき', decisions: '意思決定', strengths: '強み', weaknesses: '弱み', values: '価値観', motivators: 'やる気スイッチ', demotivators: 'やる気が下がる条件', recovery: '立ち直り方', es: 'ES', qa: '想定問答', companyFit: '企業別のネタ', interview: '面接ネタ', outputs: '作れるもの', log: '記録' };
 
   function summarize(c) {
     var s = [];
     function uniq(a) { return a.filter(function (x, i) { return a.indexOf(x) === i; }); }
     if (c.episodes.added.length) s.push('エピソード+' + c.episodes.added.length);
     if (c.episodes.updated.length) s.push('エピソード更新' + uniq(c.episodes.updated).length);
+    if (c.insights && c.insights.added.length) s.push('AIの気づき+' + c.insights.added.length);
     if (c.interview.length) s.push('面接ネタ更新：' + uniq(c.interview).map(function (k) { return INTERVIEW_LABEL[k] || k; }).join('・'));
     if (c.traits.added.length) s.push('強み・価値観+' + c.traits.added.length);
     if (c.traits.updated.length) s.push('強み・価値観 更新' + uniq(c.traits.updated).length);
+    if (c.decisions && c.decisions.added.length) s.push('意思決定+' + c.decisions.added.length);
     if (c.axes.added.length) s.push('就活の軸+' + c.axes.added.length);
     if (c.axes.updated.length) s.push('就活の軸 更新' + uniq(c.axes.updated).length);
-    if (c.future.added.length) s.push('未来（Will）+' + c.future.added.length);
-    if (c.future.updated.length) s.push('未来（Will）更新' + uniq(c.future.updated).length);
-    if (c.deepDive.added.length) s.push('深掘り待ち+' + c.deepDive.added.length);
+    if (c.future.added.length) s.push('未来（これから）+' + c.future.added.length);
+    if (c.future.updated.length) s.push('未来（これから）更新' + uniq(c.future.updated).length);
+    if (c.deepDive.added.length) s.push('深掘りしたい質問+' + c.deepDive.added.length);
     if (c.deepDone) s.push('深掘り完了' + c.deepDone);
-    if (c.reqDone) s.push('AIへの依頼 対応済み' + c.reqDone);
+    if (c.reqDone) s.push('AIへのメモ 対応済み' + c.reqDone);
     var newChecks = c.checks.added.length;
-    if (newChecks) s.push('確認待ち+' + newChecks);
+    if (newChecks) s.push('AIからの確認+' + newChecks);
     if (c.checkDone) s.push('確認できた' + c.checkDone);
     if (c.outputs.length) s.push('作れるもの：' + uniq(c.outputs).map(function (k) { return OUTPUT_LABEL[k] || k; }).join('・'));
     if (c.progress) {
@@ -1037,6 +1229,7 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
     }
     if (c.level !== undefined && levelNum(c.level)) s.push('目標：レベル' + levelNum(c.level) + '（' + LEVELS[levelNum(c.level) - 1].name + '）');
     if (c.embellish !== undefined) { var em = EMBELLISH.filter(function (x) { return x.key === c.embellish; })[0]; if (em) s.push('盛り方：' + em.name); }
+    if (c.headline) s.push('人物像の一文');
     if (c.profile) s.push('プロフィール更新');
     if (c.periods.added.length) s.push('時期+' + c.periods.added.length);
     if (c.log) s.push('記録+' + c.log);
@@ -1044,15 +1237,31 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
     if (!s.length) s.push('変更はありませんでした');
     return s;
   }
+  // 複数のパッチを順に当てた時の変更をまとめる
+  function mergeChanges(a, b) {
+    Object.keys(b).forEach(function (k) {
+      var x = a[k], y = b[k];
+      if (Array.isArray(y)) a[k] = (Array.isArray(x) ? x : []).concat(y);
+      else if (typeof y === 'number') a[k] = (typeof x === 'number' ? x : 0) + y;
+      else if (typeof y === 'boolean') a[k] = !!x || y;
+      else if (k === 'progress') { if (y) a[k] = x ? { from: x.from, to: y.to } : y; }
+      else if (k === 'deleted') Object.keys(y).forEach(function (q) { a.deleted[q] = (a.deleted[q] || 0) + y[q]; });
+      else if (isObj(y) && isObj(x) && Array.isArray(y.added)) { x.added = x.added.concat(y.added); x.updated = x.updated.concat(y.updated); }
+      else if (y !== undefined && y !== null) a[k] = y;
+    });
+    return a;
+  }
 
   function describeFull(d) {
     var nCat = INTERVIEW_KEYS.filter(function (k) { return (d.interview[k[0]] || []).length; }).length;
     var nTr = TRAIT_KEYS.reduce(function (n, k) { return n + d.traits[k].length; }, 0);
     var s = ['エピソード' + d.episodes.length + '件', '面接ネタ' + nCat + 'カテゴリ'];
     if (nTr) s.push('強み・価値観' + nTr + '件');
-    if (d.future.length) s.push('未来（Will）' + d.future.length + '件');
-    if (d.deepDive.length) s.push('深掘り待ち' + d.deepDive.filter(function (x) { return !x.done; }).length + '件');
-    var nOut = Object.keys(d.outputs).filter(function (k) { var v = d.outputs[k]; return Array.isArray(v) ? v.length : v && v.text; }).length;
+    if (d.insights.length) s.push('AIの気づき' + d.insights.length + '件');
+    if (d.decisions.length) s.push('意思決定' + d.decisions.length + '件');
+    if (d.future.length) s.push('未来（これから）' + d.future.length + '件');
+    if (d.deepDive.length) s.push('深掘りしたい質問' + d.deepDive.filter(function (x) { return !x.done; }).length + '件');
+    var nOut = ['intro1min', 'manual', 'otherRequest'].filter(function (k) { var v = d.outputs[k]; return v && v.text; }).length;
     if (nOut) s.push('作れるもの' + nOut + '種類');
     return s;
   }
@@ -1061,47 +1270,68 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
     return isObj(d) && ((d.episodes && d.episodes.length) || (d.profile && d.profile.name) || (d.interview && Object.keys(d.interview).length)) ? true : false;
   }
 
-  // 貼り付けられた文章を読み、パッチ／全体データを判定して結果を返す
+  // 貼り付けられた文章を読み、最初のデータを返す（互換用）
   function parseData(text) {
-    var first;
-    try { var o = parseLoose(text); if (looksLikeData(o)) return o; } catch (e) { first = e; }
-    // 前の文章に { が混ざっている時：データらしい始まり（{"app" など）から読み直す
-    var re = /\{\s*"(app|handoff|patch|version)"\s*:/g, m, b = String(text || '').lastIndexOf('}');
-    while ((m = re.exec(text))) {
-      var body = text.slice(m.index, b + 1);
-      try { return JSON.parse(body); } catch (e1) { /* つぎへ */ }
-      try { return JSON.parse(stripTrailingCommas(body)); } catch (e2) { /* つぎへ */ }
-    }
-    if (first) throw first;
-    return null;
+    var r = parseAll(text);
+    if (r.list.length) return r.list[0];
+    if (r.truncated) throw errTruncated();
+    if (r.broken) throw errBroken();
+    return r.any ? parseLoose(text) : null;
   }
 
   var HANDOFF_MSG = 'これはAIに渡す用のコード（引き継ぎコード）です。ノートには読み込めません。ChatGPTなどの新しいチャットに貼り付けて送ってください。AIが最後に出す「セーブデータ」をここに貼ると、ノートが更新されます。';
+  function isHandoff(o) { return isObj(o) && (o.handoff === true || o.handoff === 'true'); }
 
+  // 貼られた文章を読み、パッチ／全体データを判定して結果を返す。
+  // コードブロックが複数ある時（1/2・2/2）は、全部を順に当てる。途中で切れたもの・壊れたものがあれば何も当てない
   function prepareImport(text, current) {
-    var o = parseData(text);
-    if (isObj(o) && (o.handoff === true || o.handoff === 'true')) { var he = new Error(HANDOFF_MSG); he.handoff = true; throw he; }
-    if (!looksLikeData(o)) throw new Error('じぶんノートのデータではないようです。AIが最後に出した「セーブデータ」を貼り付けてください。');
-    if (isPatch(o)) {
-      var r = applyPatch(current, o);
-      return { kind: 'patch', data: r.data, changes: r.changes, summary: r.summary, needsConfirm: false };
+    var r = parseAll(text);
+    if (r.truncated) throw errTruncated();
+    if (r.broken) throw errBroken();
+    var list = r.list.filter(function (o) { return !isHandoff(o); });
+    if (!list.length) {
+      if (r.list.length) { var he = loadErr('handoff', HANDOFF_MSG); he.handoff = true; throw he; }
+      if (!r.any) throw errNotFound();
+      throw loadErr('notdata', 'じぶんノートのデータではないようです。AIが最後に出した「セーブデータ」を貼り付けてください。');
     }
-    var full = normalize(o);
-    return { kind: 'full', data: full, changes: null, summary: describeFull(full), needsConfirm: hasContent(current) };
+    var d = current, changes = null, full = false;
+    list.forEach(function (o) {
+      if (isPatch(o)) {
+        var p = applyPatch(d, o);
+        d = p.data; changes = changes ? mergeChanges(changes, p.changes) : p.changes;
+      } else {
+        full = true; d = normalize(o); changes = null;
+      }
+    });
+    if (full) return { kind: 'full', data: d, changes: changes, summary: describeFull(d), needsConfirm: hasContent(current), blocks: list.length };
+    return { kind: 'patch', data: d, changes: changes, summary: summarize(changes), needsConfirm: false, blocks: list.length };
   }
 
-  // 引き継ぎコード用の軽量版（下書きと作成物の本文は省く）
+  // 引き継ぎコード用：空の値（""・[]・{}・null）を省く
+  function prune(v) {
+    if (Array.isArray(v)) { var a = v.map(prune).filter(function (x) { return x !== undefined; }); return a.length ? a : undefined; }
+    if (isObj(v)) {
+      var o = {}, any = false;
+      Object.keys(v).forEach(function (k) { var x = prune(v[k]); if (x !== undefined) { o[k] = x; any = true; } });
+      return any ? o : undefined;
+    }
+    if (v === null || v === undefined || (typeof v === 'string' && !v.trim())) return undefined;
+    return v;
+  }
+  // 引き継ぎコード用の軽量版（下書きと作成物の本文・空のキーは省き、ノートが計算した「足りないもの」を gaps で付ける）
   function makeHandoff(d) {
-    var src = normalize(d), o = { handoff: true };
-    Object.keys(src).forEach(function (k) { o[k] = src[k]; });
-    Object.keys(o.interview || {}).forEach(function (k) { (Array.isArray(o.interview[k]) ? o.interview[k] : []).forEach(function (c) { if (isObj(c)) delete c.draft; }); });
+    var src = normalize(d), o = { handoff: true }, gaps = computeReach(src).gaps.slice(0, 5).map(function (g) { return g.label; });
+    if (gaps.length) o.gaps = gaps;
+    Object.keys(src.interview || {}).forEach(function (k) { (Array.isArray(src.interview[k]) ? src.interview[k] : []).forEach(function (c) { if (isObj(c)) delete c.draft; }); });
     // 依頼と確認は、まだのものだけ渡す
-    o.requests = (o.requests || []).filter(function (r) { return isObj(r) && r.done !== true; });
-    o.checks = (o.checks || []).filter(function (c) { return isObj(c) && c.done !== true; });
-    Object.keys(o.outputs || {}).forEach(function (k) {
-      var v = o.outputs[k];
+    src.requests = (src.requests || []).filter(function (r) { return isObj(r) && r.done !== true; });
+    src.checks = (src.checks || []).filter(function (c) { return isObj(c) && c.done !== true; });
+    Object.keys(src.outputs || {}).forEach(function (k) {
+      var v = src.outputs[k];
       (Array.isArray(v) ? v : [v]).forEach(function (x) { if (isObj(x)) { delete x.text; delete x.answer; } });
     });
+    var p = prune(src) || {};
+    Object.keys(p).forEach(function (k) { if (k !== 'handoff' && k !== 'gaps') o[k] = p[k]; });
     return o;
   }
 
@@ -1119,7 +1349,7 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
     { key: 'boost', name: '盛る', desc: '規模・成果・役割を大きめに。小さな経験を大きく見せる' }
   ];
   var DEPTH_LABEL = ['出来事だけ', '行動と気持ちまで', '理由と結果まで', '学びと再現性まで', '最難関水準'];
-  var REACH_NEED = { A: [3, 5, 8, 12, 15], B: [1, 2, 3, 4, 5], D1: [1, 1, 2, 2, 3], D2: [0, 0, 1, 1, 2], E: [0, 1, 2, 3, 4], F: [0, 0, 1, 2, 2], G: [0, 0, 0, 0, 1], H: [0, 2, 3, 5, 7] };
+  var REACH_NEED = { A: [3, 5, 6, 8, 8], B: [1, 2, 3, 3, 3], D1: [1, 1, 2, 2, 3], D2: [0, 0, 1, 1, 2], E: [0, 1, 2, 3, 4], F: [0, 0, 1, 2, 2], H: [0, 2, 3, 5, 7], I: [0, 0, 1, 2, 3] };
   var SLOT_NEED = {
     gakuchika: [2, 3, 3, 3, 4], self_pr: [0, 2, 3, 3, 4], strength: [0, 2, 2, 3, 3], weakness: [0, 2, 2, 3, 3], setback: [0, 0, 3, 3, 4],
     team: [0, 0, 2, 3, 4], success: [0, 0, 0, 3, 3], challenge: [0, 0, 0, 3, 3], values: [0, 0, 0, 2, 3], axis: [0, 0, 0, 2, 3],
@@ -1136,14 +1366,29 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
   function depthOf(e) { var n = isObj(e) ? toNum(e.depth) : null; return n == null ? 0 : Math.max(0, Math.min(4, Math.round(n))); }
   function hasMissing(c) { return Array.isArray(c.missing) && c.missing.some(function (m) { return String(m == null ? '' : m).trim(); }); }
 
+  // まだ答えていない「答えの穴」（checks の kind hole）の数を、エピソードごとに
+  function openHoles(d) {
+    var h = {};
+    (Array.isArray(d.checks) ? d.checks : []).forEach(function (c) {
+      if (!isObj(c) || c.kind !== 'hole' || c.done === true || !Array.isArray(c.targets)) return;
+      c.targets.forEach(function (t) { h[String(t)] = (h[String(t)] || 0) + 1; });
+    });
+    return h;
+  }
+  // 判定に使うエピソードの深さ（L4以上は、答えの穴が残っていると1段下げる）
+  function effDepth(e, lv, holes) {
+    var dep = depthOf(e);
+    return lv >= 4 && isObj(e) && holes[String(e.id)] ? Math.max(0, dep - 1) : dep;
+  }
   // その枠の fit 2 以上の候補のうち、いちばん深いもの（L3以上は missing があると1段下げる）
-  function bestCand(d, key, lv, eps) {
-    var arr = Array.isArray(d.interview[key]) ? d.interview[key] : [], b = { key: key, index: -1, depth: 0, penalized: false };
+  function bestCand(d, key, lv, eps, holes) {
+    var arr = Array.isArray(d.interview[key]) ? d.interview[key] : [], b = { key: key, index: -1, depth: 0, penalized: false, holed: false };
     arr.forEach(function (c, i) {
       if (!isObj(c) || !((toNum(c.fit) || 0) >= 2)) return;
-      var dep = depthOf(eps[String(c.episode)]), pen = false;
-      if (lv >= 3 && hasMissing(c)) { pen = true; dep = Math.max(0, dep - 1); }
-      if (b.index < 0 || dep > b.depth) b = { key: key, index: i, depth: dep, penalized: pen };
+      // missing と答えの穴が重なっても、下げるのは合わせて1段まで
+      var e = eps[String(c.episode)], dep = depthOf(e), hol = effDepth(e, lv, holes) < dep, pen = lv >= 3 && hasMissing(c);
+      if (pen || hol) dep = Math.max(0, dep - 1);
+      if (b.index < 0 || dep > b.depth) b = { key: key, index: i, depth: dep, penalized: pen, holed: hol };
     });
     return b;
   }
@@ -1183,7 +1428,7 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
       if (es.some(function (e) { return depthOf(e) >= 2; })) pastSum += 1;
       else { pastSum += 0.5; pastShallow.push(p.label); }
     });
-    var nowDefs = TRAIT_KEYS.map(function (k) { return [d.traits[k], TRAIT_LABEL[k]]; }).concat([[d.axes, '就活の軸']]);
+    var nowDefs = TRAIT_KEYS.map(function (k) { return [d.traits[k], TRAIT_LABEL[k]]; }).concat([[d.axes, '就活の軸'], [d.decisions, '意思決定']]);
     var nowMissing = nowDefs.filter(function (x) { return !x[0].filter(isObj).length; }).map(function (x) { return x[1]; });
     var fa = futureAreas(d);
     var past = { pct: Math.round(pastSum / DEFAULT_PERIODS.length * 100), missing: pastMissing, shallow: pastShallow, have: pastSum, need: DEFAULT_PERIODS.length };
@@ -1195,7 +1440,7 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
   function computeReach(data, opt) {
     var d = normalize(data);
     var lv = (opt && levelNum(opt.level)) || levelOf(d), li = lv - 1;
-    var eps = {};
+    var eps = {}, holes = openHoles(d);
     d.episodes.forEach(function (e) { if (isObj(e) && e.id != null) eps[String(e.id)] = e; });
     function realEv(a) { return (Array.isArray(a) ? a : []).filter(function (id) { return eps[String(id)]; }).length; }
     function ratio(h, n) { return n > 0 ? Math.min(h / n, 1) : 1; }
@@ -1224,8 +1469,8 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
     // C. 面接枠
     var slots = {}, req = [];
     INTERVIEW_KEYS.forEach(function (k) {
-      var key = k[0], need = SLOT_NEED[key][li], best = key === 'vision' ? visionBest(d, lv, realEv) : bestCand(d, key, lv, eps);
-      if (lv === 1 && key === 'gakuchika') { var alt = bestCand(d, 'self_pr', lv, eps); if (alt.index >= 0 && (best.index < 0 || alt.depth > best.depth)) best = alt; }
+      var key = k[0], need = SLOT_NEED[key][li], best = key === 'vision' ? visionBest(d, lv, realEv) : bestCand(d, key, lv, eps, holes);
+      if (lv === 1 && key === 'gakuchika') { var alt = bestCand(d, 'self_pr', lv, eps, holes); if (alt.index >= 0 && (best.index < 0 || alt.depth > best.depth)) best = alt; }
       var needFor = need;
       if (!needFor) for (var j = li + 1; j < 5 && !needFor; j++) needFor = SLOT_NEED[key][j];
       if (!needFor) needFor = SLOT_NEED[key][4];
@@ -1233,7 +1478,7 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
       var sc = has ? ratio(best.depth, needFor) : 0, LB = key === 'vision' ? VISION_DEPTH_LABEL : DEPTH_LABEL;
       slots[key] = {
         key: key, label: k[1], need: need, needFor: needFor, have: best.depth, score: sc, pct: Math.round(sc * 100),
-        required: need > 0, hasCand: has, penalized: best.penalized, from: best.key,
+        required: need > 0, hasCand: has, penalized: best.penalized, holed: !!best.holed, from: best.key,
         haveLabel: LB[best.depth], needLabel: LB[need || needFor],
         go: best.index >= 0 ? 'cand/' + best.key + '/' + best.index : key === 'vision' ? 'future' : 'interview/' + key
       };
@@ -1254,7 +1499,9 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
       } else if (!x.hasCand) { label = name + 'のネタを見つける'; hint = 'まだ使える候補がないよ。AIに材料探しを頼もう'; }
       else {
         label = name + 'をあと' + (x.need - x.have) + '段深く';
-        hint = x.penalized ? '「足りない情報」を埋めると1段上がるよ（今は「' + DEPTH_LABEL[x.have] + '」扱い）' : '今は「' + DEPTH_LABEL[x.have] + '」。目標は「' + DEPTH_LABEL[x.need] + '」';
+        hint = x.penalized ? '「足りない情報」を埋めると1段上がるよ（今は「' + DEPTH_LABEL[x.have] + '」扱い）'
+          : x.holed ? 'AIからの「答えの穴」の確認に答えると1段上がるよ（今は「' + DEPTH_LABEL[x.have] + '」扱い）'
+          : '今は「' + DEPTH_LABEL[x.have] + '」。目標は「' + DEPTH_LABEL[x.need] + '」';
       }
       lose(4 * (1 - x.score) / req.length, label, hint, x.go, 'C.' + x.key);
     });
@@ -1268,11 +1515,11 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
     lose((1 - parts[0]) / parts.length, '根拠のある強みをあと' + (n1 - withEv.length) + 'つ', '強みと、それが出ているエピソードをセットで', 'traits', 'D');
     if (n2 > 0) lose((1 - parts[1]) / parts.length, '「根拠しっかり」の強みをあと' + (n2 - hi) + 'つ', '同じ強みが2つ以上のエピソードで出てくると「しっかり」になるよ', 'traits', 'D.high');
 
-    // E. 価値観・やる気の条件
-    var nE = REACH_NEED.E[li], hE = d.traits.values.filter(isObj).length + d.traits.motivators.filter(isObj).length;
+    // E. 価値観・やる気の条件・立ち直り方
+    var nE = REACH_NEED.E[li], hE = d.traits.values.filter(isObj).length + d.traits.motivators.filter(isObj).length + d.traits.recovery.filter(isObj).length;
     if (nE > 0) {
-      item('E', '価値観・やる気の条件', 1, ratio(hE, nE), hE, nE);
-      lose(1 - ratio(hE, nE), '価値観・やる気の条件をあと' + (nE - hE) + 'つ', 'うれしかった時・頑張れた時の共通点を探そう', 'traits', 'E');
+      item('E', '価値観・やる気・立ち直り方', 1, ratio(hE, nE), hE, nE);
+      lose(1 - ratio(hE, nE), '価値観・やる気の条件・立ち直り方をあと' + (nE - hE) + 'つ', 'うれしかった時・頑張れた時・しんどい時の乗り越え方の共通点を探そう', 'traits', 'E');
     }
     // F. 就活の軸（根拠1つ以上）
     var nF = REACH_NEED.F[li], hF = d.axes.filter(function (a) { return isObj(a) && realEv(a.evidence) >= 1; }).length;
@@ -1280,17 +1527,18 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
       item('F', '就活の軸', 1, ratio(hF, nF), hF, nF);
       lose(1 - ratio(hF, nF), '就活の軸をあと' + (nF - hF) + 'つ', '根拠になるエピソードとセットで', 'traits', 'F');
     }
-    // G. 企業別ネタ
-    var nG = REACH_NEED.G[li], hG = (Array.isArray(d.outputs.companyFit) ? d.outputs.companyFit : []).filter(function (f) { return isObj(f) && f.company; }).length;
-    if (nG > 0) {
-      item('G', '企業別ネタ', 0.5, ratio(hG, nG), hG, nG);
-      lose(0.5 * (1 - ratio(hG, nG)), '企業別ネタを' + (nG - hG) + '社分つくる', '受ける企業に、刺さるエピソードを当ててもらおう', 'out/companyFit', 'G');
-    }
     // H. 未来（8領域のうち、1つ以上ある領域の数）
     var nH = REACH_NEED.H[li], fa = futureAreas(d), hH = fa.filled.length;
     if (nH > 0) {
-      item('H', '未来（Will）', 1, ratio(hH, nH), hH, nH);
-      lose(1 - ratio(hH, nH), '未来（Will）をあと' + (nH - hH) + '領域', 'まだ：' + fa.empty.slice(0, 3).map(function (a) { return a[1]; }).join('、') + (fa.empty.length > 3 ? 'など' : ''), 'future', 'H');
+      item('H', '未来（これから）', 1, ratio(hH, nH), hH, nH);
+      lose(1 - ratio(hH, nH), '未来（これから）をあと' + (nH - hH) + '領域', 'まだ：' + fa.empty.slice(0, 3).map(function (a) { return a[1]; }).join('、') + (fa.empty.length > 3 ? 'など' : ''), 'future', 'H');
+    }
+
+    // I. 意思決定（人生の分かれ道）
+    var nI = REACH_NEED.I[li], hI = d.decisions.filter(isObj).length;
+    if (nI > 0) {
+      item('I', '意思決定', 1, ratio(hI, nI), hI, nI);
+      lose(1 - ratio(hI, nI), '人生の分かれ道（意思決定）をあと' + (nI - hI) + 'つ', '進路・部活・バイトなどを、どう決めたか', 'traits', 'I');
     }
 
     var W = items.reduce(function (s, x) { return s + x.weight; }, 0);
@@ -1309,7 +1557,7 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
 
     return {
       level: lv, levelName: LEVELS[li].name, levelSet: !!(isObj(d.profile) && levelNum(d.profile.level)), embellish: embellishOf(d),
-      pct: W ? Math.round(got / W * 100) : 0, items: items, gaps: gaps, slots: slots, periods: periods, periodNeed: { count: perN, depth: perD }
+      pct: W ? Math.round(got / W * 100) : 0, items: items, gaps: gaps, slots: slots, periods: periods, periodNeed: { count: perN, depth: perD }, holes: lv >= 4 ? holes : {}
     };
   }
 
@@ -1329,13 +1577,14 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
 
   root.JibunCore = {
     INTERVIEW_KEYS: INTERVIEW_KEYS, INTERVIEW_LABEL: INTERVIEW_LABEL, DEFAULT_PERIODS: DEFAULT_PERIODS,
-    TRAIT_KEYS: TRAIT_KEYS, TRAIT_LABEL: TRAIT_LABEL, OUTPUT_LABEL: OUTPUT_LABEL,
+    TRAIT_KEYS: TRAIT_KEYS, TRAIT_LABEL: TRAIT_LABEL, OUTPUT_LABEL: OUTPUT_LABEL, INSIGHT_KIND: INSIGHT_KIND,
     LEVELS: LEVELS, EMBELLISH: EMBELLISH, DEPTH_LABEL: DEPTH_LABEL, SLOT_NEED: SLOT_NEED,
     FUTURE_AREAS: FUTURE_AREAS, FUTURE_LABEL: FUTURE_LABEL, VISION_DEPTH_LABEL: VISION_DEPTH_LABEL, computeCoverage: computeCoverage,
     emptyData: emptyData, normalize: normalize, stripTrailingCommas: stripTrailingCommas, parseLoose: parseLoose,
     isPatch: isPatch, looksLikeData: looksLikeData, applyPatch: applyPatch, summarize: summarize,
     describeFull: describeFull, hasContent: hasContent, prepareImport: prepareImport,
-    parseData: parseData, makeHandoff: makeHandoff, resolveIdCollisions: resolveIdCollisions,
+    parseData: parseData, parseAll: parseAll, repairJson: repairJson, makeHandoff: makeHandoff, resolveIdCollisions: resolveIdCollisions, prune: prune,
+    openHoles: openHoles, effDepth: effDepth, mergeChanges: mergeChanges,
     levelOf: levelOf, embellishOf: embellishOf, computeReach: computeReach,
     targetEpisode: targetEpisode, mergeRequests: mergeRequests, nextId: nextId
   };
@@ -1400,7 +1649,10 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
     file: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M6 3.5h8l4 4v13H6z"/><path d="M14 3.5v4h4"/></svg>',
     flag: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 20.5V4"/><path d="M6 4.5c3-1.6 5.2 1.4 8.2 0s3.8-.6 3.8-.6v8.6s-1.2-.8-3.8.5-5.2-1.6-8.2 0"/></svg>',
     future: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5h16"/><path d="M7 15.5a5 5 0 0 1 10 0"/><path d="M12 4v3.5M5.2 8.2l2 1.9M18.8 8.2l-2 1.9"/></svg>',
-    merge: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 6.5h6v5h-6zM13.5 12.5h6v5h-6z"/><path d="M10.5 9h3.5a2 2 0 0 1 2 2v1.5M13.5 15H10a2 2 0 0 1-2-2v-1.5"/></svg>'
+    merge: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 6.5h6v5h-6zM13.5 12.5h6v5h-6z"/><path d="M10.5 9h3.5a2 2 0 0 1 2 2v1.5M13.5 15H10a2 2 0 0 1-2-2v-1.5"/></svg>',
+    share: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.8v11M8 7.5l4-3.7 4 3.7"/><path d="M8.5 10.5H6.5A1.5 1.5 0 0 0 5 12v7a1.5 1.5 0 0 0 1.5 1.5h11A1.5 1.5 0 0 0 19 19v-7a1.5 1.5 0 0 0-1.5-1.5h-2"/></svg>',
+    card: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="2.8" width="12" height="18.4" rx="2"/><path d="M9 7.5h6M9 10.5h4" stroke-linecap="round"/><path d="M8.5 17c1.4 0 1.6-2.6 3.1-2.6s1.5 1.7 2.9 1.7" stroke-linecap="round"/></svg>',
+    spark: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.5l1.8 5.2 5.2 1.8-5.2 1.8L12 17.5l-1.8-5.2L5 10.5l5.2-1.8z"/><path d="M18.5 16.5l.7 1.8 1.8.7-1.8.7-.7 1.8-.7-1.8-1.8-.7 1.8-.7z"/></svg>'
   };
 
   // ---------- データの読み取り ----------
@@ -1485,7 +1737,7 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
     var bs = boostsOf(o); if (!bs.length) return '';
     return '<ul class="p-boost">' + bs.map(function (b) { return '<li>盛った所「' + esc(b.text) + '」→ 実際：' + esc(b.fact || '') + (b.answer ? '／聞かれたら：' + esc(b.answer) : '') + '</li>'; }).join('') + '</ul>';
   }
-  // ---------- 未来（Will） ----------
+  // ---------- 未来（これから） ----------
   var HORIZON = { '3y': '3年後', '10y': '10年後', life: '一生を通じて' };
   var PRIORITY = { must: '譲れない', want: 'できれば', nice: 'あったらいい' };
   function futureOf(d, area) { return (d.future || []).filter(function (f) { return f && f.area === area && String(f.text || '').trim(); }); }
@@ -1494,12 +1746,12 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
   var CONF = { high: ['high', '根拠しっかり'], mid: ['mid', '根拠1つ'], low: ['low', 'まだ仮説'] };
   function confPill(c) { var x = CONF[c]; return x ? '<span class="conf ' + x[0] + '">' + x[1] + '</span>' : ''; }
 
-  // 到達度はノートがデータから計算する（AIの progress.overall などは使わない）
+  // 仕上がりはノートがデータから計算する（AIの progress.overall などは使わない）
   function reach(d, lv) { return C.computeReach(d || D(), lv ? { level: lv } : null); }
   function lvName(n) { return C.LEVELS[n - 1].name; }
   function slotSym(sl) { return !sl || !sl.hasCand ? '−' : sl.score >= 1 ? '◎' : sl.score >= 0.66 ? '○' : sl.score > 0 ? '△' : '−'; }
   function gapRow(g) {
-    return '<li><button data-go="' + esc(g.go) + '"><span class="box" aria-hidden="true"></span><span><b>' + esc(g.label) + '</b><small>' + esc(g.hint) + '</small></span><span class="gr"><span class="gain" title="ここが埋まると到達度が上がる目安">+' + g.gain + '%</span>' + ICON.right + '</span></button></li>';
+    return '<li><button data-go="' + esc(g.go) + '"><span class="box" aria-hidden="true"></span><span><b>' + esc(g.label) + '</b><small>' + esc(g.hint) + '</small></span><span class="gr"><span class="gain" title="ここが埋まると仕上がりが上がる目安">+' + g.gain + '%</span>' + ICON.right + '</span></button></li>';
   }
   function dsteps(have, need) {
     var h = '';
@@ -1507,13 +1759,13 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
     return '<span class="dsteps" aria-hidden="true">' + h + '</span>';
   }
 
-  // ---------- AIへの依頼文 ----------
+  // ---------- AIへのメモ文 ----------
   function targetLabel(d, t) {
     t = String(t == null ? '' : t);
     if (t === '') return 'ノート全体';
     if (t === 'axes') return '就活の軸';
     if (t === 'traits') return '強み・価値観・就活の軸';
-    if (t === 'future') return '未来（Will）';
+    if (t === 'future') return '未来（これから）';
     var mf = /^future\.(.+)$/.exec(t);
     if (mf) { var fx = (d.future || []).filter(function (x) { return String(x.id) === mf[1]; })[0]; return '未来『' + (fx ? trunc(fx.text, 20) : mf[1]) + '』'; }
     var mi = /^interview\.([^.]+)\.(.+)$/.exec(t);
@@ -1543,12 +1795,8 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
   var OUT_DEF = [
     { key: 'intro1min', desc: '面接の最初に話す、約300字の台本', ask: '1分自己紹介を作って' },
     { key: 'manual', desc: '性格・強み・苦手・やる気スイッチを1枚に', ask: '自分の取扱説明書を作って' },
-    { key: 'es', desc: '設問と文字数を伝えて、下書きを作る', ask: 'ESの下書きを作って（設問と文字数は話しながら決めたい）' },
-    { key: 'qa', desc: '聞かれそうな質問と、自分らしい答え', ask: '面接で聞かれそうな質問と答え（想定問答）を5つ作って' },
-    { key: 'otherRequest', desc: '友達に「私ってどんな人？」と聞くメッセージ', ask: '友達や家族に他己分析をお願いするメッセージを作って' },
-    { key: 'companyFit', desc: '受ける企業ごとに、刺さるエピソードを当てる', ask: '' }
+    { key: 'otherRequest', desc: '友達に「私ってどんな人？」と聞くメッセージ', ask: '友達や家族に他己分析をお願いするメッセージを作って' }
   ];
-  function fitAsk(company) { return '「' + company + '」を受けるなら、どのエピソードが一番刺さるか当てて'; }
   // ---- 招待コード（公開版は指示文が暗号化されている。配布されたコードで開く） ----
   var LOCK = '\u0000LOCKED';
   function locked() { return !(typeof window.JIBUN_STARTER === 'string' && window.JIBUN_STARTER.trim()) && !!window.JIBUN_ENC; }
@@ -1587,10 +1835,33 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
           function () { toast('コードが違うみたい。もう一度確かめてね'); return false; });
       });
   }
+  // 招待コード入りのURL（?c=ABCD-EFGH-JKLM）：読み込んだら URL から c を消し、そのコードで開く
+  var URL_CODE = (function () {
+    try {
+      var u = new URL(location.href), c = u.searchParams.get('c');
+      if (!c) return '';
+      u.searchParams.delete('c');
+      history.replaceState(history.state, '', u.pathname + u.search + u.hash);
+      return c;
+    } catch (e) { return ''; }
+  })();
   (function autoUnlock() {
     var c = null; try { c = localStorage.getItem('jibun-code'); } catch (e) {}
-    if (c && locked()) unlockWith(c).then(function () { try { rerender(); } catch (e) {} }, function () { try { localStorage.removeItem('jibun-code'); } catch (e) {} });
+    function stored() { if (c && locked()) unlockWith(c).then(function () { if (S.booted) rerender(); }, function () { try { localStorage.removeItem('jibun-code'); } catch (e) {} }); }
+    if (URL_CODE && locked()) {
+      unlockWith(URL_CODE).then(function () { S.urlUnlocked = true; if (S.booted) afterUrlUnlock(); },
+        function () { S.urlCodeBad = true; if (S.booted) afterUrlUnlock(); stored(); });
+      return;
+    }
+    stored();
   })();
+  function afterUrlUnlock() {
+    if (S.urlCodeBad) { S.urlCodeBad = false; toast('リンクの招待コードが使えませんでした。もらったコードを確かめてね'); return; }
+    if (!S.urlUnlocked) return;
+    S.urlUnlocked = false; rerender();
+    if (!S.data && S.mode !== 'file') startSheet(false, '招待コードで使えるようになりました');
+    else toast('招待コードで使えるようになりました');
+  }
   function starter() { return typeof window.JIBUN_STARTER === 'string' && window.JIBUN_STARTER.trim() ? window.JIBUN_STARTER : (locked() && window.JIBUN_ENC.prompts.starter ? LOCK : ''); }
   function canStartChatGPT() { return S.mode !== 'file'; }
   function importPrompt() { return typeof window.JIBUN_IMPORT === 'string' && window.JIBUN_IMPORT.trim() ? window.JIBUN_IMPORT : (locked() && window.JIBUN_ENC.prompts['import'] ? LOCK : ''); }
@@ -1609,8 +1880,50 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
     if (!starter()) return '<button class="btn block ' + (cls || '') + '" disabled aria-disabled="true" style="opacity:.55">ChatGPTではじめる（準備中）</button>';
     return '<button class="btn block ' + (cls || '') + '" data-act="startGPT">' + ICON.chat + 'ChatGPTではじめる</button>';
   }
-  function openGPTSheet(title, body) {
-    return sheet({ title: title, body: body + '<p style="margin-top:14px"><a class="btn primary block" href="https://chatgpt.com/" target="_blank" rel="noopener" data-close="1">ChatGPTを開く ↗</a></p>', actions: [{ label: 'もう一度コピー', value: 'again' }, { label: '閉じる', value: 0 }] });
+  // ChatGPTに渡すシート：大きな「コピー」ボタン（タップの中でコピー）＋ ChatGPTを開く
+  // copied：もうコピーした時（ボタンは「もう一度コピー」、ChatGPTを開くが主）
+  function gptSheet(o) {
+    var lead = o.lead ? '<p>' + o.lead + '</p>' : '';
+    function btns(copied) {
+      return '<p style="margin-top:12px"><button class="btn block ' + (copied ? '' : 'primary') + '" type="button" data-sheetcopy="1">' + ICON.copy + '<span>' + (copied ? 'もう一度コピー' : esc(o.copyLabel || '設定文をコピー')) + '</span></button></p>' +
+        '<p style="margin-top:10px"><a class="btn block ' + (copied ? 'primary' : '') + '" href="https://chatgpt.com/" target="_blank" rel="noopener" data-close="1">ChatGPTを開く ↗</a></p>';
+    }
+    return sheet({ title: o.title, body: lead + '<div class="gpt-btns">' + btns(o.copied) + '</div><ol class="steps gpt-steps">' + o.steps + '</ol>', actions: [{ label: '閉じる', value: 0 }],
+      onOpen: function (sc) {
+        sc.addEventListener('click', function (e) {
+          if (!e.target.closest('[data-sheetcopy]')) return;
+          copyText(o.text(), o.msg || 'コピーしました', function (ok) { if (ok) { markOut(); sc.querySelector('.gpt-btns').innerHTML = btns(true); } });
+        });
+      } });
+  }
+  var GPT_STEPS_START = '<li><b>ChatGPTの新しいチャットに貼って送信</b><span>無料のままでOK。AIが1問ずつ聞いてくれます。いつでも好きに話しかけてOK。</span></li>' +
+    '<li><b>セーブが出たらコピーして、ここに戻る</b><span>戻ると「コピーしたセーブを読み込む」ボタンが出ます。押すだけでノートが育ちます。</span></li>';
+  function startSheet(copied, title) {
+    return gptSheet({ title: title || (copied ? '設定文をコピーしました' : '準備ができました'), copied: copied, text: starter, msg: '設定文をコピーしました', steps: GPT_STEPS_START,
+      lead: copied ? '' : '下のボタンで設定文をコピーして、ChatGPTに貼ってね。' });
+  }
+  function handoffSheet(copied) {
+    return gptSheet({ title: copied ? '続きの準備ができました' : '準備ができました', copied: copied, text: handoffText, msg: 'コピーしました', copyLabel: '設定文とデータをコピー',
+      lead: '会話が長くなった時や、別の日に続ける時はこちら。今までのデータごと、新しいチャットに渡します。',
+      steps: '<li><b>ChatGPTで新しいチャットを開いて、貼って送信</b><span>AIが続きから聞いてくれます。ためたメモや確認も一緒に渡ります。</span></li><li><b>セーブが出たらコピーして、ここに戻る</b><span>「コピーしたセーブを読み込む」を押すだけでOK。</span></li>' });
+  }
+  var MEMORY_ASK = '\n\n素材：あなたが覚えている私の情報と過去の会話から、自己分析に使えることを全部';
+  function importSheet() {
+    return sheet({ title: '他のAIから取り込む', body:
+      '<p>過去のESや、ほかのAIとの会話から、ノートの材料を集めます。' + (S.mode === 'local' && C.hasContent(S.data) ? '今のノートのデータも一緒に渡すので、AIが照らし合わせてくれます。' : '') + '</p>' +
+      '<div class="card" style="margin-top:12px;padding:13px 14px"><b>ChatGPTの記憶から作る</b><p class="small muted" style="margin:2px 0 10px">ChatGPTが覚えているあなたの情報や過去の会話から、材料を集めます。コピーしてChatGPTに貼るだけ。</p>' +
+      '<button class="btn primary block" type="button" data-imp="mem">' + ICON.spark + 'ChatGPTの記憶から作る</button></div>' +
+      '<div class="card" style="margin-top:10px;padding:13px 14px"><b>過去のESや会話を貼る</b><p class="small muted" style="margin:2px 0 10px">どのAIでもOK。指示文を貼ったら、続けてESや会話を貼ってね（長い時は分けて）。</p>' +
+      '<button class="btn soft block" type="button" data-imp="plain">' + ICON.copy + '取り込み用の指示文をコピー</button></div>' +
+      '<p class="small muted" style="margin-top:12px">出てきたセーブをコピーして戻ると、そのまま読み込めます。取り込んだ話は「取り込み・未確認」になり、食い違いは「AIからの確認」に入ります。</p>',
+      actions: [{ label: '閉じる', value: 0 }],
+      onOpen: function (sc) {
+        sc.addEventListener('click', function (e) {
+          var b = e.target.closest('[data-imp]'); if (!b) return;
+          var mem = b.getAttribute('data-imp') === 'mem';
+          copyText(importText() + (mem ? MEMORY_ASK : ''), mem ? 'コピーしました。ChatGPTに貼って送ってね' : '取り込み用の指示文をコピーしました', function (ok) { if (ok) { markOut(); b.lastChild.textContent = (mem ? 'ChatGPTの記憶から作る' : '取り込み用の指示文をコピー') + ' ✓'; } });
+        });
+      } });
   }
 
   // ---------- 照合（checks） ----------
@@ -1618,12 +1931,13 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
     conflict: ['食い違い', '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4v16M17 4v16M4 9h6M14 15h6"/></svg>', 'w'],
     unconfirmed: ['未確認', '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M9.6 9.6a2.5 2.5 0 1 1 3.4 2.3c-.6.3-1 .8-1 1.5v.4M12 16.8v.1"/></svg>', ''],
     duplicate: ['重複かも', '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="11" height="11" rx="2"/><rect x="9" y="9" width="11" height="11" rx="2"/></svg>', ''],
-    boost: ['盛りの確認', '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5h16"/><path d="M14.5 4.5l5 5L10 19H5v-5z"/></svg>', 'h']
+    boost: ['盛りの確認', '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5h16"/><path d="M14.5 4.5l5 5L10 19H5v-5z"/></svg>', 'h'],
+    hole: ['答えの穴', '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3.2"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3"/></svg>', 'w']
   };
   function openChecks(d) { return ((d || D()).checks || []).filter(function (c) { return c && c.done !== true; }); }
   function checkBadge(id) {
     var n = openChecks().filter(function (c) { return (c.targets || []).map(String).indexOf(String(id)) >= 0; }).length;
-    return n ? '<span class="badge-check" title="AIが本人に確かめたいことがあります">確認待ち' + (n > 1 ? ' ' + n : '') + '</span>' : '';
+    return n ? '<span class="badge-check" title="AIが本人に確かめたいことがあります">AIからの確認' + (n > 1 ? ' ' + n : '') + '</span>' : '';
   }
   function checkRow(c) {
     var k = CHECK_KIND[c.kind] || ['確認', CHECK_KIND.unconfirmed[1], ''], d = D();
@@ -1636,7 +1950,7 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
   // 主ボタンの下の1行：まだの依頼・確認の件数（0なら出さない）
   function pendLine() {
     var nRq = openRequests().length, nCk = openChecks().length, a = [];
-    if (nRq) a.push('依頼' + nRq + '件'); if (nCk) a.push('確認' + nCk + '件');
+    if (nRq) a.push('メモ' + nRq + '件'); if (nCk) a.push('確認' + nCk + '件');
     return a.length ? a.join('・') + 'もいっしょに渡します' : '';
   }
 
@@ -1660,8 +1974,8 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
     var d = D();
     var body = '<p class="small muted" style="margin-bottom:10px">対象：' + esc(targetLabel(d, target)) + '</p><div class="chips" style="margin-bottom:10px">' +
       REQ_CHIPS.map(function (c) { return '<button class="chip req-chip" type="button" data-chip="' + esc(c) + '">' + esc(c) + '</button>'; }).join('') + '</div>' +
-      '<label class="sr" for="req-text">AIへの依頼</label><textarea id="req-text" class="paste" style="min-height:110px" placeholder="例：監督とのやりとりを、もっと掘りたい"></textarea>' +
-      '<p class="small muted" style="margin-top:8px">' + (readonly() ? '保存すると、Claude Codeが次に読む場所に置きます。' : '保存すると依頼にたまって、「AIで続ける」で一緒に渡ります。') + '</p>';
+      '<label class="sr" for="req-text">AIへのメモ</label><textarea id="req-text" class="paste" style="min-height:110px" placeholder="例：監督とのやりとりを、もっと掘りたい"></textarea>' +
+      '<p class="small muted" style="margin-top:8px">' + (readonly() ? '保存すると、Claude Codeが次に読む場所に置きます。' : '保存すると「AIに渡すもの」にたまって、「AIで続ける」で一緒に渡ります。') + '</p>';
     var sp = sheet({ title: 'AIに頼む', body: body, actions: [{ label: 'やめる', value: 0 }, { label: '保存する', cls: 'primary', value: 1 }] });
     setTimeout(function () {
       var ta = $('#req-text'); if (!ta) return;
@@ -1670,7 +1984,7 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
     sp.then(function (v) {
       var ta = $('#req-text'), text = ta ? ta.value.trim() : '';
       if (!v) return;
-      if (!text) { toast('依頼の内容を書いてね'); return; }
+      if (!text) { toast('AIへのメモを書いてね'); return; }
       addRequest(target, text);
     });
   }
@@ -1685,14 +1999,14 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
       if (!Array.isArray(d.requests)) d.requests = [];
       r.id = C.nextId('r', [d.requests]);
       d.requests.push(r); save();
-      toast('依頼をためました。『AIで続ける』で渡せます');
+      toast('メモをためました。『AIで続ける』で渡せます');
     }
     rerender();
   }
   // 同じ依頼がもうたまっていれば、二重にためない
   function queueRequest(target, text) {
     var dup = openRequests().some(function (r) { return String(r.target) === String(target) && String(r.text) === String(text); });
-    if (dup) { toast('もう依頼にたまっています。『AIで続ける』で渡せます'); return; }
+    if (dup) { toast('もうメモにたまっています。『AIで続ける』で渡せます'); return; }
     addRequest(target, text);
   }
   function hasOpenReq(target) { return openRequests().some(function (r) { return String(r.target) === String(target); }); }
@@ -1702,7 +2016,7 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
       sendToClaudeCode([id]);
     } else {
       D().requests = (D().requests || []).filter(function (r) { return String(r.id) !== String(id); }); save();
-      toast('依頼を消しました');
+      toast('メモを消しました');
     }
     rerender();
   }
@@ -1763,7 +2077,38 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
   function save() {
     if (S.mode !== 'local') return;
     try { localStorage.setItem(LS_KEY, JSON.stringify(S.data)); } catch (e) { toast('この端末に保存できませんでした'); }
+    try { if (!localStorage.getItem(LS_FIRST)) localStorage.setItem(LS_FIRST, String(Date.now())); } catch (e) { /* なし */ }
+    persistOnce();
   }
+  // ブラウザに「消さないで」と頼む（対応していれば）
+  var persisted = false;
+  function persistOnce() { if (persisted) return; persisted = true; try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(function () {}); } catch (e) { /* なし */ } }
+  var LS_FIRST = 'jibun-note-first-save', LS_BACKUP = 'jibun-note-backup-at', LS_OUT = 'jibun-note-out';
+  // ChatGPTへ渡すものをコピーした時刻（戻ってきた時に「コピーしたセーブを読み込む」を出すため）
+  function markOut() { try { localStorage.setItem(LS_OUT, String(Date.now())); } catch (e) { /* なし */ } }
+  function outRecent(hours) { var t = 0; try { t = +localStorage.getItem(LS_OUT) || 0; } catch (e) { /* なし */ } return t > 0 && Date.now() - t < hours * 3600e3; }
+  function onReturn() {
+    if (!S.wasHidden) return;
+    S.wasHidden = false;
+    if (S.returned || readonly() || !outRecent(72)) return;
+    S.returned = true;
+    var r = routeParts()[0] || '';
+    if (r === '' || r === 'home' || r === 'welcome') rerender();
+  }
+  function clipBar() {
+    if (readonly() || S.mode === 'sample') return '';
+    var standaloneEmpty = isStandalone() && !S.data;
+    if (!S.returned && !standaloneEmpty) return '';
+    return '<div class="clipbar"><button class="btn primary" data-act="clipImport">' + ICON.in + (standaloneEmpty && !S.returned ? 'コピーしたノートを読み込む' : 'コピーしたセーブを読み込む') + '</button>' + (S.returned ? '<button class="x" data-act="clipClose" aria-label="この案内を閉じる">×</button>' : '') + '</div>';
+  }
+  function backupNotice() {
+    if (S.mode !== 'local' || S.backupClosed || !C.hasContent(S.data)) return '';
+    var last = +(lsGet(LS_BACKUP) || lsGet(LS_FIRST) || 0);
+    if (!last || Date.now() - last < 7 * 864e5) return '';
+    return '<div class="notice"><span>' + (lsGet(LS_BACKUP) ? '最後のバックアップから1週間たったよ。' : 'まだ一度もバックアップしていないよ。') + 'バックアップしておく？</span><button class="mini-btn" data-act="export">' + ICON.save + '保存</button><button class="x" data-act="backupClose" aria-label="閉じる">×</button></div>';
+  }
+  // アプリ内ブラウザ（Instagram・LINE・TikTok・Facebook など）は、データが消えやすい
+  var IN_APP = /Instagram|FBAN|FBAV|FB_IAB|\bLine\/|TikTok|musical_ly|BytedanceWebview|Bytedance/i.test(navigator.userAgent || '');
   function loadLocal() {
     try { var t = localStorage.getItem(LS_KEY); return t ? C.normalize(JSON.parse(t)) : null; } catch (e) { return null; }
   }
@@ -1780,10 +2125,11 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
       sc.className = 'scrim';
       sc.innerHTML = '<div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sh-t"><div class="grab"></div><h2 id="sh-t">' + esc(o.title) + '</h2>' +
         (o.body ? '<div class="body">' + o.body + '</div>' : '') +
-        '<div class="btn-row">' + (o.actions || []).map(function (a, i) { return '<button class="btn ' + (a.cls || '') + '" data-i="' + i + '">' + esc(a.label) + '</button>'; }).join('') + '</div></div>';
+        ((o.actions || []).length ? '<div class="btn-row">' + o.actions.map(function (a, i) { return '<button class="btn ' + (a.cls || '') + '" data-i="' + i + '">' + (a.html || esc(a.label)) + '</button>'; }).join('') + '</div>' : '') + '</div>';
       document.body.appendChild(sc);
       var prev = document.activeElement;
-      requestAnimationFrame(function () { sc.classList.add('show'); var b = sc.querySelector('.btn.primary,.btn.danger') || sc.querySelector('.btn'); if (b) b.focus(); });
+      requestAnimationFrame(function () { sc.classList.add('show'); var b = sc.querySelector('.btn.primary,.btn.danger') || sc.querySelector('.btn'); if (b) b.focus({ preventScroll: true }); });
+      if (o.onOpen) o.onOpen(sc);
       function close(v) {
         sc.classList.remove('show');
         document.removeEventListener('keydown', onKey);
@@ -1796,22 +2142,33 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
         if (e.target === sc) return close(null);
         if (e.target.closest('a[data-close]')) { close(null); return; }
         var b = e.target.closest('[data-i]');
-        if (b) close(o.actions[+b.getAttribute('data-i')].value);
+        if (!b) return;
+        var a = o.actions[+b.getAttribute('data-i')];
+        if (a.run) a.run(sc, b); // タップの中で実行（コピーなど）
+        if (!a.stay) close(a.value);
       });
     });
   }
-  function copyText(text, msg) {
-    function ok() { toast(msg || 'コピーしました'); }
-    function fallback() {
-      var ta = document.createElement('textarea');
-      ta.value = text; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.top = '0'; ta.style.opacity = '0';
-      document.body.appendChild(ta); ta.focus(); ta.select(); ta.setSelectionRange(0, text.length);
-      var r = false; try { r = document.execCommand('copy'); } catch (e) { r = false; }
-      ta.remove();
-      if (r) ok(); else toast('コピーできませんでした。長押しでコピーしてね');
-    }
-    if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(text).then(ok, fallback);
-    else fallback();
+  function execCopy(text) {
+    var ta = document.createElement('textarea');
+    ta.value = text; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.top = '0'; ta.style.opacity = '0'; ta.style.fontSize = '16px';
+    document.body.appendChild(ta); ta.focus(); ta.select(); ta.setSelectionRange(0, text.length);
+    var r = false; try { r = document.execCommand('copy'); } catch (e) { r = false; }
+    ta.remove();
+    return r;
+  }
+  // コピーはタップの中で呼ぶ。うまくいかなかった時は、全文の入った欄を出して長押しで選べるようにする
+  function copyText(text, msg, done) {
+    function ok() { toast(msg || 'コピーしました'); if (done) done(true); }
+    function fail() { if (execCopy(text)) ok(); else { manualCopy(text); if (done) done(false); } }
+    if (navigator.clipboard && navigator.clipboard.writeText && window.isSecureContext) {
+      try { navigator.clipboard.writeText(text).then(ok, fail); } catch (e) { fail(); }
+    } else if (execCopy(text)) ok();
+    else { manualCopy(text); if (done) done(false); }
+  }
+  function manualCopy(text) {
+    sheet({ title: 'うまくコピーできませんでした', body: '<p>下の欄を<b>長押し →「すべてを選択」→「コピー」</b>でコピーしてね。</p><textarea class="manual-ta" readonly aria-label="コピーする文">' + esc(text) + '</textarea>',
+      actions: [{ label: '全部選ぶ', value: 0, stay: true, run: function (sc) { var ta = sc.querySelector('textarea'); ta.focus(); ta.select(); ta.setSelectionRange(0, ta.value.length); try { if (document.execCommand('copy')) toast('コピーしました'); } catch (e) { /* 長押しで */ } } }, { label: '閉じる', cls: 'primary', value: 0 }] });
   }
 
   // ---------- 共通パーツ ----------
@@ -1917,7 +2274,7 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
       '<line x1="10" x2="310" y1="62" y2="62" class="g-zero"/>' +
       '<circle cx="70" cy="40" r="4.5" fill="var(--accent)"/><circle cx="125" cy="100" r="4.5" fill="var(--warm)"/><circle cx="190" cy="22" r="4.5" fill="var(--accent)"/><circle cx="245" cy="88" r="4.5" fill="var(--warm)"/><circle cx="310" cy="34" r="4.5" fill="var(--accent)"/>' +
       '<text x="190" y="12" text-anchor="middle" class="g-lab up g-fade">文化祭で1位</text><text x="125" y="118" text-anchor="middle" class="g-lab down g-fade">受験に失敗</text></svg>';
-    return '<section class="welcome">' +
+    return clipBar() + '<section class="welcome"' + (clipBar() ? ' style="padding-top:22px"' : '') + '>' +
       '<p class="eyebrow">就活の自己分析ノート</p>' +
       '<h1 class="logo">じぶんノート</h1>' +
       '<p class="tag">AIとの自己分析で話したことが、<br>見返せる「自分のノート」になる。</p>' +
@@ -1932,8 +2289,8 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
       '</div>' +
       '<div class="sec"><h2 class="sec-title">使い方</h2><ol class="steps card">' +
       '<li><b>「ChatGPTではじめる」を押して、貼って送信</b><span>ChatGPT（無料でOK）の新しいチャットへ。AIが1問ずつ聞いてくれます。</span></li>' +
-      '<li><b>出てきたセーブデータを「AIの出力を貼り付け」</b><span>前後の文章ごと貼ってOK。貼るたびにノートが育ちます。</span></li>' +
-      '<li><b>続きは「AIで続ける」</b><span>今までのデータと、ためた依頼がまとめて渡ります。</span></li>' +
+      '<li><b>セーブが出たらコピーして、ここに戻る</b><span>「コピーしたセーブを読み込む」を押すだけ。貼るたびにノートが育ちます。</span></li>' +
+      '<li><b>続きは「AIで続ける」</b><span>今までのデータと、ためたメモがまとめて渡ります。</span></li>' +
       '</ol></div>' +
       '<p class="small muted" style="margin-top:14px;text-align:center">データはこの端末の中だけに保存されます。</p></section>';
   }
@@ -1950,32 +2307,39 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
     var d = D(), R = reach(d), p = d.profile || {};
     var nEp = d.episodes.length;
     var nCat = C.INTERVIEW_KEYS.filter(function (k) { return (d.interview[k[0]] || []).length; }).length;
-    var nDeep = d.deepDive.filter(function (x) { return !x.done; }).length;
+    var nPass = passCount(d);
     var tg = p.targets || {};
     var chips = (tg.industries || []).map(function (x) { return '<span class="chip ac">' + esc(x) + '</span>'; }).join('') + (tg.jobs || []).map(function (x) { return '<span class="chip">' + esc(x) + '</span>'; }).join('');
     var meta = [p.university, p.faculty, p.grad].filter(Boolean).map(function (x) { return '<span style="white-space:nowrap">' + esc(x) + '</span>'; }).join(' ');
     var pill = R.levelSet ? '<button class="lvl-pill" data-go="goal">' + ICON.flag + '目標：レベル' + R.level + ' ' + esc(R.levelName) + '</button>'
       : '<button class="lvl-pill unset" data-go="goal">' + ICON.flag + '目標：まだ決めてない</button>';
+    var hl = String(p.headline || '').trim();
     var h = '<div class="top"><span class="brand">じぶんノート</span>' + (d.updatedAt ? '<time datetime="' + esc(d.updatedAt) + '">' + fmtDate(d.updatedAt) + ' 更新</time>' : '') + '</div>';
-    h += '<section class="card hero"><div class="hero-main"><h1 class="name">' + esc(p.name || 'わたし') + '<span>のノート</span></h1>' + (meta ? '<p class="meta">' + meta + '</p>' : '') + (chips ? '<div class="chips">' + chips + '</div>' : '') + '</div>' +
-      '<button class="ringbox" data-go="goal" aria-label="到達度 ' + R.pct + '%（レベル' + R.level + 'の基準）。タップで目標と盛り方を変える">' + ringSVG(R.pct, 96, 8) + '<div class="ring-num"><b>' + R.pct + '<small>%</small></b><span>到達度</span><em>L' + R.level + 'の基準</em></div></button><div class="lvl-row">' + pill + '</div></section>';
+    h += clipBar();
+    h += '<section class="card hero"><div class="hero-main"><h1 class="name">' + esc(p.name || 'わたし') + '<span>のノート</span></h1>' +
+      (hl ? '<div class="headline"><q>' + esc(hl) + '</q><button class="share-ic" data-go="card" aria-label="シェア用カードを作る" title="シェア用カードを作る">' + ICON.share + '</button></div>' : '') +
+      (meta ? '<p class="meta">' + meta + '</p>' : '') + (chips ? '<div class="chips">' + chips + '</div>' : '') + '</div>' +
+      '<button class="ringbox" data-go="goal" aria-label="仕上がり ' + R.pct + '%（レベル' + R.level + 'の基準）。タップで目標と盛り方を変える">' + ringSVG(R.pct, 96, 8) + '<div class="ring-num"><b>' + R.pct + '<small>%</small></b><span>仕上がり</span><em>L' + R.level + 'の基準</em></div></button><div class="lvl-row">' + pill + '</div></section>';
     if (showLevelTip(R)) h += '<div class="tipline"><button data-go="goal">目標レベルを決めると、％の基準が合います<b>決める ›</b></button><button class="x" data-act="tipClose" aria-label="この案内を閉じる">×</button></div>';
     if (p.goal) h += '<p class="goal">' + esc(p.goal) + '</p>';
+    var li = latestInsight(d);
+    if (li) h += '<div style="margin-top:14px">' + insightCard(li, { more: d.insights.length }) + '</div>';
     var next = (d.progress && d.progress.nextStep) || 'AIとの自己分析を続けて、エピソードを増やしていこう';
     var pl = pendLine();
-    h += '<section class="card next" style="margin-top:16px"><p class="eyebrow">次にやること</p><p class="next-text">' + esc(next) + '</p>' +
+    h += '<section class="card next" style="margin-top:14px"><p class="eyebrow">次にやること</p><p class="next-text">' + esc(next) + '</p>' +
       '<button class="btn primary block" data-act="handoff">' + ICON.send + esc(handoffLabel()) + '</button>' +
-      (pl ? '<button class="pend-line" data-go="' + (openRequests().length ? 'requests' : 'checks') + '">' + esc(pl) + '</button>' : '') +
+      (pl ? '<button class="pend-line" data-go="pass">' + esc(pl) + '</button>' : '') +
       (readonly() ? '' : '<button class="btn block" data-go="import" style="margin-top:10px">' + ICON.in + 'AIの出力を貼り付け</button>') + '</section>';
+    h += backupNotice();
     h += '<div class="sec"><h2 class="sec-title"><span>足りないもの <small>レベル' + R.level + 'まで</small></span>' + (R.gaps.length ? '<button class="link" data-go="reach">ぜんぶ見る ›</button>' : '') + '</h2>' +
       (R.gaps.length ? '<ul class="quiet">' + R.gaps.slice(0, 3).map(function (g) { return '<li><button data-go="' + esc(g.go) + '"><span><b>' + esc(g.label) + '</b><small>' + esc(g.hint) + '</small></span>' + ICON.right + '</button></li>'; }).join('') + '</ul>'
         : '<p class="gaps-done">レベル' + R.level + 'の基準は、ぜんぶそろったよ。' + (R.level < 5 ? '<button class="link-in" data-go="goal">目標を上げる ›</button>' : '') + '</p>') + '</div>';
     h += '<div class="stats">' +
       '<button class="stat" data-go="timeline"><b>' + nEp + '</b><span>エピソード</span></button>' +
       '<button class="stat" data-go="interview"><b>' + nCat + '<small>/' + C.INTERVIEW_KEYS.length + '</small></b><span>面接ネタ</span></button>' +
-      '<button class="stat" data-go="deep"><b>' + nDeep + '</b><span>深掘り待ち</span></button></div>';
+      '<button class="stat" data-go="pass"><b>' + nPass + '</b><span>AIに渡すもの</span></button></div>';
     if (nEp) h += '<div class="sec"><button class="card minigraph" data-go="graph" aria-label="モチベーショングラフを開く"><div class="mg-head"><b>モチベーショングラフ</b><span>くわしく見る ›</span></div>' + graphSVG(d, { w: viewWidth() - 30, h: 70, mini: true, animate: true, id: 'mg' }) + '</button></div>';
-    // 自己分析の範囲（過去・現在・未来）。旧「時期ごとの進み具合」の場所（時期ごとの％は年表に出ている）
+    // 自己分析の範囲（過去・現在・未来）
     var CV = C.computeCoverage(d);
     function covRow(k, go, c, extra) {
       var note = c.missing.length ? 'まだ：' + namesLine(c.missing) : extra && extra.length ? 'もう少し：' + namesLine(extra) : '';
@@ -1994,11 +2358,11 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
     return h;
   }
 
-  // ---------- 画面：到達度 ----------
+  // ---------- 画面：仕上がり ----------
   function vReach() {
     var d = D(), R = reach(d);
-    var h = subhead('<button class="mini-btn" data-go="goal">' + ICON.flag + '目標を変える</button>') + pagehead('到達度', 'レベル' + R.level + '「' + esc(R.levelName) + '」の基準で、ノートがデータから計算しています');
-    h += '<div class="card reach-top"><div class="ringbox" role="img" aria-label="到達度 ' + R.pct + '%">' + ringSVG(R.pct, 84, 7) + '<div class="ring-num"><b>' + R.pct + '<small>%</small></b></div></div><p><b>' + (R.gaps.length ? '足りないものは あと' + R.gaps.length + 'つ' : 'ぜんぶそろったよ') + '</b>' + esc(C.LEVELS[R.level - 1].need) + '</p></div>';
+    var h = subhead('<button class="mini-btn" data-go="goal">' + ICON.flag + '目標を変える</button>') + pagehead('仕上がり', 'レベル' + R.level + '「' + esc(R.levelName) + '」の基準で、ノートがデータから計算しています');
+    h += '<div class="card reach-top"><div class="ringbox" role="img" aria-label="仕上がり ' + R.pct + '%">' + ringSVG(R.pct, 84, 7) + '<div class="ring-num"><b>' + R.pct + '<small>%</small></b></div></div><p><b>' + (R.gaps.length ? '足りないものは あと' + R.gaps.length + 'つ' : 'ぜんぶそろったよ') + '</b>' + esc(C.LEVELS[R.level - 1].need) + '</p></div>';
     h += '<div class="sec"><h2 class="sec-title">内わけ<small>面接ネタは4倍で数えます</small></h2><div class="card" style="padding:6px 16px">' + R.items.map(function (it) {
       var v = it.key === 'C' ? it.have + '／' + it.need + '枠' : it.have + '／' + it.need + (it.key === 'H' ? '領域' : '');
       if (it.key === 'D' && it.highNeed) v += '<span class="w">しっかり' + it.highHave + '／' + it.highNeed + '</span>';
@@ -2006,12 +2370,12 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
     }).join('') + '</div></div>';
     h += '<div class="sec"><h2 class="sec-title">面接ネタの深さ<small>●今の深さ　○必要な深さ</small></h2><div class="card" style="padding:4px 16px"><ul class="slotlist">' + C.INTERVIEW_KEYS.map(function (k) {
       var sl = R.slots[k[0]], ok = sl.required && sl.score >= 1;
-      var sub = !sl.hasCand ? (k[0] === 'vision' ? 'まだ未来の話なし' : 'まだ候補なし') : sl.haveLabel + (sl.penalized ? '（足りない情報ありで1段下げ）' : '');
+      var sub = !sl.hasCand ? (k[0] === 'vision' ? 'まだ未来の話なし' : 'まだ候補なし') : sl.haveLabel + (sl.penalized ? '（足りない情報ありで1段下げ）' : sl.holed ? '（答えの穴ありで1段下げ）' : '');
       return '<li><button data-go="' + esc(sl.go) + '"' + (sl.required ? '' : ' class="opt"') + '><span>' + esc(k[1]) + '<small>' + esc(sub) + '</small></span>' + dsteps(sl.have, sl.required ? sl.need : 0) +
         '<span class="dnum' + (ok ? ' ok' : '') + '">' + (sl.required ? (ok ? 'OK' : sl.have + '／' + sl.need + '段') : '今は不要') + '</span></button></li>';
     }).join('') + '</ul></div></div>';
     if (R.gaps.length) h += '<div class="sec"><h2 class="sec-title">足りないもの<small>上から順にやると早い</small></h2><div class="card gaps"><ul>' + R.gaps.map(gapRow).join('') + '</ul></div></div>';
-    h += '<p class="small muted" style="margin-top:16px">％はAIの目安ではなく、ノートの中のデータから計算しています。足りない情報（面接ネタの「足りない情報」）が残っている話は、レベル3以上では1段下げて数えます。「将来のビジョン」の深さは、未来（Will）のなりたい姿・キャリアプランと、その根拠のエピソードで決まります。</p>';
+    h += '<p class="small muted" style="margin-top:16px">％はAIの目安ではなく、ノートの中のデータから計算しています。足りない情報（面接ネタの「足りない情報」）が残っている話は、レベル3以上では1段下げて数えます。AIからの「答えの穴」の確認が残っている話は、レベル4以上では1段下げて数えます。「将来のビジョン」の深さは、未来（これから）のなりたい姿・キャリアプランと、その根拠のエピソードで決まります。</p>';
     return h;
   }
 
@@ -2035,7 +2399,7 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
     var curEm = readonly() && S.goalPreview.embellish ? S.goalPreview.embellish : C.embellishOf(d);
     var shownR = curLv && curLv !== R.level ? reach(d, curLv) : R;
     var h = subhead() + pagehead('目標と盛り方', '目標に合わせて、％の基準とAIの聞き方が変わるよ。あとからいつでも変えられます');
-    h += '<button class="card reach-mini" data-go="reach"><span class="rm-num">' + shownR.pct + '<small>%</small></span><span><b>レベル' + shownR.level + 'の基準での到達度</b>' + bar(shownR.pct) + '<em>' + (shownR.gaps.length ? '足りないもの ' + shownR.gaps.length + 'つ' : 'ぜんぶそろってる') + '</em></span>' + ICON.right + '</button>';
+    h += '<button class="card reach-mini" data-go="reach"><span class="rm-num">' + shownR.pct + '<small>%</small></span><span><b>レベル' + shownR.level + 'の基準での仕上がり</b>' + bar(shownR.pct) + '<em>' + (shownR.gaps.length ? '足りないもの ' + shownR.gaps.length + 'つ' : 'ぜんぶそろってる') + '</em></span>' + ICON.right + '</button>';
     h += '<div class="sec"><h2 class="sec-title">目標レベル<small>受ける企業に合わせて</small></h2><div role="radiogroup" aria-label="目標レベル">' + C.LEVELS.map(function (L) {
       var on = L.level === curLv, p = reach(d, L.level).pct;
       var tag = on ? '<span class="now">いまの目標</span>' : (!curLv && L.level === 2 ? '<span class="now tmp">未設定なのでこれで計算中</span>' : '');
@@ -2096,6 +2460,8 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
     h += '<p class="depth-next">' + (dn === 4 ? '<b>最難関水準：</b>' + esc(DEPTH_NEXT[3]) + '、がそろっています。深掘りが何回あっても崩れにくい話です'
       : '<b>次の段「' + esc(C.DEPTH_LABEL[dn + 1]) + '」：</b>' + esc(DEPTH_NEXT[dn])) + '</p>';
     var ck = openChecks(d).filter(function (c) { return (c.targets || []).map(String).indexOf(String(e.id)) >= 0; });
+    var hole = ck.some(function (c) { return c.kind === 'hole'; }), lvNow = C.levelOf(d);
+    if (hole && lvNow >= 4 && dn > 0) h += '<p class="depth-next" style="margin-top:4px"><b>答えの穴が残っています：</b>レベル' + lvNow + 'では、答えるまで「' + esc(C.DEPTH_LABEL[dn - 1]) + '」として数えます。面接で突かれやすい所なので、先に答えを用意しておこう</p>';
     if (ck.length) h += '<div class="card checks-mini" style="margin-top:14px">' + ck.map(checkRow).join('') + '<p class="small muted" style="margin-top:8px">「AIで続ける」と、最初に聞いてくれるよ</p></div>';
     if (e.source === 'import') h += '<div class="note-import">過去のESや、ほかのAIとの会話から取り込んだ話です。まだ本人が確かめていないので、合っているか確認して、自分の言葉で話し直すと「本人の話」になるよ。' + sayLine('取り込んだ話を確かめたい') + '</div>';
     if (e.quotes && e.quotes.length) h += '<div class="quotes" aria-label="本人の言葉">' + e.quotes.map(function (q) { return '<blockquote class="quote">' + esc(q) + '</blockquote>'; }).join('') + '</div>';
@@ -2163,14 +2529,14 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
     });
     return h;
   }
-  // 面接ネタ帳の vision 枠：未来（Will）のなりたい姿・キャリアプラン・やりたいことを要約して出す
+  // 面接ネタ帳の vision 枠：未来（これから）のなりたい姿・キャリアプラン・やりたいことを要約して出す
   function visionSummary(d) {
     var rows = ['vision', 'career', 'work'].map(function (a) {
       var fs = futureOf(d, a); if (!fs.length) return '';
       return '<dt>' + esc(C.FUTURE_LABEL[a]) + '</dt><dd>' + fs.map(function (f) { return esc(f.text) + (f.horizon && HORIZON[f.horizon] ? '<span class="muted small">（' + HORIZON[f.horizon] + '）</span>' : ''); }).join('<br>') + '</dd>';
     }).join('');
     if (!rows) return '';
-    return '<div class="fsum"><dl>' + rows + '</dl><button class="more" data-go="future">未来（Will）を見る ›</button></div>';
+    return '<div class="fsum"><dl>' + rows + '</dl><button class="more" data-go="future">未来（これから）を見る ›</button></div>';
   }
   function vCand(key, i) {
     var d = D(), c = (d.interview[key] || [])[+i];
@@ -2181,15 +2547,16 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
     h += '<div class="ep-meta"><span><span class="lbl">おすすめ度</span><span class="fit">' + fitSym(c.fit) + '</span> <span class="small muted">' + fitText(c.fit) + '</span></span>' + (e && key !== 'vision' ? depthMeter(e.depth) : '') + boostBadge(c) + aiBadge(c) + '</div>';
     if (sl && key === 'vision') {
       var vneed = sl.required ? sl.need : sl.needFor, vok = sl.have >= vneed;
-      h += '<p class="slot-note">レベル' + R.level + 'の「' + esc(label) + '」に必要なのは<b>「' + esc(sl.needLabel) + '」</b>' + (sl.required ? '' : '（今の目標では無くてもOK）') + '。未来（Will）は今<b>「' + esc(sl.haveLabel) + '」</b>' +
+      h += '<p class="slot-note">レベル' + R.level + 'の「' + esc(label) + '」に必要なのは<b>「' + esc(sl.needLabel) + '」</b>' + (sl.required ? '' : '（今の目標では無くてもOK）') + '。未来（これから）は今<b>「' + esc(sl.haveLabel) + '」</b>' +
         (sl.penalized ? '（足りない情報があるので1段下げて判定）' : '') + ' → ' + (vok ? '<span class="ok">クリア</span>' : 'あと' + Math.max(1, vneed - sl.have) + '段') + '</p>';
       var vs = visionSummary(d);
-      if (vs) h += '<div class="sec"><h2 class="sec-title">未来（Will）のメモ</h2><div class="card" style="padding:4px 16px 8px">' + vs.replace('class="fsum"', 'class="fsum" style="border-top:0"') + '</div></div>';
+      if (vs) h += '<div class="sec"><h2 class="sec-title">未来（これから）のメモ</h2><div class="card" style="padding:4px 16px 8px">' + vs.replace('class="fsum"', 'class="fsum" style="border-top:0"') + '</div></div>';
     } else if (sl && e) {
       var need = sl.required ? sl.need : sl.needFor, pen = R.level >= 3 && c.missing && c.missing.some(function (m) { return String(m || '').trim(); });
-      var eff = Math.max(0, depthN(e.depth) - (pen ? 1 : 0)), ok = eff >= need && num(c.fit) >= 2;
+      var hd = C.effDepth(e, R.level, R.holes), hol = hd < depthN(e.depth);
+      var eff = Math.max(0, depthN(e.depth) - (pen || hol ? 1 : 0)), ok = eff >= need && num(c.fit) >= 2;
       h += '<p class="slot-note">レベル' + R.level + 'の「' + esc(label) + '」に必要なのは<b>「' + esc(C.DEPTH_LABEL[need]) + '」</b>' + (sl.required ? '' : '（今の目標では無くてもOK）') + '。この話は今<b>「' + esc(C.DEPTH_LABEL[eff]) + '」</b>' +
-        (pen ? '（足りない情報があるので1段下げて判定）' : '') + (num(c.fit) < 2 ? '。おすすめ度が△なので、到達度には数えていません' : '') + ' → ' + (ok ? '<span class="ok">クリア</span>' : 'あと' + Math.max(1, need - eff) + '段') + '</p>';
+        (pen ? '（足りない情報があるので1段下げて判定）' : '') + (hol ? '（答えの穴が残っているので1段下げて判定）' : '') + (num(c.fit) < 2 ? '。おすすめ度が△なので、仕上がりには数えていません' : '') + ' → ' + (ok ? '<span class="ok">クリア</span>' : 'あと' + Math.max(1, need - eff) + '段') + '</p>';
     }
     if (c.points && c.points.length) h += '<div class="sec"><h2 class="sec-title">話すポイント</h2><div class="card"><ul class="dots">' + c.points.map(function (p) { return '<li style="font-size:14.5px;color:var(--ink)">' + esc(p) + '</li>'; }).join('') + '</ul></div></div>';
     h += '<div class="sec"><h2 class="sec-title">面接で話す下書き' + (c.draft ? '<small class="cnt">' + c.draft.length + '字</small>' : '') + '</h2>';
@@ -2209,18 +2576,44 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
     return '<div class="chips"><span class="ev-label">根拠</span>' + ev.map(function (id) { var e = epById(d, id); return e ? '<button class="chip ac" data-go="ep/' + esc(id) + '">' + esc(trunc(e.title, 14)) + '</button>' : ''; }).join('') + '</div>';
   }
   function vTraits() {
-    var d = D();
+    var d = D(), any = false;
     var h = pagehead('強み・価値観・軸', 'エピソードから見えてきた「じぶん」のまとめ');
-    var any = false;
+    var ins = (d.insights || []).filter(function (i) { return i && String(i.text || '').trim(); });
+    if (ins.length) {
+      any = true;
+      h += '<div class="sec" id="sec-insights" style="margin-top:6px"><h2 class="sec-title">AIの気づき<small>' + ins.length + '</small></h2>' + ins.slice().reverse().map(function (i) { return insightCard(i, { ev: true }); }).join('') +
+        '<p class="small muted" style="margin:8px 2px 0">「当たってる」「ちょっと違う」をAIに伝えると、もっと正確になるよ</p></div>';
+    }
+    function trCard(t, k) {
+      var rk = k === 'values' && num(t.rank) ? '<span class="rank">' + num(t.rank) + '位</span>' : '';
+      return '<div class="card tr"><div class="tr-top"><b>' + rk + esc(t.name) + '</b><span class="badges">' + confPill(t.confidence) + aiBadge(t) + '</span></div>' + (t.description ? '<p>' + esc(t.description) + '</p>' : '') +
+        (k === 'values' && t.tradeoff ? '<div class="tradeoff"><b>両立しなかった時に選んだもの</b>' + esc(t.tradeoff) + '</div>' : '') + evChips(d, t.evidence) + '</div>';
+    }
+    var SUB = { values: '大事な順', recovery: 'しんどい時の乗り越え方' };
     C.TRAIT_KEYS.forEach(function (k) {
-      var arr = d.traits[k]; if (!arr.length) return; any = true;
-      h += '<div class="sec"><h2 class="sec-title">' + C.TRAIT_LABEL[k] + '<small>' + arr.length + '</small></h2>' + arr.map(function (t) {
-        return '<div class="card tr"><div class="tr-top"><b>' + esc(t.name) + '</b><span class="badges">' + confPill(t.confidence) + aiBadge(t) + '</span></div>' + (t.description ? '<p>' + esc(t.description) + '</p>' : '') + evChips(d, t.evidence) + '</div>';
-      }).join('') + '</div>';
+      var arr = (d.traits[k] || []).filter(function (t) { return t && t.name; }); if (!arr.length) return; any = true;
+      if (k === 'values') arr = arr.map(function (t, i) { return { t: t, i: i }; }).sort(function (a, b) { var ra = num(a.t.rank), rb = num(b.t.rank); return (ra == null ? 99 : ra) - (rb == null ? 99 : rb) || a.i - b.i; }).map(function (x) { return x.t; });
+      var ranked = k === 'values' && arr.some(function (t) { return num(t.rank); });
+      h += '<div class="sec" id="sec-' + k + '"><h2 class="sec-title">' + C.TRAIT_LABEL[k] + '<small>' + (ranked || k === 'recovery' ? SUB[k] + '・' : '') + arr.length + '</small></h2>' + arr.map(function (t) { return trCard(t, k); }).join('') + '</div>';
     });
+    var dcs = (d.decisions || []).filter(function (x) { return x && x.choice; });
+    if (dcs.length) {
+      any = true;
+      var habit = ins.filter(function (i) { return i.kind === 'pattern' && /決め|選ん|選ぶ|分かれ道/.test(i.text); }).slice(-1)[0];
+      h += '<div class="sec" id="sec-decisions"><h2 class="sec-title">人生の分かれ道<small>意思決定・' + dcs.length + '</small></h2>' +
+        (habit ? '<div class="card habit tr"><p class="eyebrow">決め方の癖（AIの気づき）</p><p style="font-size:14.5px;font-weight:700;color:var(--ink);margin-top:4px">' + esc(habit.text) + '</p></div>'
+          : dcs.length >= 3 ? '<div class="card habit tr"><p class="eyebrow">決め方の癖</p>' + sayLine('自分の決め方の癖を教えて') + '</div>' : '') +
+        dcs.map(function (x) {
+          var opts = (x.options || []).filter(Boolean);
+          return '<div class="card dc">' + (x.when ? '<p class="when">' + esc(x.when) + '</p>' : '') + '<b>' + esc(x.choice) + '</b><dl>' +
+            (opts.length ? '<dt>選ばなかった</dt><dd>' + opts.map(esc).join('／') + '</dd>' : '') +
+            (x.how ? '<dt>決め方</dt><dd>' + esc(x.how) + '</dd>' : '') + (x.regret ? '<dt>今思うこと</dt><dd>' + esc(x.regret) + '</dd>' : '') + '</dl>' +
+            '<div style="margin-top:8px">' + evChips(d, x.evidence) + '</div></div>';
+        }).join('') + '</div>';
+    }
     if (d.axes.length) {
       any = true;
-      h += '<div class="sec"><h2 class="sec-title">就活の軸<small>' + d.axes.length + '</small></h2>' + d.axes.map(function (a, i) {
+      h += '<div class="sec" id="sec-axes"><h2 class="sec-title">就活の軸<small>' + d.axes.length + '</small></h2>' + d.axes.map(function (a, i) {
         return '<div class="card tr"><div class="tr-top"><b><span class="axis-num">' + (i + 1) + '</span>' + esc(a.text) + '</b><span class="badges">' + aiBadge(a) + '</span></div>' + (a.reason ? '<p>' + esc(a.reason) + '</p>' : '') + evChips(d, a.evidence) + '</div>';
       }).join('') + '</div>';
     }
@@ -2228,7 +2621,7 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
     return h;
   }
 
-  // ---------- 画面：未来（Will） ----------
+  // ---------- 画面：未来（これから） ----------
   function futureItem(d, f) {
     var tags = (f.priority && PRIORITY[f.priority] ? '<span class="pri ' + esc(f.priority) + '">' + PRIORITY[f.priority] + '</span>' : '') +
       (f.horizon && HORIZON[f.horizon] ? '<span class="hz">' + HORIZON[f.horizon] + '</span>' : '') + aiBadge(f);
@@ -2236,7 +2629,7 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
   }
   function vFuture() {
     var d = D(), n = futureCount(d), all = C.FUTURE_AREAS.length;
-    var h = subhead(askBtn('future')) + pagehead('未来（Will）', 'これからどう生きたいか。迷っている・まだ決めていない、も立派な答えです');
+    var h = subhead(askBtn('future')) + pagehead('未来（これから）', 'これからどう生きたいか。迷っている・まだ決めていない、も立派な答えです');
     h += '<div class="prow" style="margin:-6px 2px 4px"><span>' + n + '／' + all + '領域</span>' + bar(n / all * 100) + '<span class="pv">' + Math.round(n / all * 100) + '%</span></div>';
     var musts = [];
     C.FUTURE_AREAS.forEach(function (a) { futureOf(d, a[0]).forEach(function (f) { if (f.priority === 'must') musts.push(f); }); });
@@ -2251,7 +2644,7 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
     return h;
   }
 
-  // ---------- 画面：深掘りリスト ----------
+  // ---------- 画面：AIに渡すもの（あなたのメモ・AIからの確認・深掘りしたい質問） ----------
   function deepCard(x) {
     var d = D(), t = String(x.target || ''), go = epById(d, t) ? 'ep/' + t : t.indexOf('interview.') === 0 ? 'interview/' + t.slice(10) : (t === 'axes' || d.axes.some(function (a) { return String(a.id) === t; })) ? 'traits' : /^future(\.|$)/.test(t) ? 'future' : '';
     var pr = clamp(num(x.priority) || 3, 1, 3);
@@ -2260,43 +2653,31 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
       '<h3>' + esc(x.question) + '</h3>' + (x.why && !x.done ? '<p class="why">' + esc(x.why) + '</p>' : '') +
       '</div>';
   }
-  function vDeep() {
-    var d = D();
-    var todo = d.deepDive.filter(function (x) { return !x.done; }).sort(function (a, b) { return (num(a.priority) || 3) - (num(b.priority) || 3); });
-    var done = d.deepDive.filter(function (x) { return x.done; });
-    var h = subhead() + pagehead('深掘りリスト', 'ここにある質問は、AIで続ける時に自動で渡ります');
-    h += todo.length ? todo.map(deepCard).join('') : '<div class="card"><p class="small muted">いま深掘り待ちはありません。</p></div>';
-    if (done.length) h += '<div class="sec"><h2 class="sec-title">聞けたこと<small>' + done.length + '</small></h2>' + done.map(deepCard).join('') + '</div>';
-    return h;
-  }
-
-  // ---------- 画面：もっと ----------
+  function deepTodo(d) { return d.deepDive.filter(function (x) { return x && !x.done; }); }
+  function passCount(d) { return openRequests().length + openChecks(d).length + deepTodo(d).length; }
   function menuItem(go, ic, title, sub, end, cls, act) {
     return '<button ' + (act ? 'data-act="' + act + '"' : 'data-go="' + go + '"') + '><span class="ic ' + (cls || '') + '">' + ic + '</span><span><b>' + title + '</b>' + (sub ? '<small>' + sub + '</small>' : '') + '</span><span class="end">' + (end || '') + ICON.right + '</span></button>';
   }
   function vMore() {
-    var d = D(), nDeep = d.deepDive.filter(function (x) { return !x.done; }).length;
-    var nTr = C.TRAIT_KEYS.reduce(function (n, k) { return n + d.traits[k].length; }, 0) + d.axes.length;
-    var nRq = openRequests().length, nCk = openChecks(d).length;
+    var d = D();
+    var nTr = C.TRAIT_KEYS.reduce(function (n, k) { return n + d.traits[k].length; }, 0) + d.axes.length + (d.insights || []).length + (d.decisions || []).length;
+    var nPass = passCount(d), nCk = openChecks(d).length;
     var h = pagehead('もっと');
     h += '<h2 class="sec-title menu-head">目標とAIとのやりとり</h2><div class="menu">' +
       menuItem('goal', ICON.flag, '目標と盛り方', 'レベル' + C.levelOf(d) + '・' + C.EMBELLISH.filter(function (x) { return x.key === C.embellishOf(d); })[0].name, '') +
-      menuItem('reach', ICON.star, '到達度', '目標までに、あと何が必要か', reach(d).pct + '%') +
-      menuItem('requests', ICON.chat, 'AIへの依頼', '「AIで続ける」で渡る頼みごと', nRq ? nRq + '件' : '') +
-      menuItem('checks', CHECK_KIND.unconfirmed[1], '確認待ち', 'AIが本人に確かめたいこと', nCk ? nCk + '件' : '', nCk ? 'w' : '') + '</div>';
+      menuItem('reach', ICON.star, '仕上がり', '目標までに、あと何が必要か', reach(d).pct + '%') +
+      menuItem('pass', ICON.chat, 'AIに渡すもの', 'あなたのメモ・AIからの確認・深掘りしたい質問', nPass ? nPass + '件' : '', nCk ? 'w' : '') + '</div>';
     h += '<div class="sec"><h2 class="sec-title menu-head">ノートの中身</h2><div class="menu">' +
-      menuItem('traits', ICON.star, '強み・価値観・軸', '強み・弱み・やる気スイッチ・就活の軸', nTr ? nTr + '件' : '') +
-      menuItem('future', ICON.future, '未来（Will）', 'ビジョン・キャリア・働き方・お金・家庭など', futureCount(d) + '／' + C.FUTURE_AREAS.length) +
-      menuItem('deep', ICON.dive, '深掘りリスト', 'AIで続ける時に自動で渡る質問', nDeep ? nDeep + '件' : '') +
-      menuItem('outputs', ICON.box, '作れるもの', '自己紹介・ES・想定問答など') + '</div></div>';
+      menuItem('traits', ICON.star, '強み・価値観・軸', '気づき・強み・価値観・立ち直り方・分かれ道・軸', nTr ? nTr + '件' : '') +
+      menuItem('future', ICON.future, '未来（これから）', 'ビジョン・キャリア・働き方・お金・家庭など', futureCount(d) + '／' + C.FUTURE_AREAS.length) +
+      menuItem('outputs', ICON.box, '作れるもの', '1分自己紹介・取扱説明書・他己分析の依頼文') +
+      menuItem('card', ICON.card, 'シェア用カードを作る', '「わたしの取扱説明書」を画像に') + '</div></div>';
     h += '<div class="sec"><h2 class="sec-title menu-head">データ</h2><div class="menu">' +
-      ((importPrompt() || readonly()) ? menuItem('', ICON.merge, '他のAIから取り込む', '過去のESや、ほかのAIとの会話から', '', '', 'importAI') : menuItem('', ICON.merge, '他のAIから取り込む', '準備中', '', '', 'noop')) +
+      ((importPrompt() || readonly()) ? menuItem('', ICON.merge, '他のAIから取り込む', '過去のES・ほかのAI・ChatGPTの記憶から', '', '', 'importAI') : menuItem('', ICON.merge, '他のAIから取り込む', '準備中', '', '', 'noop')) +
       menuItem('data', ICON.file, 'バックアップ・印刷・データ', 'バックアップ、PDFで保存、削除') + '</div></div>';
     h += '<p class="foot-note">じぶんノート</p>';
     return h;
   }
-
-  // ---------- 画面：AIへの依頼 ----------
   function reqCard(r) {
     var d = D(), t = String(r.target == null ? '' : r.target), te = C.targetEpisode(t);
     var go = epById(d, te) ? (t === te ? 'ep/' + te : '') : /^outputs\.[a-zA-Z0-9]+/.test(t) ? 'out/' + t.split('.')[1] : /^traits(\.|$)/.test(t) || d.axes.some(function (a) { return String(a.id) === t; }) ? 'traits' : /^future(\.|$)/.test(t) ? 'future' : '';
@@ -2308,90 +2689,76 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
       (r.done ? '<p class="why" style="margin-bottom:0">→ ' + esc(r.result || '対応済み') + (r.doneAt ? '（' + esc(fmtDate(r.doneAt)) + '）' : '') + '</p>'
         : ((!readonly() || r._local) ? '<button class="mini-btn" data-act="delReq" data-id="' + esc(r.id) + '" style="color:var(--warm);background:transparent;border-color:var(--warm-line)">' + ICON.trash + '消す</button>' : '')) + '</div>';
   }
-  function vRequests() {
-    var all = allRequests(), todo = all.filter(function (r) { return r.done !== true; }), done = all.filter(function (r) { return r.done === true; });
-    var h = subhead(askBtn('', '新しく頼む')) + pagehead('AIへの依頼', readonly() ? 'ノートから書いた依頼は、Claude Codeが次に読んで対応します' : 'ためた依頼は、次に「AIで続ける」でまとめてAIに渡ります。AIが対応すると「対応済み」に移るよ');
-    h += '<div class="sec" style="margin-top:4px"><h2 class="sec-title">まだ<small>' + todo.length + '</small></h2>' + (todo.length ? todo.map(reqCard).join('') : '<div class="card"><p class="small muted">いま待っている依頼はありません。エピソードや下書きのページ右上の「AIに頼む」からためられます。</p></div>') + '</div>';
-    if (done.length) h += '<div class="sec"><h2 class="sec-title">対応済み<small>' + done.length + '</small></h2>' + done.map(reqCard).join('') + '</div>';
-    if (readonly() && todo.some(function (r) { return r._local; })) h += '<div class="sec"><button class="btn soft block" data-act="ccSend">' + ICON.send + 'Claude Codeに渡す（もう一度）</button></div>';
-    return h;
-  }
-  // ---------- 画面：確認待ち ----------
-  function vChecks() {
-    var d = D(), todo = openChecks(d), done = (d.checks || []).filter(function (c) { return c && c.done === true; });
-    var h = subhead() + pagehead('確認待ち', 'AIが取り込みや見直しで見つけた「本人に確かめたいこと」。ノートでは答えず、AIと話して解決します');
-    h += todo.length ? '<div class="card" style="padding:4px 16px">' + todo.map(checkRow).join('') + '</div>' : '<div class="card"><p class="small muted">いま確認待ちはありません。</p></div>';
-    if (todo.length) h += '<div class="sec" style="margin-top:14px"><button class="btn primary block" data-act="handoff">' + ICON.send + esc(handoffLabel()) + '</button><p class="small muted" style="margin-top:6px;text-align:center">' + (readonly() ? 'Claude Codeを起動すると、最初に聞いてくれます' : '新しいチャットに貼ると、AIが最初に1つずつ聞いてくれます') + '</p></div>';
-    if (done.length) h += '<div class="sec"><h2 class="sec-title">確認できた<small>' + done.length + '</small></h2><div class="card" style="padding:4px 16px;opacity:.75">' + done.map(checkRow).join('') + '</div></div>';
+  function vPass() {
+    var d = D(), all = allRequests(), rq = all.filter(function (r) { return r.done !== true; }), ck = openChecks(d);
+    var dd = deepTodo(d).sort(function (a, b) { return (num(a.priority) || 3) - (num(b.priority) || 3); });
+    var rqDone = all.filter(function (r) { return r.done === true; }), ckDone = (d.checks || []).filter(function (c) { return c && c.done === true; }), ddDone = d.deepDive.filter(function (x) { return x && x.done; });
+    var h = subhead(askBtn('', 'AIに頼む')) + pagehead('AIに渡すもの', readonly() ? 'Claude Codeが次に起動した時に、ここにあるものから拾います' : '次に「AIで続ける」と、ここにあるものがまとめてAIに渡ります');
+    function sec(id, title, sub, n, inner, empty) {
+      return '<div class="sec" id="sec-' + id + '"' + (id === 'memo' ? ' style="margin-top:6px"' : '') + '><h2 class="sec-title"><span>' + title + ' <small>' + sub + '</small></span><small>' + n + '</small></h2>' + (n ? inner : '<div class="card"><p class="small muted">' + empty + '</p></div>') + '</div>';
+    }
+    h += sec('memo', 'あなたのメモ', 'AIに頼みたいこと', rq.length, rq.map(reqCard).join(''), 'まだありません。エピソードや下書きのページ右上の「AIに頼む」から書けます。');
+    h += sec('checks', 'AIからの確認', 'AIがあなたに確かめたいこと', ck.length, '<div class="card" style="padding:4px 16px">' + ck.map(checkRow).join('') + '</div>', 'いまAIからの確認はありません。');
+    h += sec('deep', '深掘りしたい質問', 'AIが次に聞きたいこと', dd.length, dd.map(deepCard).join(''), 'いま深掘りしたい質問はありません。');
+    if ((rq.length || ck.length || dd.length) && !readonly()) h += '<div class="sec" style="margin-top:16px"><button class="btn primary block" data-act="handoff">' + ICON.send + esc(handoffLabel()) + '</button><p class="small muted" style="margin-top:6px;text-align:center">新しいチャットに貼ると、AIが確認から1つずつ聞いてくれます</p></div>';
+    if (readonly() && rq.some(function (r) { return r._local; })) h += '<div class="sec"><button class="btn soft block" data-act="ccSend">' + ICON.send + 'Claude Codeに渡す（もう一度）</button></div>';
+    var nd = rqDone.length + ckDone.length + ddDone.length;
+    if (nd) h += '<details class="bst-fold" style="margin-top:22px"><summary style="color:var(--muted)">済んだもの（' + nd + '）</summary>' +
+      rqDone.map(reqCard).join('') + (ckDone.length ? '<div class="card" style="padding:4px 16px;opacity:.75;margin-top:10px">' + ckDone.map(checkRow).join('') + '</div>' : '') + ddDone.map(deepCard).join('') + '</details>';
     return h;
   }
 
-  // ---------- 画面：作れるもの ----------
+  // ---------- 画面：作れるもの（1分自己紹介・取扱説明書・他己分析の依頼文。取り込んだESは「取り込んだ資料」） ----------
   function outDone(d, k) { var v = d.outputs[k]; return Array.isArray(v) ? v.length > 0 : !!(v && v.text); }
+  function importedEs(d) { return (Array.isArray(d.outputs.es) ? d.outputs.es : []).filter(isImportedEs); }
   function vOutputs() {
     var d = D();
-    var h = subhead() + pagehead('作れるもの', 'ノートが自動で作るものと、AIに作ってもらうもの');
-    h += '<div class="sec" style="margin-top:6px"><h2 class="sec-title">ノートが自動で作る</h2><div class="menu">' +
-      menuItem('graph', ICON.chat.replace('M4 5.5h16v10.5H10l-4.5 3.5V16H4z', 'M3 16c2.2 0 2.6-6 5-6s2.4 4.5 4.6 4.5S15.7 5 18.2 5 21 9 21 9'), 'モチベーショングラフ', '気持ちの山と谷が一目でわかる', '<span class="st ok">できてる</span>') +
-      menuItem('timeline', ICON.box, '年表', '幼少期から今までのエピソード', '<span class="st ok">できてる</span>') +
-      menuItem('traits', ICON.star, '強みマップ', '強み・価値観を根拠つきで', '<span class="st ok">できてる</span>') + '</div></div>';
-    h += '<div class="sec"><h2 class="sec-title">AIに作ってもらう</h2><div class="menu">' +
+    var h = subhead() + pagehead('作れるもの', 'ここまでの自己分析から、AIに作ってもらえるもの');
+    h += '<div class="sec" style="margin-top:6px"><div class="menu">' +
       OUT_DEF.map(function (o) {
-        var ok = outDone(d, o.key), v = d.outputs[o.key];
-        var cnt = Array.isArray(v) && v.length ? v.length + '件 ' : '';
-        var st = ok ? '<span class="st ok">' + cnt + '作成済み</span>' : hasOpenReq('outputs.' + o.key) ? '<span class="st ok">依頼済み</span>' : '<span class="st no">まだ</span>';
-        return menuItem('out/' + o.key, o.key === 'qa' ? ICON.chat : o.key === 'companyFit' ? ICON.star : ICON.file, C.OUTPUT_LABEL[o.key], o.desc, st, ok ? '' : 'w');
+        var ok = outDone(d, o.key);
+        var st = ok ? '<span class="st ok">作成済み</span>' : hasOpenReq('outputs.' + o.key) ? '<span class="st ok">頼んだ</span>' : '<span class="st no">まだ</span>';
+        return menuItem('out/' + o.key, ICON.file, C.OUTPUT_LABEL[o.key], o.desc, st, ok ? '' : 'w');
       }).join('') + '</div></div>';
+    var ie = importedEs(d);
+    if (ie.length) h += '<div class="sec"><h2 class="sec-title">取り込んだ資料</h2><div class="menu">' + menuItem('out/es', ICON.in, '取り込んだES', '過去のESなどから取り込んだ本文', ie.length + '件') + '</div></div>';
+    h += '<p class="small muted" style="margin-top:16px">モチベーショングラフ・年表・強みのまとめは、ノートが自動で作っています。</p>';
     return h;
   }
   function vOut(key) {
-    var d = D(), def = OUT_DEF.filter(function (o) { return o.key === key; })[0];
+    var d = D();
+    if (key === 'es') {
+      var ie = importedEs(d);
+      var h0 = subhead() + pagehead('取り込んだ資料', '過去のESなどから取り込んだ本文。ノートの材料として残しています');
+      if (!ie.length) return h0 + '<div class="card"><p class="small muted">まだ取り込んだ資料はありません。</p></div>';
+      return h0 + ie.map(function (es) {
+        var len = String(es.text || '').replace(/\s/g, '').length;
+        return '<div class="sec" style="margin-top:14px"><h2 class="sec-title">' + esc(String(es.title || 'ES').replace(/^取り込み[：:]\s*/, '')) + '<small class="cnt">' + len + '字</small></h2><div class="chips" style="margin:-4px 2px 8px">' + importBadge() + '</div><div class="draft">' + esc(es.text || '') + '</div>' +
+          '<div class="btn-row" style="margin-top:10px;align-items:center"><button class="btn sm" ' + copyAttr(es.text || '') + '>' + ICON.copy + 'コピー</button></div>' + (es.episodes && es.episodes.length ? '<div style="margin-top:10px">' + evChips(d, es.episodes) + '</div>' : '') + '</div>';
+      }).join('');
+    }
+    var def = OUT_DEF.filter(function (o) { return o.key === key; })[0];
     if (!def) return subhead() + '<p class="muted" style="padding:40px 0">見つかりませんでした。</p>';
     var v = d.outputs[key], ok = outDone(d, key);
     var h = subhead(ok ? askBtn('outputs.' + key) : '') + pagehead(C.OUTPUT_LABEL[key], def.desc);
-    if (key === 'companyFit') {
-      var comps = ((d.profile.targets || {}).companies || []);
-      if (ok) h += v.map(function (f) {
-        return '<div class="card tr"><div class="tr-top"><b>' + esc(f.company) + '</b>' + (f.updatedAt ? '<span class="cnt">' + fmtDate(f.updatedAt) + '</span>' : '') + '</div><ul class="dots" style="margin-top:8px">' + (f.points || []).map(function (p) { return '<li>' + esc(p) + '</li>'; }).join('') + '</ul>' + evChips(d, f.episodes) + '</div>';
-      }).join('');
-      h += '<div class="sec"><h2 class="sec-title">' + (ok ? 'ほかの企業も当ててもらう' : '企業を選んで、AIに当ててもらう') + '</h2><div class="card">' +
-        (comps.length ? '<div class="btn-row" style="margin-bottom:12px">' + comps.map(function (c) { return '<button class="mini-btn" data-act="fitAsk" data-c="' + esc(c) + '">' + esc(c) + '</button>'; }).join('') + '</div>' : '') +
-        '<label class="small muted" for="fitname">企業名を入れる</label><input id="fitname" class="field-input" placeholder="例：博報堂" style="margin:6px 0 10px"><button class="btn soft block" data-act="fitAsk">' + ICON.chat + 'AIに当ててもらう</button>' +
-        '<p class="small muted" style="margin-top:8px">依頼にたまって、「AIで続ける」で渡ります</p></div></div>';
-      return h;
-    }
     if (!ok) {
       var asked = hasOpenReq('outputs.' + key);
-      return h + '<div class="card"><p class="small" style="margin-bottom:6px;font-weight:700">' + (asked ? '依頼にたまっています' : 'まだ作っていません') + '</p><p class="small muted" style="margin-bottom:14px">' + (asked ? '「AIで続ける」で渡すと、AIが作ってくれます。できあがったセーブデータを読み込むと、ここに表示されます。' : '押すと依頼にたまります。「AIで続ける」でAIに渡すと作ってくれて、セーブデータを読み込むとここに表示されます。') + '</p>' +
+      return h + '<div class="card"><p class="small" style="margin-bottom:6px;font-weight:700">' + (asked ? 'AIに渡すものにたまっています' : 'まだ作っていません') + '</p><p class="small muted" style="margin-bottom:14px">' + (asked ? '「AIで続ける」で渡すと、AIが作ってくれます。できあがったセーブデータを読み込むと、ここに表示されます。' : '押すと「AIに渡すもの」にたまります。「AIで続ける」でAIに渡すと作ってくれて、セーブデータを読み込むとここに表示されます。') + '</p>' +
         (asked ? '<button class="btn primary block" data-act="handoff">' + ICON.send + esc(handoffLabel()) + '</button>' : '<button class="btn primary block" data-act="makeOut" data-k="' + esc(key) + '">' + ICON.chat + 'AIに作ってもらう</button>') + '</div>';
     }
-    if (key === 'es') {
-      h += v.map(function (es) {
-        var len = String(es.text || '').replace(/\s/g, '').length;
-        var badges = (isImportedEs(es) ? importBadge() : '') + boostBadge(es);
-        return '<div class="sec" style="margin-top:14px"><h2 class="sec-title">' + esc(es.title || 'ES') + '<small class="cnt">' + len + (num(es.chars) ? '／' + es.chars : '') + '字</small></h2>' + (badges ? '<div class="chips" style="margin:-4px 2px 8px">' + badges + '</div>' : '') + '<div class="draft">' + boostText(es.text, es) + '</div>' +
-          '<div class="btn-row" style="margin-top:10px;align-items:center"><button class="btn sm" ' + copyAttr(es.text || '') + '>' + ICON.copy + 'コピー</button></div>' + (es.episodes && es.episodes.length ? '<div style="margin-top:10px">' + evChips(d, es.episodes) + '</div>' : '') + boostSection(es).replace('id="boosts"', '') + '</div>';
-      }).join('');
-    } else if (key === 'qa') {
-      h += v.map(function (q) {
-        return '<div class="card qa"><h3>' + esc(q.question) + '</h3>' + (boostsOf(q).length ? '<div style="margin:6px 0 0 22px">' + boostBadge(q) + '</div>' : '') + '<p class="a">' + boostText(q.answer, q) + '</p><div class="btn-row" style="margin-top:10px;align-items:center"><button class="mini-btn" ' + copyAttr(q.answer || '') + '>' + ICON.copy + '答えをコピー</button></div>' + (q.episodes && q.episodes.length ? '<div style="margin-top:10px">' + evChips(d, q.episodes) + '</div>' : '') + boostFold(q) + '</div>';
-      }).join('');
-    } else {
-      var t = String(v.text || '');
-      if (boostsOf(v).length) h += '<div class="chips" style="margin-bottom:8px">' + boostBadge(v) + '</div>';
-      h += '<div class="' + (key === 'intro1min' ? 'draft' : 'card outbox') + '">' + boostText(t, v) + '</div>' +
-        '<div class="btn-row" style="margin-top:12px;align-items:center;justify-content:space-between"><button class="btn sm" ' + copyAttr(t) + '>' + ICON.copy + 'コピー</button><span class="cnt">' + t.replace(/\s/g, '').length + '字' + (v.updatedAt ? '・' + fmtDate(v.updatedAt) + ' 作成' : '') + '</span></div>' + boostSection(v);
-    }
-    if (key === 'es') h += '<div class="sec"><button class="mini-btn" data-act="makeOut" data-k="es">' + ICON.chat + '別の設問でも作ってもらう</button></div>';
+    var t = String(v.text || '');
+    if (boostsOf(v).length) h += '<div class="chips" style="margin-bottom:8px">' + boostBadge(v) + '</div>';
+    h += '<div class="' + (key === 'intro1min' ? 'draft' : 'card outbox') + '">' + boostText(t, v) + '</div>' +
+      '<div class="btn-row" style="margin-top:12px;align-items:center;justify-content:space-between"><button class="btn sm" ' + copyAttr(t) + '>' + ICON.copy + 'コピー</button><span class="cnt">' + t.replace(/\s/g, '').length + '字' + (v.updatedAt ? '・' + fmtDate(v.updatedAt) + ' 作成' : '') + '</span></div>' + boostSection(v);
     return h;
   }
 
   // ---------- 画面：読み込み ----------
   function vImport() {
-    var h = (S.data ? subhead() : subhead()) + pagehead('AIの出力を貼り付け', 'AIが出した「セーブデータ」を貼り付けてください。前後の文章や ``` が混ざっていても大丈夫です');
+    var h = subhead() + pagehead('AIの出力を貼り付け', 'AIが出した「セーブデータ」を貼り付けてください。前後の文章や ``` が混ざっていても、2つに分かれていても大丈夫です');
     if (readonly()) return h + '<div class="card"><p class="small">このノートはClaude Codeが直接更新しています。ページを再読み込みすると、最新の内容になります。</p></div>';
     h += '<label class="sr" for="paste">AIの出力を貼り付け</label><textarea id="paste" class="paste" placeholder="ここにAIの出力を貼り付け" autocomplete="off" autocapitalize="off" spellcheck="false">' + esc(S.importText) + '</textarea>';
-    if (S.importErr) h += '<p class="err" role="alert">' + esc(S.importErr) + '</p>';
+    if (S.importErr) h += '<div class="err" role="alert">' + esc(S.importErr) + (S.importFix ? '<button class="btn sm block" ' + copyAttr(S.importFix, 'コピーしました。ChatGPTに送ってね') + '>' + ICON.copy + 'AIへの直し方をコピー</button>' : '') + '</div>';
     h += '<div class="btn-row" style="margin-top:12px">' + (navigator.clipboard && navigator.clipboard.readText ? '<button class="btn" data-act="paste">貼り付け</button>' : '') + '<button class="btn primary" data-act="runImport">' + ICON.in + '読み込む</button></div>';
     h += '<div class="sec"><button class="btn sm" data-act="pickFile">' + ICON.file + 'バックアップから戻す</button><input type="file" id="fileIn" accept=".json,application/json,text/plain" hidden></div>';
     if (S.mode === 'sample') h += '<p class="small muted" style="margin-top:16px">※ 読み込むと、サンプルではなく「あなたのノート」として保存されます。</p>';
@@ -2399,18 +2766,68 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
   }
   function doImport(text) {
     var current = S.mode === 'local' ? S.data : null, r;
-    try { r = C.prepareImport(text, current); } catch (e) { S.importErr = e.message; S.importText = text; render(); return; }
-    var go = function () {
-      S.data = r.data; S.mode = 'local'; S.importText = ''; S.importErr = '';
+    try { r = C.prepareImport(text, current); }
+    catch (e) {
+      S.importErr = e.message; S.importFix = e.fix || ''; S.importText = text;
+      if ((routeParts()[0] || '') === 'import') render(); else go('import');
+      return;
+    }
+    var wasEmpty = !(current && current.episodes && current.episodes.length);
+    var go2 = function () {
+      S.data = r.data; S.mode = 'local'; S.importText = ''; S.importErr = ''; S.importFix = ''; S.returned = false;
       if (!S.data.updatedAt) S.data.updatedAt = today();
       save(); renderBanner();
-      sheet({ title: r.kind === 'patch' ? 'ノートを更新しました' : 'ノートを読み込みました', body: '<ul class="changes">' + r.summary.map(function (s) { return '<li>' + esc(s) + '</li>'; }).join('') + '</ul>', actions: [{ label: 'ノートを見る', cls: 'primary', value: 1 }] })
-        .then(function () { S.stack = []; location.hash = 'home'; if (location.hash === '#home') onRoute(); });
+      S.stack = []; location.hash = 'home'; if (location.hash === '#home') onRoute();
+      afterImportSheet(r, wasEmpty);
     };
     if (r.needsConfirm) {
       sheet({ title: '今のノートを置き換えますか？', body: '貼り付けたのは「まるごとのデータ」でした。今のノートの中身は、このデータで置き換わります。<ul class="changes">' + r.summary.map(function (s) { return '<li>' + esc(s) + '</li>'; }).join('') + '</ul>', actions: [{ label: 'やめる', value: 0 }, { label: '置き換える', cls: 'primary', value: 1 }] })
-        .then(function (v) { if (v) go(); });
-    } else go();
+        .then(function (v) { if (v) go2(); });
+    } else go2();
+  }
+  function latestInsight(d) { var a = (d.insights || []).filter(function (i) { return i && String(i.text || '').trim(); }); return a[a.length - 1] || null; }
+  function insightCard(i, opt) {
+    opt = opt || {};
+    var ok = i.confirmed === true, no = i.confirmed === false, k = C.INSIGHT_KIND[i.kind] || '';
+    return '<div class="card ins' + (ok ? ' ok' : '') + (no ? ' no' : '') + (i.kind === 'gap' ? ' gap' : '') + '"' + (opt.id ? ' id="' + opt.id + '"' : '') + '><p class="eyebrow"><span>' + ICON.spark.replace('<svg ', '<svg style="width:14px;height:14px;vertical-align:-2px;margin-right:4px" ') + esc(opt.label || 'AIの気づき') + '</span>' + (ok ? '' : '<small>' + esc(k) + '</small>') + '</p>' +
+      (ok ? '<span class="stamp">当たってた</span>' : '') + '<p class="ins-t"><span>' + esc(i.text) + '</span></p>' + (i.reaction ? '<span class="ins-r">' + esc(i.reaction) + '</span>' : '') + (no ? '<span class="ins-no">本人は違うと思っている</span>' : '') +
+      (opt.ev ? '<div style="margin-top:8px">' + evChips(D(), i.evidence) + '</div>' : '') + (opt.more ? '<button class="more" data-go="traits/insights">気づきをぜんぶ見る' + (opt.more > 1 ? '（' + opt.more + '）' : '') + ' ›</button>' : '') + '</div>';
+  }
+  function isStandalone() { return (window.matchMedia && matchMedia('(display-mode: standalone)').matches) || navigator.standalone === true; }
+  var isIOS = /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) { /* なし */ } }
+  // 初回のセーブ後に1回だけ：ホーム画面に追加すると消えにくい
+  function a2hsBox() {
+    if (isStandalone() || S.mode !== 'local' || lsGet('jibun-note-a2hs')) return '';
+    lsSet('jibun-note-a2hs', '1');
+    return '<div class="a2hs"><b>ホーム画面に追加すると、データが消えにくくなります</b><br>' +
+      (S.installPrompt ? 'このボタンから追加できます。' + '<br><button class="mini-btn" data-act="install">ホーム画面に追加</button>'
+        : isIOS ? 'Safariの共有ボタン →「ホーム画面に追加」。iPhoneはホーム画面のアプリだと保存場所が別になるので、先に「ノートをコピー」してから追加し、アプリで「コピーしたノートを読み込む」を押してね。<br><button class="mini-btn" data-act="copyNote">' + ICON.copy + 'ノートをコピー</button>'
+          : 'ブラウザのメニューから「ホーム画面に追加」（アプリをインストール）を選んでね。') + '</div>';
+  }
+  // 読み込んだ後：主は「ChatGPTに戻って、そのまま続けてOK」。最初の1回はグラフ・人物像・気づきを演出つきで見せる
+  function afterImportSheet(r, wasEmpty) {
+    var d = D(), first = wasEmpty && d.episodes.length > 0 && r.kind === 'patch' || (wasEmpty && r.kind === 'full' && d.episodes.length > 0);
+    var back = '<div class="back-note"><b>ChatGPTに戻って、そのまま続けてOK</b>同じチャットで話を続けて、次のセーブが出たら、またコピーしてここに戻ってきてね。</div>';
+    var ins = latestInsight(d), newIns = r.changes && r.changes.insights && r.changes.insights.added.length ? ins : null;
+    var body, title;
+    if (first) {
+      var w = Math.min(560, window.innerWidth) - 52, hasG = d.episodes.some(function (e) { return num(e.motivation) != null; });
+      var nCat = C.INTERVIEW_KEYS.filter(function (k) { return (d.interview[k[0]] || []).length; }).length;
+      var chips = ['エピソード ' + d.episodes.length + 'つ'].concat(nCat ? ['面接ネタ ' + nCat + '枠'] : []).concat(d.insights.length ? ['AIの気づき ' + d.insights.length + 'つ'] : []);
+      title = 'あなたのノートができました';
+      body = '<div class="reveal">' + (hasG ? '<div class="rv-g">' + graphSVG(d, { w: w, h: 96, mini: true, animate: true, id: 'rv' }) + '<p class="small muted" style="margin-top:2px">あなたのモチベーショングラフ</p></div>' : '') +
+        (d.profile.headline ? '<p class="rv-h">' + esc(d.profile.headline) + '</p>' : '') +
+        '<div class="chips rv-chips">' + chips.map(function (c) { return '<span class="chip ac">' + esc(c) + '</span>'; }).join('') + '</div>' +
+        (ins ? insightCard(ins) : '') + '</div>' + back + a2hsBox();
+    } else {
+      title = r.kind === 'patch' ? 'ノートを更新しました' : 'ノートを読み込みました';
+      body = (newIns ? insightCard(newIns, { label: '新しい気づき' }) : '') + '<ul class="changes">' + r.summary.map(function (s) { return '<li>' + esc(s) + '</li>'; }).join('') + '</ul>' + back;
+    }
+    var acts = [{ label: '閉じる', cls: 'primary', value: 1 }];
+    if (S.mode !== 'file') acts.unshift({ label: '新しいチャットで続ける', value: 0, run: function () { ACT.handoff(); } });
+    sheet({ title: title, body: body, actions: acts });
   }
 
   // ---------- 画面：データ管理 ----------
@@ -2428,11 +2845,255 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
     return h;
   }
 
+  // ---------- シェア用カード（わたしの取扱説明書・1080×1920） ----------
+  var LS_CARD = 'jibun-note-card';
+  var CARD_THEME = {
+    paper: { name: '紙', bg: '#F7F5F0', card: '#FFFFFF', ink: '#26251F', ink2: '#55524A', muted: '#8A857A', line: '#E6E1D6', band: '#EFEBE2', accent: '#2F7A68', warm: '#B95B3F', hl: '#F5E2A0', margin: '#EBC6B8' },
+    mint: { name: 'ミント', bg: '#E2EFE9', card: '#F8FCFA', ink: '#1F3A32', ink2: '#3E5A51', muted: '#6C877E', line: '#CCE1D7', band: '#D3E7DD', accent: '#2C7563', warm: '#BF6449', hl: '#FAE6A6', margin: '#B5D6CA' },
+    night: { name: '夜', bg: '#191A18', card: '#232421', ink: '#EEECE6', ink2: '#C9C5BB', muted: '#9A968C', line: '#30312C', band: '#232421', accent: '#7CC4AE', warm: '#E79A84', hl: '#5E4E1E', margin: '#5A382E' }
+  };
+  var CARD_SERIF = '"Hiragino Mincho ProN","Hiragino Mincho Pro","Yu Mincho","YuMincho","Noto Serif JP","Noto Serif CJK JP",serif';
+  var CARD_SANS = '"Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP","Noto Sans CJK JP","Yu Gothic","YuGothic",Meiryo,sans-serif';
+  function looksFullName(n) { n = String(n || '').trim(); return /[\s　]/.test(n) || /^[一-龥々]{4,}$/.test(n); }
+  function cardState() {
+    if (S.card) return S.card;
+    var c = {}; try { c = JSON.parse(localStorage.getItem(LS_CARD) || '{}') || {}; } catch (e) { c = {}; }
+    var nm = String((D().profile || {}).name || '').trim();
+    S.card = { name: c.name || 'nick', nick: c.nick != null ? c.nick : (looksFullName(nm) ? '' : nm), theme: CARD_THEME[c.theme] ? c.theme : 'paper' };
+    return S.card;
+  }
+  function saveCardState() { if (S.mode === 'sample') return; lsSet(LS_CARD, JSON.stringify(S.card)); }
+  var KANA_INI = (function () {
+    var m = {}, rows = [['あ', 'A'], ['い', 'I'], ['う', 'U'], ['え', 'E'], ['お', 'O'], ['かきくけこ', 'K'], ['がぎぐげご', 'G'], ['さすせそ', 'S'], ['し', 'S'], ['ざずぜぞ', 'Z'], ['じぢ', 'J'], ['たてと', 'T'], ['ち', 'C'], ['つ', 'T'], ['だづでど', 'D'],
+      ['なにぬねの', 'N'], ['はひへほ', 'H'], ['ふ', 'F'], ['ばびぶべぼ', 'B'], ['ぱぴぷぺぽ', 'P'], ['まみむめも', 'M'], ['やゆよ', 'Y'], ['らりるれろ', 'R'], ['わを', 'W'], ['ん', 'N']];
+    rows.forEach(function (r) { r[0].split('').forEach(function (ch) { m[ch] = r[1]; }); });
+    return m;
+  })();
+  function initialOf(n) {
+    n = String(n || '').trim(); if (!n) return '';
+    var c = n[0];
+    if (/[A-Za-z]/.test(c)) return c.toUpperCase() + '.';
+    var code = c.charCodeAt(0);
+    if (code >= 0x30A1 && code <= 0x30F6) c = String.fromCharCode(code - 0x60);
+    return KANA_INI[c] ? KANA_INI[c] + '.' : '';
+  }
+  function cardName(d, cs) {
+    var nm = String((d.profile || {}).name || '').trim();
+    if (cs.name === 'none') return 'わたし';
+    if (cs.name === 'initial') return initialOf(cs.nick) || initialOf(nm) || 'わたし';
+    return String(cs.nick || '').trim().slice(0, 10) || 'わたし';
+  }
+  // 個人が特定できる言葉（名前・大学・学部・志望先）は伏せる
+  function cardMask(d, text) {
+    var p = d.profile || {}, tg = p.targets || {}, t = String(text || '');
+    [p.name, p.university, p.faculty].concat(tg.companies || [], tg.industries || []).forEach(function (w) {
+      w = String(w || '').trim(); if (w.length >= 2) t = t.split(w).join('○○');
+    });
+    return t.replace(/[一-龥ァ-ヶー]{1,12}(大学|高校|高等学校|中学校|中学|小学校)/g, '○○');
+  }
+  function rankTraits(arr, n) {
+    var C2 = { high: 0, mid: 1, low: 2 };
+    return (arr || []).filter(function (t) { return t && String(t.name || '').trim(); }).map(function (t, i) { return { t: t, i: i }; }).sort(function (a, b) {
+      var ca = C2[a.t.confidence] != null ? C2[a.t.confidence] : 1, cb = C2[b.t.confidence] != null ? C2[b.t.confidence] : 1;
+      return ca - cb || (b.t.evidence || []).length - (a.t.evidence || []).length || a.i - b.i;
+    }).slice(0, n).map(function (x) { return x.t; });
+  }
+  function cardReady(d) { return !!(String((d.profile || {}).headline || '').trim() || rankTraits(d.traits.strengths, 1).length); }
+  function wrapText(ctx, text, maxW, maxLines) {
+    var NG = '、。，．・ー」』）)！？!?ぁぃぅぇぉっゃゅょゎァィゥェォッャュョヮ…', lines = [], cur = '';
+    for (var i = 0; i < text.length; i++) {
+      var ch = text[i];
+      if (cur && ctx.measureText(cur + ch).width > maxW && NG.indexOf(ch) < 0) {
+        // 行末に開きかっこを残さない
+        if (/[「『（(]$/.test(cur)) { lines.push(cur.slice(0, -1)); cur = cur.slice(-1) + ch; } else { lines.push(cur); cur = ch; }
+      } else cur += ch;
+    }
+    if (cur) lines.push(cur);
+    if (lines.length > maxLines) {
+      lines = lines.slice(0, maxLines);
+      var l = lines[maxLines - 1]; while (l && ctx.measureText(l + '…').width > maxW) l = l.slice(0, -1);
+      lines[maxLines - 1] = l + '…';
+    }
+    return lines;
+  }
+  // 行の長さをそろえて折り返す（最後の行に1〜2文字だけ残さない）
+  function wrapBalanced(ctx, text, maxW, maxLines) {
+    var ls = wrapText(ctx, text, maxW, maxLines);
+    if (ls.length < 2 || ls.length >= maxLines && /…$/.test(ls[ls.length - 1])) return ls;
+    var n = ls.length, total = ctx.measureText(text).width;
+    for (var w = Math.ceil(total / n); w < maxW; w += 12) { var t = wrapText(ctx, text, w, 99); if (t.length <= n) return t; }
+    return ls;
+  }
+  function rrect(ctx, x, y, w, h, r) { ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); }
+  function cardFonts() {
+    if (!document.fonts || !document.fonts.load) return Promise.resolve();
+    return Promise.all([document.fonts.load('700 60px ' + CARD_SERIF, 'じぶん'), document.fonts.load('700 40px ' + CARD_SANS, 'じぶん'), document.fonts.load('500 30px ' + CARD_SANS, 'じぶん')])
+      .catch(function () { /* なし */ }).then(function () { return document.fonts.ready; });
+  }
+  // モチベーショングラフ（ラベルは時期だけ。出来事の名前は出さない）
+  function cardGraph(ctx, d, x, y, w, h, P) {
+    var eps = epsSorted(d).filter(function (e) { return num(e.motivation) != null; }), n = eps.length;
+    if (n < 2) { ctx.fillStyle = P.muted; ctx.font = '500 30px ' + CARD_SANS; ctx.textAlign = 'center'; ctx.fillText('話した出来事がふえると、線が引かれます', x + w / 2, y + h / 2); ctx.textAlign = 'left'; return; }
+    var step = w / n;
+    function X(i) { return x + (i + 0.5) * step; }
+    function Y(m) { return y + (5 - clamp(m, -5, 5)) / 10 * h; }
+    var groups = [];
+    eps.forEach(function (e, i) { var g = groups[groups.length - 1]; if (g && g.p === e.period) g.end = i; else groups.push({ p: e.period, start: i, end: i }); });
+    ctx.textAlign = 'center';
+    groups.forEach(function (g, gi) {
+      var x0 = x + g.start * step, x1 = x + (g.end + 1) * step, pe = periodOf(d, g.p);
+      if (gi % 2 === 0) { ctx.fillStyle = P.band; rrect(ctx, x0, y - 10, x1 - x0, h + 20, 10); ctx.fill(); }
+      ctx.fillStyle = P.ink2; ctx.font = '700 28px ' + CARD_SANS;
+      var lab = pe.label; while (lab.length > 1 && ctx.measureText(lab).width > x1 - x0 - 6) lab = lab.slice(0, -1);
+      ctx.fillText(lab, (x0 + x1) / 2, y + h + 56);
+    });
+    ctx.textAlign = 'left';
+    var zy = Y(0);
+    ctx.save(); ctx.strokeStyle = P.muted; ctx.globalAlpha = 0.5; ctx.lineWidth = 2; ctx.setLineDash([8, 10]); ctx.beginPath(); ctx.moveTo(x, zy); ctx.lineTo(x + w, zy); ctx.stroke(); ctx.restore();
+    var pts = eps.map(function (e, i) { return [X(i), Y(num(e.motivation)), num(e.motivation)]; }), ds = [], tg = [], i;
+    for (i = 0; i < n - 1; i++) ds.push((pts[i + 1][1] - pts[i][1]) / (pts[i + 1][0] - pts[i][0]));
+    for (i = 0; i < n; i++) tg.push(i === 0 ? ds[0] / 2 : i === n - 1 ? ds[n - 2] / 2 : ds[i - 1] * ds[i] <= 0 ? 0 : 2 / (1 / ds[i - 1] + 1 / ds[i]));
+    function curve() {
+      ctx.moveTo(pts[0][0], pts[0][1]);
+      for (var k = 0; k < n - 1; k++) { var p1 = pts[k], p2 = pts[k + 1], hh = (p2[0] - p1[0]) / 3; ctx.bezierCurveTo(p1[0] + hh, p1[1] + tg[k] * hh, p2[0] - hh, p2[1] - tg[k + 1] * hh, p2[0], p2[1]); }
+    }
+    [[P.accent, y - 20, zy], [P.warm, zy, y + h + 20]].forEach(function (f) {
+      ctx.save(); ctx.beginPath(); ctx.rect(x - 20, f[1], w + 40, f[2] - f[1]); ctx.clip();
+      ctx.beginPath(); curve(); ctx.lineTo(pts[n - 1][0], zy); ctx.lineTo(pts[0][0], zy); ctx.closePath();
+      ctx.globalAlpha = 0.2; ctx.fillStyle = f[0]; ctx.fill(); ctx.restore();
+    });
+    ctx.beginPath(); curve(); ctx.strokeStyle = P.ink2; ctx.lineWidth = 6; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.stroke();
+    pts.forEach(function (p) {
+      ctx.beginPath(); ctx.arc(p[0], p[1], 11, 0, Math.PI * 2);
+      ctx.fillStyle = p[2] > 0 ? P.accent : p[2] < 0 ? P.warm : P.muted; ctx.fill();
+      ctx.lineWidth = 5; ctx.strokeStyle = P.bg; ctx.stroke();
+    });
+  }
+  function drawCard(d, cs) {
+    return cardFonts().then(function () {
+      var W = 1080, H = 1920, M = 104, P = CARD_THEME[cs.theme] || CARD_THEME.paper, p = d.profile || {};
+      var cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+      var ctx = cv.getContext('2d');
+      ctx.fillStyle = P.bg; ctx.fillRect(0, 0, W, H);
+      // 罫線と、ノートの余白の線
+      ctx.strokeStyle = P.line; ctx.lineWidth = 2;
+      for (var ly = 300; ly < H - 150; ly += 76) { ctx.beginPath(); ctx.moveTo(0, ly); ctx.lineTo(W, ly); ctx.globalAlpha = 0.55; ctx.stroke(); }
+      ctx.globalAlpha = 0.8; ctx.strokeStyle = P.margin; ctx.beginPath(); ctx.moveTo(70, 0); ctx.lineTo(70, H); ctx.stroke(); ctx.globalAlpha = 1;
+      ctx.textBaseline = 'alphabetic';
+      // 見出し
+      ctx.fillStyle = P.muted; ctx.font = '700 28px ' + CARD_SANS;
+      if ('letterSpacing' in ctx) ctx.letterSpacing = '6px';
+      ctx.fillText('MY MANUAL', M, 150);
+      if ('letterSpacing' in ctx) ctx.letterSpacing = '2px';
+      ctx.fillStyle = P.ink; ctx.font = '700 62px ' + CARD_SERIF;
+      ctx.fillText(cardName(d, cs) + 'の取扱説明書', M, 236);
+      if ('letterSpacing' in ctx) ctx.letterSpacing = '0px';
+      ctx.fillStyle = P.accent; ctx.fillRect(M, 268, 96, 6);
+      var y = 392;
+      // 人物像の一文（いちばん大きく）
+      var hl = cardMask(d, String(p.headline || '').trim());
+      if (hl) {
+        ctx.font = '700 76px ' + CARD_SERIF;
+        var hls = wrapBalanced(ctx, '「' + hl + '」', W - M * 2 + 20, 3);
+        hls.forEach(function (l, i) {
+          var by = y + i * 112, lw = ctx.measureText(l).width;
+          ctx.fillStyle = P.hl; ctx.globalAlpha = cs.theme === 'night' ? 0.75 : 1; ctx.fillRect(M - 6, by + 4, lw + 12, 26); ctx.globalAlpha = 1;
+          ctx.fillStyle = P.ink; ctx.fillText(l, M - (i === 0 ? 30 : 0), by);
+        });
+        y += hls.length * 112 + 30;
+      }
+      function label(t, color, yy) { ctx.fillStyle = color; ctx.font = '700 32px ' + CARD_SANS; if ('letterSpacing' in ctx) ctx.letterSpacing = '4px'; ctx.fillText(t, M, yy); if ('letterSpacing' in ctx) ctx.letterSpacing = '0px'; }
+      // 強み TOP3
+      var st = rankTraits(d.traits.strengths, 3);
+      if (st.length) {
+        label('得意なこと TOP' + st.length, P.accent, y + 20); y += 58;
+        st.forEach(function (t, i) {
+          ctx.font = '700 46px ' + CARD_SANS;
+          var ls = wrapText(ctx, cardMask(d, t.name), W - M * 2 - 96, 2);
+          ctx.fillStyle = P.accent; ctx.font = '700 70px ' + CARD_SERIF; ctx.fillText(String(i + 1), M + 4, y + 62);
+          ctx.fillStyle = P.ink; ctx.font = '700 46px ' + CARD_SANS;
+          ls.forEach(function (l, j) { ctx.fillText(l, M + 96 - (/^[「『（(]/.test(l) ? 22 : 0), y + 56 + j * 64); });
+          y += ls.length * 64 + 34;
+        });
+        y += 10;
+      }
+      // やる気が上がる・下がる条件（2枚のカード）
+      var up = rankTraits(d.traits.motivators, 2), dn = rankTraits(d.traits.demotivators, 2);
+      if (up.length || dn.length) {
+        var cw = (W - M * 2 - 28) / 2, cols = [[up, '▲ やる気が上がる', P.accent], [dn, '▼ やる気が下がる', P.warm]];
+        ctx.font = '600 36px ' + CARD_SANS;
+        var blocks = cols.map(function (c) { return c[0].map(function (t) { return wrapText(ctx, cardMask(d, t.name), cw - 64, 3); }); });
+        var ch = Math.max.apply(null, blocks.map(function (b) { return b.reduce(function (s, ls) { return s + ls.length * 50 + 22; }, 0); })) + 104;
+        cols.forEach(function (c, ci) {
+          var cx = M + ci * (cw + 28);
+          ctx.fillStyle = P.card; rrect(ctx, cx, y, cw, ch, 26); ctx.fill();
+          ctx.strokeStyle = P.line; ctx.lineWidth = 2; ctx.stroke();
+          ctx.fillStyle = c[2]; ctx.font = '700 30px ' + CARD_SANS; ctx.fillText(c[1], cx + 32, y + 62);
+          var yy = y + 120;
+          ctx.fillStyle = P.ink; ctx.font = '600 36px ' + CARD_SANS;
+          if (!blocks[ci].length) { ctx.fillStyle = P.muted; ctx.fillText('まだ', cx + 32, yy); }
+          blocks[ci].forEach(function (ls) { ls.forEach(function (l, j) { ctx.fillText(l, cx + 32, yy + j * 50); }); yy += ls.length * 50 + 22; });
+        });
+        y += ch + 44;
+      }
+      // モチベーショングラフ
+      var gTop = y + 72, gH = Math.min(320, H - 170 - gTop - 74);
+      if (gH >= 130) { label('モチベーショングラフ', P.ink2, y + 20); cardGraph(ctx, d, M + 10, gTop, W - M * 2 - 20, gH, P); }
+      // フッター（運営名・QRは入れない）
+      ctx.textAlign = 'center';
+      ctx.fillStyle = P.ink2; ctx.font = '700 34px ' + CARD_SERIF;
+      var a = 'じぶんノート', b2 = '｜招待制の自己分析ノート';
+      var wa = ctx.measureText(a).width; ctx.font = '500 27px ' + CARD_SANS; var wb = ctx.measureText(b2).width;
+      var fx = W / 2 - (wa + wb) / 2;
+      ctx.textAlign = 'left'; ctx.font = '700 34px ' + CARD_SERIF; ctx.fillText(a, fx, H - 92);
+      ctx.fillStyle = P.muted; ctx.font = '500 27px ' + CARD_SANS; ctx.fillText(b2, fx + wa, H - 93);
+      return cv;
+    });
+  }
+  function canShareFiles() {
+    try { return !!(navigator.canShare && navigator.share && navigator.canShare({ files: [new File([''], 'a.png', { type: 'image/png' })] })); } catch (e) { return false; }
+  }
+  function drawCardPreview() {
+    var img = $('#card-img'); if (!img || !S.data) return;
+    var seq = (S.cardSeq = (S.cardSeq || 0) + 1);
+    drawCard(D(), cardState()).then(function (cv) {
+      if (seq !== S.cardSeq) return;
+      S.cardCanvas = cv; S.cardFile = null;
+      img.src = cv.toDataURL('image/png'); img.hidden = false;
+      var ph = $('#card-ph'); if (ph) ph.remove();
+      // 共有はタップの中で呼ぶ必要があるので、先にファイルにしておく
+      cv.toBlob(function (bl) { if (seq === S.cardSeq && bl) S.cardFile = new File([bl], 'jibun-note-card.png', { type: 'image/png' }); }, 'image/png');
+    });
+  }
+  function vCard() {
+    var d = D(), cs = cardState(), p = d.profile || {};
+    var h = subhead() + pagehead('シェア用カード', '「わたしの取扱説明書」を、ストーリーに載せられる画像にします');
+    if (!cardReady(d)) return h + '<div class="card"><p class="small" style="font-weight:700">まだカードにする材料が足りません</p><p class="small muted" style="margin-top:4px">人物像の一文か、強みが1つあればカードにできます。</p>' + sayLine('人物像の一文と強みをまとめたい') + '</div>';
+    h += '<div class="cardprev"><img id="card-img" alt="シェア用カードのプレビュー" hidden><div class="ph" id="card-ph" aria-hidden="true"></div></div>';
+    h += '<p class="small muted" style="text-align:center">画像を長押しすると、写真に保存もできます</p>';
+    var share = canShareFiles();
+    h += '<div class="btn-row" style="margin-top:14px">' + (share ? '<button class="btn primary" data-act="cardShare">' + ICON.share + 'シェア</button>' : '') + '<button class="btn' + (share ? '' : ' primary') + '" data-act="cardSave">' + ICON.save + '画像を保存</button></div>';
+    function seg(k, opts) { return '<div class="seg" role="group">' + opts.map(function (o) { return '<button data-act="cardOpt" data-k="' + k + '" data-v="' + o[0] + '" aria-pressed="' + (cs[k] === o[0]) + '">' + esc(o[1]) + '</button>'; }).join('') + '</div>'; }
+    h += '<div class="card" style="margin-top:18px">';
+    h += '<div class="optrow" style="margin-top:0"><span class="l">名前の出し方</span>' + seg('name', [['nick', '呼び名'], ['initial', 'イニシャル'], ['none', '出さない']]) + '</div>';
+    if (cs.name !== 'none') h += '<div class="optrow"><label for="card-nick">' + (cs.name === 'initial' ? 'イニシャルにする名前（ひらがな・ローマ字）' : 'カードでの呼び名') + '</label><input id="card-nick" class="field-input" maxlength="10" autocomplete="off" value="' + esc(cs.nick) + '" placeholder="例：ゆうき"></div>';
+    if (cs.name === 'initial' && !initialOf(cs.nick) && !initialOf(p.name)) h += '<p class="small muted" style="margin-top:6px">漢字の名前はイニシャルにできないので、ひらがなかローマ字で入れてね</p>';
+    h += '<div class="optrow"><span class="l">色</span>' + seg('theme', Object.keys(CARD_THEME).map(function (k) { return [k, CARD_THEME[k].name]; })) + '</div></div>';
+    h += '<p class="masked">自動で伏せています：本名・大学・学部・志望先・エピソードの本文と名前（グラフは時期だけ）</p>';
+    if (!String(p.headline || '').trim()) h += '<div class="card" style="margin-top:12px"><p class="small muted">人物像の一文があると、カードの一番上に大きく入ります。</p>' + sayLine('人物像の一文を作って') + '</div>';
+    return h;
+  }
+  function cardDownload() {
+    var f = S.cardFile, cv = S.cardCanvas; if (!f && !cv) return;
+    function dl(blob) { var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'jibun-note-card.png'; document.body.appendChild(a); a.click(); setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 800); toast('画像を保存しました'); }
+    if (f) dl(f); else cv.toBlob(dl, 'image/png');
+  }
+
   // ---------- 印刷 ----------
   function buildPrint() {
     var d = D(); if (!d) return;
     var p = d.profile || {}, R = reach(d), eps = epsSorted(d);
-    var h = '<div class="p-cover"><h1>' + esc(p.name || 'わたし') + ' のじぶんノート</h1><p>' + esc([p.university, p.faculty, p.grad].filter(Boolean).join('・')) + (d.updatedAt ? '　' + esc(d.updatedAt) + ' 更新' : '') + '　目標：レベル' + R.level + ' ' + esc(R.levelName) + '　到達度 ' + R.pct + '%</p>' + (p.goal ? '<p>目標：' + esc(p.goal) + '</p>' : '') + '</div>';
+    var h = '<div class="p-cover"><h1>' + esc(p.name || 'わたし') + ' のじぶんノート</h1>' + (p.headline ? '<p style="font-family:var(--serif);font-size:13pt;color:var(--ink)">「' + esc(p.headline) + '」</p>' : '') + '<p>' + esc([p.university, p.faculty, p.grad].filter(Boolean).join('・')) + (d.updatedAt ? '　' + esc(d.updatedAt) + ' 更新' : '') + '　目標：レベル' + R.level + ' ' + esc(R.levelName) + '　仕上がり ' + R.pct + '%</p>' + (p.goal ? '<p>目標：' + esc(p.goal) + '</p>' : '') + '</div>';
     if (eps.length) h += '<div class="p-sec"><h2>モチベーショングラフ</h2><div class="p-graph">' + graphSVG(d, { w: 660, h: 260, id: 'pg' }) + '</div></div>';
     h += '<div class="p-sec"><h2>年表とエピソード</h2>';
     periods(d).forEach(function (pe) {
@@ -2450,20 +3111,24 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
       h += '<p class="p-period">' + k[1] + '</p>';
       cs.forEach(function (x) { var e = epById(d, x.c.episode); h += '<div class="p-item"><h3>' + fitSym(x.c.fit) + ' ' + esc(e ? e.title : x.c.episode) + '</h3><p>' + (x.c.points || []).map(esc).join(' ／ ') + '</p>' + (x.c.draft ? '<p class="p-text">' + esc(x.c.draft) + '</p>' : '') + boostPrint(x.c) + '</div>'; });
     });
-    h += '</div><div class="p-sec"><h2>強み・価値観・就活の軸</h2><div class="p-grid">';
-    C.TRAIT_KEYS.forEach(function (k) { d.traits[k].forEach(function (t) { h += '<div class="p-item"><h3>' + C.TRAIT_LABEL[k] + '：' + esc(t.name) + '</h3><p>' + esc(t.description || '') + '</p></div>'; }); });
+    h += '</div>';
+    var pins = (d.insights || []).filter(function (i) { return i && i.text; });
+    if (pins.length) h += '<div class="p-sec"><h2>AIの気づき</h2>' + pins.map(function (i) { return '<div class="p-item"><h3>' + (i.confirmed === true ? '【当たってた】' : i.confirmed === false ? '【本人は違うと思っている】' : '') + esc(i.text) + '</h3>' + (i.reaction ? '<p>本人：「' + esc(i.reaction) + '」</p>' : '') + '</div>'; }).join('') + '</div>';
+    h += '<div class="p-sec"><h2>強み・価値観・就活の軸</h2><div class="p-grid">';
+    C.TRAIT_KEYS.forEach(function (k) { d.traits[k].forEach(function (t) { h += '<div class="p-item"><h3>' + C.TRAIT_LABEL[k] + (k === 'values' && num(t.rank) ? '（' + num(t.rank) + '位）' : '') + '：' + esc(t.name) + '</h3><p>' + esc(t.description || '') + (t.tradeoff ? '／選んだもの：' + esc(t.tradeoff) : '') + '</p></div>'; }); });
     d.axes.forEach(function (a) { h += '<div class="p-item"><h3>軸：' + esc(a.text) + '</h3><p>' + esc(a.reason || '') + '</p></div>'; });
     h += '</div></div>';
+    var pdc = (d.decisions || []).filter(function (x) { return x && x.choice; });
+    if (pdc.length) h += '<div class="p-sec"><h2>人生の分かれ道（意思決定）</h2>' + pdc.map(function (x) { return '<div class="p-item"><h3>' + esc((x.when ? x.when + '：' : '') + x.choice) + '</h3><p>' + esc([(x.options || []).length ? '選ばなかった：' + x.options.join('／') : '', x.how ? '決め方：' + x.how : '', x.regret ? '今思うこと：' + x.regret : ''].filter(Boolean).join('　')) + '</p></div>'; }).join('') + '</div>';
     if (futureCount(d)) {
-      h += '<div class="p-sec"><h2>未来（Will）</h2><div class="p-grid">';
+      h += '<div class="p-sec"><h2>未来（これから）</h2><div class="p-grid">';
       C.FUTURE_AREAS.forEach(function (a) { futureOf(d, a[0]).forEach(function (f) { h += '<div class="p-item"><h3>' + esc(a[1]) + (f.priority && PRIORITY[f.priority] ? '（' + PRIORITY[f.priority] + '）' : '') + '</h3><p>' + esc(f.text) + (f.horizon && HORIZON[f.horizon] ? '　' + HORIZON[f.horizon] : '') + '</p></div>'; }); });
       h += '</div></div>';
     }
     var o = d.outputs || {};
     if (o.intro1min && o.intro1min.text) h += '<div class="p-sec"><h2>1分自己紹介</h2><p class="p-text">' + esc(o.intro1min.text) + '</p>' + boostPrint(o.intro1min) + '</div>';
     if (o.manual && o.manual.text) h += '<div class="p-sec"><h2>自分の取扱説明書</h2><p class="p-text">' + esc(o.manual.text) + '</p></div>';
-    (o.es || []).forEach(function (es) { h += '<div class="p-sec"><h2>ES：' + esc(es.title) + '</h2><p class="p-text">' + esc(es.text) + '</p>' + boostPrint(es) + '</div>'; });
-    if ((o.qa || []).length) h += '<div class="p-sec"><h2>想定問答</h2>' + o.qa.map(function (q) { return '<div class="p-item"><h3>Q. ' + esc(q.question) + '</h3><p class="p-text">A. ' + esc(q.answer) + '</p>' + boostPrint(q) + '</div>'; }).join('') + '</div>';
+    if (o.otherRequest && o.otherRequest.text) h += '<div class="p-sec"><h2>他己分析の依頼文</h2><p class="p-text">' + esc(o.otherRequest.text) + '</p></div>';
     h += '<p class="p-foot">じぶんノート</p>';
     $('#print').innerHTML = h;
   }
@@ -2471,9 +3136,11 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
   // ---------- 描画 ----------
   function renderBanner() {
     var b = $('#banner'), app = $('#app');
-    if (S.mode === 'sample') b.innerHTML = '<div class="banner"><span><b>これはサンプルです</b><span class="bn-sub">（架空の学生）</span></span><button data-act="exitSample">自分のをはじめる</button></div>';
-    else if (S.mode === 'file') b.innerHTML = '<div class="banner info"><span>Claude Codeのデータを表示中。再読み込みで最新になります</span></div>';
-    else b.innerHTML = '';
+    var h = '';
+    if (IN_APP && S.mode !== 'file' && !S.inappClosed) h += '<div class="banner"><span><b>アプリの中のブラウザだと、ノートが消えやすいよ</b><br>URLをコピーして、Safari／Chromeで開いてね</span><button data-act="copyUrl">URLをコピー</button></div>';
+    if (S.mode === 'sample') h += '<div class="banner"><span><b>これはサンプルです</b><span class="bn-sub">（架空の学生）</span></span><button data-act="exitSample">自分のをはじめる</button></div>';
+    else if (S.mode === 'file') h += '<div class="banner info"><span>Claude Codeのデータを表示中。再読み込みで最新になります</span></div>';
+    b.innerHTML = h;
     app.classList.toggle('has-banner', !!b.innerHTML);
     requestAnimationFrame(function () { var bb = b.firstChild; document.documentElement.style.setProperty('--bannerh', (bb ? bb.offsetHeight : 0) + 'px'); });
   }
@@ -2493,7 +3160,10 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
       case 'cand': html = vCand(parts[1], parts[2]); break;
       case 'future': html = vFuture(); break;
       case 'traits': html = subhead(S.data && C.hasContent(S.data) ? askBtn('traits') : '') + vTraits(); break;
-      case 'deep': html = vDeep(); break;
+      case 'deep': case 'requests': case 'checks': case 'pass':
+        if (r !== 'pass') { parts = ['pass', { deep: 'deep', requests: 'memo', checks: 'checks' }[r]]; r = 'pass'; }
+        html = vPass(); break;
+      case 'card': html = vCard(); break;
       case 'more': html = vMore(); break;
       case 'outputs': html = vOutputs(); break;
       case 'out': html = vOut(parts[1]); break;
@@ -2501,8 +3171,6 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
       case 'data': html = vData(); break;
       case 'goal': html = vGoal(); break;
       case 'reach': html = vReach(); break;
-      case 'requests': html = vRequests(); break;
-      case 'checks': html = vChecks(); break;
       default: html = vHome(); r = 'home';
     }
     var v = $('#view');
@@ -2512,7 +3180,7 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
     var tab = { home: 'home', timeline: 'timeline', ep: 'timeline', graph: 'graph', interview: 'interview', cand: 'interview' }[r] || 'more';
     document.querySelectorAll('.tab').forEach(function (t) { if (t.getAttribute('data-tab') === tab) t.setAttribute('aria-current', 'page'); else t.removeAttribute('aria-current'); });
     $('#tabbar').classList.toggle('hide', r === 'welcome' || (!S.data && r === 'import'));
-    var titles = { home: 'ホーム', timeline: '年表', ep: 'エピソード', graph: 'モチベーショングラフ', interview: '面接ネタ帳', cand: '面接ネタ', traits: '強み・価値観', future: '未来（Will）', deep: '深掘りリスト', more: 'もっと', outputs: '作れるもの', out: '作れるもの', import: 'AIの出力を貼り付け', data: 'バックアップ', goal: '目標と盛り方', reach: '到達度', requests: 'AIへの依頼', checks: '確認待ち' };
+    var titles = { home: 'ホーム', timeline: '年表', ep: 'エピソード', graph: 'モチベーショングラフ', interview: '面接ネタ帳', cand: '面接ネタ', traits: '強み・価値観', future: '未来（これから）', pass: 'AIに渡すもの', card: 'シェア用カード', more: 'もっと', outputs: '作れるもの', out: '作れるもの', import: 'AIの出力を貼り付け', data: 'バックアップ', goal: '目標と盛り方', reach: '仕上がり' };
     document.title = (titles[r] ? titles[r] + '｜' : '') + 'じぶんノート';
     // スクロール位置
     var h = location.hash.slice(1);
@@ -2522,7 +3190,16 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
       var el = document.getElementById((r === 'timeline' ? 'p-' : 'iv-') + parts[1]);
       window.scrollTo(0, 0);
       if (el) setTimeout(function () { var y = el.getBoundingClientRect().top + window.scrollY - 70; window.scrollTo(0, Math.max(0, y)); }, 30);
+    } else if ((r === 'traits' || r === 'pass') && parts[1]) {
+      var el2 = document.getElementById('sec-' + parts[1]);
+      window.scrollTo(0, 0);
+      if (el2) setTimeout(function () {
+        var sh = document.querySelector('.subhead'), off = sh ? sh.getBoundingClientRect().height + 12 : 64;
+        var bn = document.querySelector('.banner'); if (bn) off += bn.getBoundingClientRect().height;
+        var y = el2.getBoundingClientRect().top + window.scrollY - off; window.scrollTo(0, Math.max(0, y));
+      }, 30);
     } else window.scrollTo(0, 0);
+    if (r === 'card') setTimeout(drawCardPreview, 0);
     // アニメーション（リング・バー）
     requestAnimationFrame(function () { requestAnimationFrame(function () {
       v.querySelectorAll('.ring-fg').forEach(function (c) { c.style.strokeDashoffset = c.getAttribute('data-off'); });
@@ -2559,7 +3236,7 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
     ask: function (b) { askSheet(b.getAttribute('data-t') || ''); },
     delReq: function (b) {
       var id = b.getAttribute('data-id');
-      sheet({ title: 'この依頼を消しますか？', body: 'まだAIに渡していない依頼なら、消しても大丈夫です。', actions: [{ label: 'やめる', value: 0 }, { label: '消す', cls: 'danger', value: 1 }] }).then(function (v) { if (v) delRequest(id); });
+      sheet({ title: 'このメモを消しますか？', body: 'まだAIに渡していないメモなら、消しても大丈夫です。', actions: [{ label: 'やめる', value: 0 }, { label: '消す', cls: 'danger', value: 1 }] }).then(function (v) { if (v) delRequest(id); });
     },
     ccSend: function () { sendToClaudeCode(); },
     tipClose: function () { S.tipClosed = true; rerender(); },
@@ -2580,40 +3257,51 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
     },
     importAI: function () {
       if (readonly()) {
-        sheet({ title: '他のAIから取り込む', body: '<p>Claude Code版では、ファイルを置いて頼むだけでOK。</p><ol class="steps" style="margin-top:12px"><li><b>data/import フォルダにファイルを入れる</b><span>過去のES、ほかのAIとの会話を書き出したテキストなど。</span></li><li><b>Claude Codeに「取り込んで」と言う</b><span>今のノートと照らし合わせて、食い違いは「確認待ち」に積んでくれます。</span></li></ol><div class="cc-box">data/import フォルダにファイルを入れて『取り込んで』と言ってね</div>', actions: [{ label: '「取り込んで」をコピー', value: 'copy' }, { label: 'OK', cls: 'primary', value: 1 }] })
+        sheet({ title: '他のAIから取り込む', body: '<p>Claude Code版では、ファイルを置いて頼むだけでOK。</p><ol class="steps" style="margin-top:12px"><li><b>data/import フォルダにファイルを入れる</b><span>過去のES、ほかのAIとの会話を書き出したテキストなど。</span></li><li><b>Claude Codeに「取り込んで」と言う</b><span>今のノートと照らし合わせて、食い違いは「AIからの確認」に積んでくれます。</span></li></ol><div class="cc-box">data/import フォルダにファイルを入れて『取り込んで』と言ってね</div>', actions: [{ label: '「取り込んで」をコピー', value: 'copy' }, { label: 'OK', cls: 'primary', value: 1 }] })
           .then(function (v) { if (v === 'copy') copyText('取り込んで'); });
         return;
       }
       if (!importPrompt()) return;
-      if (locked()) { ensureUnlocked().then(function (ok) { if (ok) ACT.importAI(); }); return; }
-      var t = importText();
-      copyText(t, '取り込み用の指示文をコピーしました');
-      sheet({ title: '取り込み用の指示文をコピーしました', body: '<ol class="steps" style="margin-top:12px">' +
-        '<li><b>好きなAIの新しいチャットに貼る</b><span>ChatGPT・Claude・Geminiなど、どれでもOK。' + (S.mode === 'local' && C.hasContent(S.data) ? '今までのノートのデータも一緒に入っています。' : '') + '</span></li>' +
-        '<li><b>続けて、過去のESや会話を貼る</b><span>長い時は何回かに分けて貼ってね。AIが今のノートと照らし合わせます。</span></li>' +
-        '<li><b>出てきたセーブを「AIの出力を貼り付け」に貼る</b><span>取り込んだ話は「取り込み・未確認」になります。食い違いは「確認待ち」に入るよ。</span></li></ol>',
-        actions: [{ label: 'もう一度コピー', value: 'again' }, { label: '貼り付けへ', cls: 'primary', value: 'paste' }] })
-        .then(function (v) { if (v === 'again') copyText(importText(), 'もう一度コピーしました'); else if (v === 'paste') go('import'); });
+      // 解錠（非同期）の後は自動でコピーしない。シートのボタンをタップしてコピーする
+      if (locked()) { ensureUnlocked().then(function (ok) { if (ok) importSheet(); }); return; }
+      importSheet();
     },
     toggleP: function (b) { toggle(b.closest('.tl-period'), S.openP, b.getAttribute('data-id')); },
     toggleI: function (b) { toggle(b.closest('.iv'), S.openI, b.getAttribute('data-id')); },
     handoff: function () {
-      if (S.mode !== 'file' && locked()) { ensureUnlocked().then(function (ok) { if (ok) ACT.handoff(); }); return; }
-      copyText(handoffText(), 'コピーしました');
+      if (S.mode !== 'file' && locked()) { ensureUnlocked().then(function (ok) { if (ok) handoffSheet(false); }); return; }
+      copyText(handoffText(), 'コピーしました'); markOut();
       if (S.mode === 'file') {
         sheet({ title: '引き継ぎコードをコピーしました', body: 'Claude Code版では、Claude Codeがこのノートのデータを直接読んで続きをします。別のAIで続けたい時は、新しいチャットに貼り付けて送ってください。', actions: [{ label: 'OK', cls: 'primary', value: 1 }] });
         return;
       }
-      openGPTSheet('続きの準備ができました', '<ol class="steps" style="margin-top:12px"><li><b>ChatGPTで新しいチャットを開く</b><span>無料のままでOK。下のボタンから開けます。</span></li><li><b>コピーしたものを貼って送信</b><span>今までのデータごと渡っているので、AIが続きから話を聞いてくれます。</span></li></ol>')
-        .then(function (v) { if (v === 'again') copyText(handoffText()); });
+      handoffSheet(true);
     },
     startGPT: function () {
       var st = starter(); if (!st) return;
-      if (st === LOCK) { ensureUnlocked().then(function (ok) { if (ok) ACT.startGPT(); }); return; }
-      copyText(st, 'はじめるプロンプトをコピーしました');
-      openGPTSheet('はじめるプロンプトをコピーしました', '<ol class="steps" style="margin-top:12px"><li><b>ChatGPTの新しいチャットを開く</b><span>無料のままでOK。下のボタンから開けます。</span></li><li><b>貼り付けて送信する</b><span>コピーしたらChatGPTの新しいチャットに貼って送信してね。AIが1問ずつ質問してくれます。</span></li><li><b>最後に出る「セーブデータ」をここへ</b><span>「AIの出力を貼り付け」から読み込むと、ノートができあがります。</span></li></ol>')
-        .then(function (v) { if (v === 'again') copyText(st, 'もう一度コピーしました'); });
+      if (st === LOCK) { ensureUnlocked().then(function (ok) { if (ok) startSheet(false, '使えるようになりました'); }); return; }
+      copyText(st, '設定文をコピーしました'); markOut();
+      startSheet(true);
     },
+    clipImport: function () {
+      if (!navigator.clipboard || !navigator.clipboard.readText) { go('import'); return; }
+      navigator.clipboard.readText().then(function (t) {
+        if (!String(t || '').trim()) { toast('コピーされているものがありません。セーブをコピーしてから押してね'); return; }
+        doImport(t, true);
+      }, function () { S.importErr = ''; go('import'); setTimeout(function () { toast('ここに長押しで貼り付けてね'); }, 300); });
+    },
+    clipClose: function () { S.returned = false; rerender(); },
+    cardOpt: function (b) { var cs = cardState(); cs[b.getAttribute('data-k')] = b.getAttribute('data-v'); saveCardState(); rerender(); setTimeout(drawCardPreview, 0); },
+    cardSave: function () { cardDownload(); },
+    cardShare: function () {
+      var f = S.cardFile; if (!f) { toast('準備中…もう一度押してね'); return; }
+      navigator.share({ files: [f], title: 'わたしの取扱説明書' }).catch(function (e) { if (!e || e.name !== 'AbortError') cardDownload(); });
+    },
+    backupClose: function () { S.backupClosed = true; rerender(); },
+    copyNote: function () { copyText(JSON.stringify(D()), 'ノートをコピーしました。ホーム画面のアプリで「コピーしたノートを読み込む」を押してね'); },
+    install: function () { var p = S.installPrompt; if (!p) return; S.installPrompt = null; p.prompt(); },
+    copyUrl: function () { copyText(location.href.replace(/#.*$/, ''), 'URLをコピーしました。Safari／Chromeに貼って開いてね'); },
+    inappClose: function () { S.inappClosed = true; renderBanner(); },
     sample: function () { S.data = C.normalize(window.JIBUN_SAMPLE); S.mode = 'sample'; renderBanner(); S.stack = []; go('home'); },
     exitSample: function () {
       var local = loadLocal();
@@ -2622,21 +3310,17 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
       go(local ? 'home' : 'welcome');
     },
     paste: function () { navigator.clipboard.readText().then(function (t) { var ta = $('#paste'); if (ta) { ta.value = t; S.importText = t; } }, function () { toast('貼り付けできませんでした。長押しで貼り付けてね'); }); },
-    runImport: function () { var t = ($('#paste') || {}).value || ''; if (!t.trim()) { S.importErr = 'まだ何も貼り付けられていません。'; render(); return; } doImport(t); },
+    runImport: function () { var t = ($('#paste') || {}).value || ''; if (!t.trim()) { S.importErr = 'まだ何も貼り付けられていません。'; S.importFix = ''; render(); return; } doImport(t); },
     pickFile: function () { var f = $('#fileIn'); if (f) f.click(); },
-    fitAsk: function (b) {
-      var n = b.getAttribute('data-c') || ($('#fitname') || {}).value || '';
-      if (!n.trim()) { toast('企業名を入れてね'); return; }
-      queueRequest('outputs.companyFit', fitAsk(n.trim()));
-    },
     makeOut: function (b) {
       var k = b.getAttribute('data-k'), def = OUT_DEF.filter(function (o) { return o.key === k; })[0];
-      if (def && def.ask) queueRequest('outputs.' + k, k === 'es' && outDone(D(), 'es') ? 'ESの下書きを別の設問でも作って（設問と文字数は話しながら決めたい）' : def.ask);
+      if (def && def.ask) queueRequest('outputs.' + k, def.ask);
     },
     export: function () {
       var blob = new Blob([JSON.stringify(D(), null, 2)], { type: 'application/json' });
       var a = document.createElement('a'); a.href = URL.createObjectURL(blob);
       a.download = 'jibun-note-' + today() + '.json'; document.body.appendChild(a); a.click();
+      lsSet(LS_BACKUP, String(Date.now())); S.backupClosed = true; if ((routeParts()[0] || 'home') === 'home') rerender();
       setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 500);
       toast('バックアップを保存しました');
     },
@@ -2657,7 +3341,11 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
   document.addEventListener('keydown', function (e) {
     if ((e.key === 'Enter' || e.key === ' ') && e.target.matches && e.target.matches('g[role="button"]')) { e.preventDefault(); go(e.target.getAttribute('data-go')); }
   });
-  document.addEventListener('input', function (e) { if (e.target.id === 'paste') S.importText = e.target.value; });
+  var cardT;
+  document.addEventListener('input', function (e) {
+    if (e.target.id === 'paste') S.importText = e.target.value;
+    if (e.target.id === 'card-nick') { cardState().nick = e.target.value; saveCardState(); clearTimeout(cardT); cardT = setTimeout(drawCardPreview, 250); }
+  });
   document.addEventListener('change', function (e) {
     if (e.target.id !== 'fileIn' || !e.target.files[0]) return;
     var fr = new FileReader(); fr.onload = function () { doImport(String(fr.result || '')); }; fr.readAsText(e.target.files[0]);
@@ -2665,6 +3353,12 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
   window.addEventListener('beforeprint', buildPrint);
   var rt; window.addEventListener('resize', function () { clearTimeout(rt); rt = setTimeout(function () { var r = routeParts()[0]; if (r === 'graph' || r === 'home' || r === '') render(false); }, 200); });
   window.addEventListener('hashchange', onRoute);
+  // ノートに戻ってきた時（ChatGPTから）
+  document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'hidden') S.wasHidden = true; else onReturn(); });
+  window.addEventListener('blur', function () { S.wasHidden = true; });
+  window.addEventListener('focus', onReturn);
+  window.addEventListener('pageshow', function (e) { if (e.persisted) { S.wasHidden = true; onReturn(); } });
+  window.addEventListener('beforeinstallprompt', function (e) { e.preventDefault(); S.installPrompt = e; });
 
   // ---------- 起動 ----------
   function boot() {
@@ -2672,9 +3366,13 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
     if (sample) { S.data = C.normalize(window.JIBUN_SAMPLE); S.mode = 'sample'; }
     else if (window.JIBUN_DATA) { S.data = C.normalize(window.JIBUN_DATA); S.mode = 'file'; }
     else { var l = loadLocal(); if (l) { S.data = l; S.mode = 'local'; } }
+    // アプリを切り替えている間にページが読み直された時も、戻ってきたとみなす
+    if (outRecent(12) && S.mode !== 'file') S.returned = true;
     renderBanner();
     S.stack = [location.hash.slice(1)];
+    S.booted = true;
     render(false);
+    afterUrlUnlock();
   }
   // Claude Code版：同じフォルダの data/jibun-data.js があれば読む（ローカルで開いた時だけ）
   var local = location.protocol === 'file:' || /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname);

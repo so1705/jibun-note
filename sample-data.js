@@ -10,6 +10,7 @@ window.JIBUN_SAMPLE = {
     "grad": "28卒",
     "targets": { "industries": ["広告", "人材"], "companies": ["博報堂", "リクルート", "マイナビ"], "jobs": ["営業", "企画"] },
     "goal": "面接で自信を持って話せるネタを3つ固める",
+    "headline": "人に役割を渡して、場を動かす仕組み屋",
     "mode": "interview",
     "level": 4,
     "embellish": "boost"
@@ -315,8 +316,8 @@ window.JIBUN_SAMPLE = {
       { "id": "w2", "name": "初めての場で自分の意見を引っ込めがち", "description": "まとめ役に回ることで、自分の考えを出すのを後回しにしてしまう", "evidence": ["e17"], "confidence": "mid", "source": "ai" }
     ],
     "values": [
-      { "id": "v1", "name": "誰かの「できた」に立ち会うこと", "description": "自分の成功より、人が自信をつける瞬間に一番うれしさを感じる", "evidence": ["e8", "e14"], "confidence": "high", "source": "ai" },
-      { "id": "v2", "name": "誰もが居場所を感じられること", "description": "輪に入れなかった経験から、一人になっている人に気づきやすい", "evidence": ["e3", "e4", "e19"], "confidence": "high", "source": "ai" }
+      { "id": "v1", "name": "誰かの「できた」に立ち会うこと", "description": "自分の成功より、人が自信をつける瞬間に一番うれしさを感じる", "evidence": ["e8", "e14"], "confidence": "high", "source": "ai", "rank": 1, "tradeoff": "塾で『点を上げるだけなら答えを教えた方が早い』と言われた時も、時間がかかっても生徒が自分で解ける方を選んだ" },
+      { "id": "v2", "name": "誰もが居場所を感じられること", "description": "輪に入れなかった経験から、一人になっている人に気づきやすい", "evidence": ["e3", "e4", "e19"], "confidence": "high", "source": "ai", "rank": 2 }
     ],
     "motivators": [
       { "id": "m1", "name": "自分にしかない役割がある時", "description": "新聞係、記録係、リーダー。役割があるとエンジンがかかる", "evidence": ["e4", "e10"], "confidence": "high", "source": "ai" },
@@ -325,6 +326,9 @@ window.JIBUN_SAMPLE = {
     "demotivators": [
       { "id": "n1", "name": "人と比べて「何者でもない」と感じる時", "description": "受験の失敗や大学1年の空白期間に、一番やる気が落ちている", "evidence": ["e9", "e12"], "confidence": "high", "source": "ai" },
       { "id": "n2", "name": "目的が見えないまま作業する時", "description": "", "evidence": [], "confidence": "low", "source": "ai" }
+    ],
+    "recovery": [
+      { "id": "h1", "name": "人に話して、やることを小さく分ける", "description": "落ち込んだら、まず母か友達に話す。そのあと『今日やること』を1つだけ決めて動く", "evidence": ["e9", "e13"], "confidence": "mid", "source": "user" }
     ]
   },
   "axes": [
@@ -338,6 +342,16 @@ window.JIBUN_SAMPLE = {
     { "id": "f3", "area": "work", "text": "伝え方の工夫で、人が一歩ふみ出すきっかけを作る仕事。広告か人材かは、まだ迷っている", "reason": "クラス新聞から商店街のPRまで、「知らない」を「行きたい」に変えるのがずっと好きだった", "horizon": "3y", "priority": "must", "evidence": ["e4", "e18"], "source": "user" },
     { "id": "f4", "area": "growth", "text": "初めての場でも、まとめ役に逃げずに自分の仮説を最初に出せる力", "reason": "インターンで『意見が見えない』と言われたのが悔しかった", "horizon": "3y", "priority": "want", "evidence": ["e17", "e18"], "source": "user" },
     { "id": "f5", "area": "society", "text": "一人になっている人やつまずいている人が「自分にも居場所がある」と思える場を増やしたい", "reason": "図書室が逃げ場所だった頃と、友達に言われた『端っこの子に話しかけに行く』から", "horizon": "life", "priority": "nice", "evidence": ["e3", "e19"], "source": "ai" }
+  ],
+  "insights": [
+    { "id": "i1", "kind": "pattern", "text": "気持ちが上がった出来事には、いつも「自分にしかない役割」がある。任された時より、自分から手を挙げた時のほうが点が高い", "evidence": ["e1", "e4", "e10", "e15"], "reaction": "言われてみたら、ずっとそう", "confirmed": true, "source": "ai" },
+    { "id": "i2", "kind": "pattern", "text": "大事な分かれ道では、条件よりも「そこにいる人」で決めている（オープンキャンパスの先輩・教室長・広報の先輩）", "evidence": ["e11", "e13", "e15"], "reaction": "たしかに、人で決めてる", "confirmed": true, "source": "ai" },
+    { "id": "i3", "kind": "gap", "text": "自分では「まとめ役・裏方」だと思っているけど、友達からは「端っこの子に自分から話しかけに行く人」と見られている。人に寄っていく力は、自分が思うより目立っている", "evidence": ["e17", "e19"], "reaction": "意外。まだピンときてない", "confirmed": false, "source": "ai" }
+  ],
+  "decisions": [
+    { "id": "k1", "when": "高3の春", "choice": "国公立に落ちて、浪人せずに今の私立大学へ", "options": ["浪人して国公立を受け直す"], "how": "親とは浪人の話もした。最後はオープンキャンパスで会った先輩の『ここは何でもやらせてもらえる』で決めた。3日くらいで決めた", "regret": "なし。浪人していたら、学園祭の広報には出会っていない", "evidence": ["e11", "e12"], "source": "user" },
+    { "id": "k2", "when": "大1の秋", "choice": "塾講師のアルバイトを始める", "options": ["時給の高い居酒屋", "サークルだけに集中する"], "how": "時給は一番低かったけど、面接してくれた教室長の人柄で決めた", "regret": "最初の3か月はやめたかった。今は選んでよかったと思う", "evidence": ["e13", "e14"], "source": "user" },
+    { "id": "k3", "when": "大2の春", "choice": "学園祭実行委員の広報に手を挙げる", "options": ["企画班に入る", "実行委員には入らない"], "how": "友達に誘われて説明会へ。広報の先輩がいちばん楽しそうに話していたから", "regret": "なし", "evidence": ["e15"], "source": "user" }
   ],
   "interview": {
     "self_pr": [
@@ -483,7 +497,8 @@ window.JIBUN_SAMPLE = {
   ],
   "checks": [
     { "id": "c1", "kind": "conflict", "targets": ["e15"], "question": "Instagramのフォロワー、取り込んだESでは『1,000人→3,500人』、前の会話では『約800人→3,200人』。どっちが正しい？", "createdAt": "2026-11-04", "done": false, "answer": "" },
-    { "id": "c2", "kind": "unconfirmed", "targets": ["e20"], "question": "取り込んだ『飲食店バイトの手順書』の話、内容は合ってる？手順書は自分ひとりで作った？", "createdAt": "2026-11-04", "done": false, "answer": "" }
+    { "id": "c2", "kind": "unconfirmed", "targets": ["e20"], "question": "取り込んだ『飲食店バイトの手順書』の話、内容は合ってる？手順書は自分ひとりで作った？", "createdAt": "2026-11-04", "done": false, "answer": "" },
+    { "id": "c3", "kind": "hole", "targets": ["e14"], "question": "数学が32点→71点になったのは、学習カルテのおかげ？授業の回数が増えた・学校の先生が変わった、など他の理由は無かった？（面接で一番突かれる所）", "createdAt": "2026-11-04", "done": false, "answer": "" }
   ],
   "outputs": {
     "intro1min": {
@@ -538,8 +553,8 @@ window.JIBUN_SAMPLE = {
     { "date": "2026-10-24", "summary": "中学の吹奏楽部を深掘り。後輩とぶつかった話が挫折ネタの候補に" },
     { "date": "2026-10-27", "summary": "高校受験の失敗と文化祭の話。モチベーショングラフの山と谷がはっきりした" },
     { "date": "2026-10-30", "summary": "塾講師のバイトを深掘り。学習カルテの話でガクチカが完成" },
-    { "date": "2026-11-02", "summary": "強み・価値観・就活の軸をまとめた。ESのガクチカ400字を作成" },
-    { "date": "2026-11-04", "summary": "学園祭の広報とインターンの話。自己PR300字と想定問答を作成" },
+    { "date": "2026-11-02", "summary": "強み・価値観・就活の軸をまとめた。分かれ道を3つ聞いて、決め方の癖が見えた" },
+    { "date": "2026-11-04", "summary": "学園祭の広報とインターンの話。自己PRの材料がそろい、人物像の一文ができた" },
     { "date": "2026-11-04", "summary": "去年の夏インターンのESを取り込んだ。バイトの手順書の話が見つかり、確認待ちが2つ" }
   ]
 };
