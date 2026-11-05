@@ -2762,6 +2762,7 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
       menuItem('card', ICON.card, 'シェア用カードを作る', '「わたしの取扱説明書」を画像に') + '</div></div>';
     h += '<div class="sec"><h2 class="sec-title menu-head">データ</h2><div class="menu">' +
       ((importPrompt() || readonly()) ? menuItem('', ICON.merge, '他のAIから取り込む', '過去のES・ほかのAI・ChatGPTの記憶から', '', '', 'importAI') : menuItem('', ICON.merge, '他のAIから取り込む', '準備中', '', '', 'noop')) +
+      (syncOn() ? menuItem('', ICON.share, 'スマホ・ほかの端末でも開く', 'QRコードをカメラで読むだけ。同じノートになります', '', '', 'qrOpen') : '') +
       menuItem('data', ICON.file, 'バックアップ・印刷・データ', 'バックアップ、PDFで保存、削除') + '</div></div>';
     h += '<p class="foot-note">じぶんノート</p>';
     return h;
@@ -3414,6 +3415,21 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
       toast('バックアップを保存しました');
     },
     print: function () { buildPrint(); window.print(); },
+    qrOpen: function () {
+      var url = 'https://so1705.github.io/jibun-note/?c=' + syncCode();
+      function show() {
+        var q = window.qrcode(0, 'M'); q.addData(url); q.make();
+        sheet({ title: 'スマホでも開く', body: '<div style="text-align:center;margin:4px 0 10px">' + q.createSvgTag({ cellSize: 5, margin: 2, scalable: true }).replace('<svg ', '<svg style="width:220px;height:220px" ') + '</div>' +
+          '<p>スマホの<b>カメラ</b>でこのQRコードを読んで、出てきたリンクを開いてね。数秒で、このノートと同じ内容になります。</p>' +
+          '<p class="small muted" style="margin-top:8px">開いたら「ホーム画面に追加」しておくと、アプリのように使えます。このQRコードは<b>あなた専用</b>なので、人に見せたり送ったりしないでね。</p>',
+          actions: [{ label: '閉じる', cls: 'primary', value: 1 }] });
+      }
+      if (window.qrcode) return show();
+      var sc = document.createElement('script');
+      sc.src = 'https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js';
+      sc.onload = show; sc.onerror = function () { toast('QRコードを作れませんでした。ネットにつながっているか確かめてね'); };
+      document.head.appendChild(sc);
+    },
     wipe: function () {
       sheet({ title: 'データを消しますか？', body: 'この端末に保存したノートがすべて消えます' + (syncOn() ? '（同じログインコードで同期しているほかの端末からも消えます）' : '') + '。元に戻せません。心配なら、先に「バックアップ」しておいてください。', actions: [{ label: 'やめる', value: 0 }, { label: '消す', cls: 'danger', value: 1 }] })
         .then(function (v) { if (!v) return; try { localStorage.removeItem(LS_KEY); } catch (e) { /* なし */ } S.data = null; S.mode = 'none'; if (syncOn()) { var t = Date.now(); lsSet(LS_SYNC_AT, String(t)); syncPush(t).catch(function () {}); } renderBanner(); S.stack = []; go('welcome'); toast('データを消しました'); });
