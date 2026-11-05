@@ -1797,7 +1797,7 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
     { key: 'manual', desc: '性格・強み・苦手・やる気スイッチを1枚に', ask: '自分の取扱説明書を作って' },
     { key: 'otherRequest', desc: '友達に「私ってどんな人？」と聞くメッセージ', ask: '友達や家族に他己分析をお願いするメッセージを作って' }
   ];
-  // ---- 招待コード（公開版は指示文が暗号化されている。配布されたコードで開く） ----
+  // ---- ログインコード（公開版は指示文が暗号化されている。配布されたコードで開く） ----
   var LOCK = '\u0000LOCKED';
   function locked() { return !(typeof window.JIBUN_STARTER === 'string' && window.JIBUN_STARTER.trim()) && !!window.JIBUN_ENC; }
   function b64d(x) { return Uint8Array.from(atob(x), function (c) { return c.charCodeAt(0); }); }
@@ -1825,7 +1825,7 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
   }
   function ensureUnlocked() {
     if (!locked()) return Promise.resolve(true);
-    return sheet({ title: '招待コードを入れてね', body: '<p>AIとの自己分析は、<b>招待コード</b>で使えるようになります（最初の1回だけ）。コードは、このノートを教えてくれた人からもらってね。ノートを見るだけなら、コードなしでも使えます。</p>' +
+    return sheet({ title: 'ログインコードを入れてね', body: '<p>AIとの自己分析は、<b>あなた専用のログインコード</b>で使えるようになります（最初の1回だけ）。コードは、このノートを教えてくれた人からもらってね。ノートを見るだけなら、コードなしでも使えます。</p>' +
       '<p style="margin-top:12px"><input id="unlock-in" class="input" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="例：ABCD-EFGH-JKLM" style="width:100%;min-height:46px;font-size:17px;letter-spacing:.08em;padding:0 14px;border-radius:12px;border:1px solid var(--line);background:var(--paper);color:var(--ink)"></p>',
       actions: [{ label: 'あとで', value: 0 }, { label: '使えるようにする', cls: 'primary', value: 'ok' }] })
       .then(function (v) {
@@ -1835,7 +1835,7 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
           function () { toast('コードが違うみたい。もう一度確かめてね'); return false; });
       });
   }
-  // 招待コード入りのURL（?c=ABCD-EFGH-JKLM）：読み込んだら URL から c を消し、そのコードで開く
+  // ログインコード入りのURL（?c=ABCD-EFGH-JKLM）：読み込んだら URL から c を消し、そのコードで開く
   var URL_CODE = (function () {
     try {
       var u = new URL(location.href), c = u.searchParams.get('c');
@@ -1856,11 +1856,11 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
     stored();
   })();
   function afterUrlUnlock() {
-    if (S.urlCodeBad) { S.urlCodeBad = false; toast('リンクの招待コードが使えませんでした。もらったコードを確かめてね'); return; }
+    if (S.urlCodeBad) { S.urlCodeBad = false; toast('リンクのログインコードが使えませんでした。もらったコードを確かめてね'); return; }
     if (!S.urlUnlocked) return;
     S.urlUnlocked = false; rerender();
-    if (!S.data && S.mode !== 'file') startSheet(false, '招待コードで使えるようになりました');
-    else toast('招待コードで使えるようになりました');
+    if (!S.data && S.mode !== 'file') startSheet(false, 'ログインできました');
+    else toast('ログインできました');
   }
   function starter() { return typeof window.JIBUN_STARTER === 'string' && window.JIBUN_STARTER.trim() ? window.JIBUN_STARTER : (locked() && window.JIBUN_ENC.prompts.starter ? LOCK : ''); }
   function canStartChatGPT() { return S.mode !== 'file'; }
@@ -3042,7 +3042,7 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
       // フッター（運営名・QRは入れない）
       ctx.textAlign = 'center';
       ctx.fillStyle = P.ink2; ctx.font = '700 34px ' + CARD_SERIF;
-      var a = 'じぶんノート', b2 = '｜招待制の自己分析ノート';
+      var a = 'じぶんノート', b2 = '｜あなただけの自己分析ノート';
       var wa = ctx.measureText(a).width; ctx.font = '500 27px ' + CARD_SANS; var wb = ctx.measureText(b2).width;
       var fx = W / 2 - (wa + wb) / 2;
       ctx.textAlign = 'left'; ctx.font = '700 34px ' + CARD_SERIF; ctx.fillText(a, fx, H - 92);
