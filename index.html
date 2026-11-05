@@ -1896,7 +1896,7 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
         });
       } });
   }
-  var GPT_STEPS_START = '<li><b>ChatGPTの新しいチャットに貼って送信</b><span>無料のままでOK。AIが1問ずつ聞いてくれます。いつでも好きに話しかけてOK。</span></li>' +
+  var GPT_STEPS_START = '<li><b>ChatGPTの新しいチャットに貼って送信</b><span>無料のままでOK。AIが質問してくれます。いつでも好きに話しかけてOK。</span></li>' +
     '<li><b>セーブが出たらコピーして、ここに戻る</b><span>戻ると「コピーしたセーブを読み込む」ボタンが出ます。押すだけでノートが育ちます。</span></li>';
   function startSheet(copied, title) {
     return gptSheet({ title: title || (copied ? '設定文をコピーしました' : '準備ができました'), copied: copied, text: starter, msg: '設定文をコピーしました', steps: GPT_STEPS_START,
@@ -2288,7 +2288,7 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
       (importPrompt() ? '<button class="textlink" data-act="importAI">過去のESや他のAIから取り込む</button>' : '<button class="textlink" disabled>過去のESや他のAIから取り込む（準備中）</button>') +
       '</div>' +
       '<div class="sec"><h2 class="sec-title">使い方</h2><ol class="steps card">' +
-      '<li><b>「ChatGPTではじめる」を押して、貼って送信</b><span>ChatGPT（無料でOK）の新しいチャットへ。AIが1問ずつ聞いてくれます。</span></li>' +
+      '<li><b>「ChatGPTではじめる」を押して、貼って送信</b><span>ChatGPT（無料でOK）の新しいチャットへ。AIが質問してくれます。</span></li>' +
       '<li><b>セーブが出たらコピーして、ここに戻る</b><span>「コピーしたセーブを読み込む」を押すだけ。貼るたびにノートが育ちます。</span></li>' +
       '<li><b>続きは「AIで続ける」</b><span>今までのデータと、ためたメモがまとめて渡ります。</span></li>' +
       '</ol></div>' +
