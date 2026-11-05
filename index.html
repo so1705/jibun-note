@@ -1820,6 +1820,7 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
         window.JIBUN_STARTER = r[0] ? r[0] + mark : '';
         window.JIBUN_IMPORT = r[1] ? r[1] + mark : '';
         try { localStorage.setItem('jibun-code', code); } catch (e) {}
+        setTimeout(function () { syncPull(true); }, 0);
         return code;
       });
   }
@@ -2079,7 +2080,94 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
     try { localStorage.setItem(LS_KEY, JSON.stringify(S.data)); } catch (e) { toast('この端末に保存できませんでした'); }
     try { if (!localStorage.getItem(LS_FIRST)) localStorage.setItem(LS_FIRST, String(Date.now())); } catch (e) { /* なし */ }
     persistOnce();
+    syncChanged();
   }
+  // ---------- 同期（同じログインコードなら、パソコンとスマホで同じノート。中身は端末で暗号化してから送る） ----------
+  var SYNC_URL = 'https://script.google.com/macros/s/AKfycbweRTGVHGEPpv-_CD2-JmhT5ZeRZTA3Tk0W2v2p1jJ_fVV21vCQto0CEWwov2PbO9Ld0A/exec';
+  var LS_SYNC_AT = 'jibun-sync-at', LS_SYNC_DONE = 'jibun-sync-done', LS_SYNC_HASH = 'jibun-sync-hash';
+  var SY = { key: null, id: '', code: '', timer: 0, busy: false, lastPull: 0, ok: 0 };
+  function syncCode() {
+    var c = window.JIBUN_SYNC_CODE || lsGet('jibun-code') || '';
+    c = String(c).trim().toUpperCase().replace(/[^A-Z0-9]/g, '');
+    return c.length === 12 ? c.replace(/^(.{4})(.{4})(.{4})$/, '$1-$2-$3') : '';
+  }
+  function syncOn() { return !!(syncCode() && window.fetch && window.crypto && window.crypto.subtle) && S.mode !== 'sample'; }
+  function lsNum(k) { return +(lsGet(k) || 0) || 0; }
+  function b64e(u8) { var t = ''; for (var i = 0; i < u8.length; i += 0x8000) t += String.fromCharCode.apply(null, u8.subarray(i, i + 0x8000)); return btoa(t); }
+  function syncReady() {
+    var code = syncCode(), cs = window.crypto.subtle, te = new TextEncoder();
+    if (SY.key && SY.code === code) return Promise.resolve();
+    return cs.digest('SHA-256', te.encode('jibun-sync|' + code)).then(function (h) {
+      SY.id = Array.prototype.map.call(new Uint8Array(h), function (b) { return ('0' + b.toString(16)).slice(-2); }).join('');
+      return cs.importKey('raw', te.encode(code), 'PBKDF2', false, ['deriveKey']);
+    }).then(function (base) {
+      return cs.deriveKey({ name: 'PBKDF2', salt: te.encode('jibun-note-sync-v1'), iterations: 150000, hash: 'SHA-256' }, base, { name: 'AES-GCM', length: 256 }, false, ['encrypt', 'decrypt']);
+    }).then(function (k) { SY.key = k; SY.code = code; });
+  }
+  function syncCall(body) {
+    return fetch(SYNC_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(body) })
+      .then(function (r) { return r.json(); });
+  }
+  function syncPush(at) {
+    var txt = JSON.stringify(S.data || null), iv = window.crypto.getRandomValues(new Uint8Array(12));
+    return syncReady().then(function () {
+      return window.crypto.subtle.encrypt({ name: 'AES-GCM', iv: iv }, SY.key, new TextEncoder().encode(txt));
+    }).then(function (ct) {
+      var all = new Uint8Array(12 + ct.byteLength); all.set(iv); all.set(new Uint8Array(ct), 12);
+      return syncCall({ op: 'put', id: SY.id, at: at, blob: b64e(all) });
+    }).then(function (r) {
+      if (r && r.ok && !r.stale) { lsSet(LS_SYNC_DONE, String(at)); SY.ok = Date.now(); }
+      return r;
+    });
+  }
+  function syncOpen(rec) {
+    var all = b64d(rec.blob);
+    return window.crypto.subtle.decrypt({ name: 'AES-GCM', iv: all.slice(0, 12) }, SY.key, all.slice(12))
+      .then(function (b) { return JSON.parse(new TextDecoder().decode(b)); });
+  }
+  function hashText(t) { var h = 5381; for (var i = 0; i < t.length; i++) h = ((h << 5) + h + t.charCodeAt(i)) | 0; return String(h); }
+  // この端末で変わった：少し待ってから送る
+  function syncChanged() {
+    if (S.mode !== 'local') return;
+    lsSet(LS_SYNC_AT, String(Date.now()));
+    if (!syncOn()) return;
+    clearTimeout(SY.timer);
+    SY.timer = setTimeout(function () { syncPush(lsNum(LS_SYNC_AT)).catch(function () {}); }, 1500);
+  }
+  // 開いた時・戻ってきた時：新しい方にそろえる
+  function syncPull(force) {
+    if (!S.booted || !syncOn() || SY.busy) return Promise.resolve();
+    if (!force && Date.now() - SY.lastPull < 15000) return Promise.resolve();
+    SY.busy = true; SY.lastPull = Date.now();
+    var done = function () { SY.busy = false; };
+    return syncReady().then(function () { return syncCall({ op: 'get', id: SY.id }); }).then(function (r) {
+      if (!r || !r.ok) return;
+      var rec = r.rec, done0 = lsNum(LS_SYNC_DONE);
+      if (S.mode === 'file') {
+        // Claude Code版：パソコンのフォルダが本体。変わっていたら送るだけ
+        var h = hashText(JSON.stringify(S.data || null));
+        if (S.data && (!rec || lsGet(LS_SYNC_HASH) !== h)) return syncPush(Date.now()).then(function (x) { if (x && x.ok) lsSet(LS_SYNC_HASH, h); });
+        return;
+      }
+      var localAt = lsNum(LS_SYNC_AT), hasLocal = !!(S.data && C.hasContent(S.data));
+      if (rec && rec.at > done0 && (rec.at >= localAt || !hasLocal)) {
+        return syncOpen(rec).then(function (d) {
+          if (d && C.hasContent(d)) {
+            S.data = C.normalize(d); S.mode = 'local';
+            try { localStorage.setItem(LS_KEY, JSON.stringify(S.data)); } catch (e) { /* なし */ }
+          } else if (hasLocal) {
+            S.data = null; S.mode = 'none';
+            try { localStorage.removeItem(LS_KEY); } catch (e) { /* なし */ }
+          } else { lsSet(LS_SYNC_DONE, String(rec.at)); return; }
+          lsSet(LS_SYNC_AT, String(rec.at)); lsSet(LS_SYNC_DONE, String(rec.at)); SY.ok = Date.now();
+          renderBanner(); rerender(); toast('ほかの端末の内容に更新しました');
+        });
+      }
+      if (hasLocal && (!rec || localAt > done0)) return syncPush(localAt || Date.now());
+      SY.ok = Date.now();
+    }).then(done, done);
+  }
+  document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'visible') syncPull(); });
   // ブラウザに「消さないで」と頼む（対応していれば）
   var persisted = false;
   function persistOnce() { if (persisted) return; persisted = true; try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(function () {}); } catch (e) { /* なし */ } }
@@ -2841,7 +2929,8 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
     if (S.mode === 'sample') h += '<div class="sec"><div class="menu">' + menuItem('', ICON.left, 'サンプルを閉じる', '自分のノートを始める', '', 'w', 'exitSample') + '</div></div>';
     else if (S.mode === 'local') h += '<div class="sec"><div class="menu">' + menuItem('', ICON.trash, 'データを消す', 'この端末に保存したノートを削除します', '', 'w', 'wipe') + '</div></div>';
     else if (readonly()) h += '<p class="small muted" style="margin-top:16px">このノートはClaude Codeのフォルダにあるデータを表示しています（読み取り専用）。</p>';
-    h += '<p class="small muted" style="margin-top:18px">データはこの端末のブラウザの中だけに保存されています。ブラウザの履歴を消すと消えることがあるので、ときどき「バックアップ」しておくと安心です。戻す時は「バックアップから戻す」でファイルを選ぶか、ファイルの中身を「AIの出力を貼り付け」に貼ってください。</p>';
+    h += syncOn() ? '<p class="small muted" style="margin-top:18px"><b>同期：オン</b>。同じログインコードで開けば、パソコンでもスマホでも同じノートになります（中身は暗号化して預けています）。' + (S.mode === 'file' ? 'このパソコンのフォルダが本体で、スマホは見る用です。' : '') + '</p>' : '';
+    h += '<p class="small muted" style="margin-top:18px">' + (syncOn() ? 'この端末のブラウザにも保存しています。' : 'データはこの端末のブラウザの中だけに保存されています。') + 'ブラウザの履歴を消すと消えることがあるので、ときどき「バックアップ」しておくと安心です。戻す時は「バックアップから戻す」でファイルを選ぶか、ファイルの中身を「AIの出力を貼り付け」に貼ってください。</p>';
     return h;
   }
 
@@ -3326,8 +3415,8 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
     },
     print: function () { buildPrint(); window.print(); },
     wipe: function () {
-      sheet({ title: 'データを消しますか？', body: 'この端末に保存したノートがすべて消えます。元に戻せません。心配なら、先に「バックアップ」しておいてください。', actions: [{ label: 'やめる', value: 0 }, { label: '消す', cls: 'danger', value: 1 }] })
-        .then(function (v) { if (!v) return; try { localStorage.removeItem(LS_KEY); } catch (e) { /* なし */ } S.data = null; S.mode = 'none'; renderBanner(); S.stack = []; go('welcome'); toast('データを消しました'); });
+      sheet({ title: 'データを消しますか？', body: 'この端末に保存したノートがすべて消えます' + (syncOn() ? '（同じログインコードで同期しているほかの端末からも消えます）' : '') + '。元に戻せません。心配なら、先に「バックアップ」しておいてください。', actions: [{ label: 'やめる', value: 0 }, { label: '消す', cls: 'danger', value: 1 }] })
+        .then(function (v) { if (!v) return; try { localStorage.removeItem(LS_KEY); } catch (e) { /* なし */ } S.data = null; S.mode = 'none'; if (syncOn()) { var t = Date.now(); lsSet(LS_SYNC_AT, String(t)); syncPush(t).catch(function () {}); } renderBanner(); S.stack = []; go('welcome'); toast('データを消しました'); });
     }
   };
   document.addEventListener('click', function (e) {
@@ -3373,14 +3462,20 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
     S.booted = true;
     render(false);
     afterUrlUnlock();
+    syncPull(true);
   }
   // Claude Code版：同じフォルダの data/jibun-data.js があれば読む（ローカルで開いた時だけ）
   var local = location.protocol === 'file:' || /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname);
   if (local && !/[?&]sample=1/.test(location.search)) {
     var s = document.createElement('script');
-    s.src = 'data/jibun-data.js?t=' + Date.now();
-    s.onload = boot; s.onerror = boot;
-    document.head.appendChild(s);
+    var s0 = document.createElement('script');
+    s0.src = 'data/sync.js?t=' + Date.now();
+    s0.onload = s0.onerror = function () {
+      s.src = 'data/jibun-data.js?t=' + Date.now();
+      s.onload = boot; s.onerror = boot;
+      document.head.appendChild(s);
+    };
+    document.head.appendChild(s0);
   } else boot();
 })();
 </script>
