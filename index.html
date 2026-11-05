@@ -67,8 +67,8 @@ svg.arrow{width:18px;height:18px;flex:none;color:var(--muted)}
 .pagehead h1{font-size:25px;line-height:1.35;font-weight:800;letter-spacing:.02em}
 .pagehead p{color:var(--muted);font-size:13.5px;margin-top:4px}
 .eyebrow{font-size:12px;color:var(--muted);letter-spacing:.08em;font-weight:600}
-.subhead{position:sticky;top:0;z-index:20;margin:0 -18px;padding:6px 10px;padding-top:calc(6px + env(safe-area-inset-top));background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:space-between}
-.has-banner .subhead{top:var(--bannerh,0px);padding-top:6px}
+.subhead{position:relative;margin:0 -18px;padding:6px 10px;padding-top:calc(6px + env(safe-area-inset-top));display:flex;align-items:center;justify-content:space-between}
+.has-banner .subhead{padding-top:6px}
 .back{display:inline-flex;align-items:center;gap:2px;min-height:44px;padding:0 10px 0 4px;border-radius:8px;color:var(--accent-ink);font-weight:600;font-size:15px}
 .back svg{width:22px;height:22px}
 .back:active{background:var(--line2)}
@@ -3284,7 +3284,7 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
       var el2 = document.getElementById('sec-' + parts[1]);
       window.scrollTo(0, 0);
       if (el2) setTimeout(function () {
-        var sh = document.querySelector('.subhead'), off = sh ? sh.getBoundingClientRect().height + 12 : 64;
+        var sh = document.querySelector('.subhead'), off = 16;
         var bn = document.querySelector('.banner'); if (bn) off += bn.getBoundingClientRect().height;
         var y = el2.getBoundingClientRect().top + window.scrollY - off; window.scrollTo(0, Math.max(0, y));
       }, 30);
