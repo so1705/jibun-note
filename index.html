@@ -1767,7 +1767,22 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
   function confPill(c) { var x = CONF[c]; return x ? '<span class="conf ' + x[0] + '">' + x[1] + '</span>' : ''; }
 
   // 仕上がりはノートがデータから計算する（AIの progress.overall などは使わない）
-  function reach(d, lv) { return C.computeReach(d || D(), lv ? { level: lv } : null); }
+  // Claude Code版（ファイルを読むだけ）でノートから目標を変えた時、AIが書き換えるまでの「仮の目標」。
+  // どの画面の％もこのレベルで出す（ホームと目標の画面でずれないように）。AIが同じレベルにしたら消える
+  var LS_GOALP = 'jibun-note-goal-pending';
+  function pendLv() {
+    if (!readonly() || !S.data) return 0;
+    var p = S.goalPreview.level || +(lsGet(LS_GOALP) || 0) || 0;
+    if (!p) return 0;
+    var real = S.data.profile && +S.data.profile.level;
+    if (real === p) { S.goalPreview.level = 0; lsSet(LS_GOALP, ''); return 0; }
+    return p;
+  }
+  function reach(d, lv) {
+    var p = lv ? 0 : pendLv(), R = C.computeReach(d || D(), (lv || p) ? { level: lv || p } : null);
+    if (p) { R.levelSet = true; R.pending = true; }
+    return R;
+  }
   function lvName(n) { return C.LEVELS[n - 1].name; }
   function slotSym(sl) { return !sl || !sl.hasCand ? '−' : sl.score >= 1 ? '◎' : sl.score >= 0.66 ? '○' : sl.score > 0 ? '△' : '−'; }
   function gapRow(g) {
@@ -2419,7 +2434,7 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
     var tg = p.targets || {};
     var chips = (tg.industries || []).map(function (x) { return '<span class="chip ac">' + esc(x) + '</span>'; }).join('') + (tg.jobs || []).map(function (x) { return '<span class="chip">' + esc(x) + '</span>'; }).join('');
     var meta = [p.university, p.faculty, p.grad].filter(Boolean).map(function (x) { return '<span style="white-space:nowrap">' + esc(x) + '</span>'; }).join(' ');
-    var pill = R.levelSet ? '<button class="lvl-pill" data-go="goal">' + ICON.flag + '目標：レベル' + R.level + ' ' + esc(R.levelName) + '</button>'
+    var pill = R.levelSet ? '<button class="lvl-pill" data-go="goal">' + ICON.flag + '目標：レベル' + R.level + ' ' + esc(R.levelName) + (R.pending ? '（AIに伝える前）' : '') + '</button>'
       : '<button class="lvl-pill unset" data-go="goal">' + ICON.flag + '目標：まだ決めてない</button>';
     var hl = String(p.headline || '').trim();
     var h = '<div class="top"><span class="brand">じぶんノート</span>' + (d.updatedAt ? '<time datetime="' + esc(d.updatedAt) + '">' + fmtDate(d.updatedAt) + ' 更新</time>' : '') + '</div>';
@@ -2511,7 +2526,7 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
   }
   function vGoal() {
     var d = D(), R = reach(d);
-    var curLv = readonly() && S.goalPreview.level ? S.goalPreview.level : (R.levelSet ? R.level : 0);
+    var curLv = readonly() && pendLv() ? pendLv() : (R.levelSet ? R.level : 0);
     var curEm = readonly() && S.goalPreview.embellish ? S.goalPreview.embellish : C.embellishOf(d);
     var shownR = curLv && curLv !== R.level ? reach(d, curLv) : R;
     var h = subhead() + pagehead('目標と盛り方', '目標に合わせて、％の基準とAIの聞き方が変わるよ。あとからいつでも変えられます');
@@ -2780,7 +2795,7 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
     var nPass = passCount(d), nCk = openChecks(d).length;
     var h = pagehead('もっと');
     h += '<h2 class="sec-title menu-head">目標とAIとのやりとり</h2><div class="menu">' +
-      menuItem('goal', ICON.flag, '目標と盛り方', 'レベル' + C.levelOf(d) + '・' + C.EMBELLISH.filter(function (x) { return x.key === C.embellishOf(d); })[0].name, '') +
+      menuItem('goal', ICON.flag, '目標と盛り方', 'レベル' + reach(d).level + '・' + C.EMBELLISH.filter(function (x) { return x.key === C.embellishOf(d); })[0].name, '') +
       menuItem('reach', ICON.star, '仕上がり', '目標までに、あと何が必要か', reach(d).pct + '%') +
       menuItem('pass', ICON.chat, 'AIに渡すもの', 'あなたのメモ・AIからの確認・深掘りしたい質問', nPass ? nPass + '件' : '', nCk ? 'w' : '') + '</div>';
     h += '<div class="sec"><h2 class="sec-title menu-head">ノートの中身</h2><div class="menu">' +
@@ -3361,7 +3376,7 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
     sendClose: function () { S.goalChanged = {}; rerender(); },
     setLevel: function (b) {
       var n = +b.getAttribute('data-n');
-      if (readonly()) { S.goalPreview.level = n; S.goalChanged.level = n; rerender(); return; }
+      if (readonly()) { S.goalPreview.level = n; S.goalChanged.level = n; lsSet(LS_GOALP, String(n)); rerender(); toast('％をレベル' + n + 'の基準にしたよ。AIにも伝えてね'); return; }
       if (C.levelOf(D()) === n && D().profile.level) return;
       D().profile.level = n; save(); S.goalChanged.level = n;
       rerender(); toast('目標をレベル' + n + 'にしたよ。％を計算し直しました');
