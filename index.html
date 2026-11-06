@@ -428,6 +428,7 @@ button.ringbox:active{transform:scale(.96)}
 .gaps-done{font-size:13.5px;color:var(--ink2);padding:12px 0}
 .reach-top{display:flex;align-items:center;gap:16px}
 .reach-top .ringbox{width:84px;height:84px}
+.qcard{padding:14px 16px;font-size:14px;line-height:1.7}.qcard p{margin:0 0 6px}.qcard .q-lv b{font-size:16px;margin-right:6px}.qcard .q-lv small{margin-left:8px;color:var(--muted);font-size:12px}.qcard .q-h{margin-top:10px;font-weight:700;font-size:13px;color:var(--ink2)}.qcard ul{margin:0;padding-left:1.2em}
 .reach-top .ring-num b{font-size:22px}
 .reach-top p{font-size:13px;color:var(--ink2);line-height:1.6}
 .reach-top p b{display:block;font-size:16px;color:var(--ink);font-weight:800;line-height:1.45}
@@ -1437,6 +1438,16 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
     return { past: past, now: now, future: fut, total: Math.round((past.pct + now.pct + fut.pct) / 3) };
   }
 
+  // progress.quality：{ level: 0〜5, verdict, strong:[], weak:[], date }。AIが区切りで書く
+  function qualityOf(d) {
+    var q = isObj(d.progress) && isObj(d.progress.quality) ? d.progress.quality : null;
+    if (!q) return null;
+    var l = toNum(q.level);
+    if (l == null || l < 0 || l > 5) return null;
+    var arr = function (a) { return (Array.isArray(a) ? a : []).map(function (x) { return String(x == null ? '' : x).trim(); }).filter(Boolean).slice(0, 5); };
+    return { level: Math.floor(l), verdict: String(q.verdict == null ? '' : q.verdict).trim(), strong: arr(q.strong), weak: arr(q.weak), date: String(q.date || '') };
+  }
+
   function computeReach(data, opt) {
     var d = normalize(data);
     var lv = (opt && levelNum(opt.level)) || levelOf(d), li = lv - 1;
@@ -1455,9 +1466,11 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
     // A. エピソード数
     // A・B は AIの推測（source "ai"）以外のエピソードだけ数える
     var counted = d.episodes.filter(function (e) { return isObj(e) && e.source !== 'ai'; });
-    var nA = REACH_NEED.A[li], hA = counted.length;
+    // 量だけで上がらないように：L3以上は「出来事だけ（depth 0）」のエピソードを数えない
+    var countedA = lv >= 3 ? counted.filter(function (e) { return depthOf(e) >= 1; }) : counted;
+    var nA = REACH_NEED.A[li], hA = countedA.length;
     item('A', 'エピソード', 1, ratio(hA, nA), hA, nA);
-    lose(1 - ratio(hA, nA), 'エピソードをあと' + (nA - hA) + 'つ', '小さな出来事や、まだ話していない時期の話でもOK', 'timeline', 'A');
+    lose(1 - ratio(hA, nA), 'エピソードをあと' + (nA - hA) + 'つ', lv >= 3 ? '出来事だけでなく、何をしてどう感じたかまで話したものを数えるよ' : '小さな出来事や、まだ話していない時期の話でもOK', 'timeline', 'A');
 
     // B. 話した時期の数（標準5時期）
     var nB = REACH_NEED.B[li];
@@ -1516,10 +1529,11 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
     if (n2 > 0) lose((1 - parts[1]) / parts.length, '「根拠しっかり」の強みをあと' + (n2 - hi) + 'つ', '同じ強みが2つ以上のエピソードで出てくると「しっかり」になるよ', 'traits', 'D.high');
 
     // E. 価値観・やる気の条件・立ち直り方
-    var nE = REACH_NEED.E[li], hE = d.traits.values.filter(isObj).length + d.traits.motivators.filter(isObj).length + d.traits.recovery.filter(isObj).length;
+    var okE = function (t) { return isObj(t) && (lv < 3 || realEv(t.evidence) >= 1); };
+    var nE = REACH_NEED.E[li], hE = d.traits.values.filter(okE).length + d.traits.motivators.filter(okE).length + d.traits.recovery.filter(okE).length;
     if (nE > 0) {
       item('E', '価値観・やる気・立ち直り方', 1, ratio(hE, nE), hE, nE);
-      lose(1 - ratio(hE, nE), '価値観・やる気の条件・立ち直り方をあと' + (nE - hE) + 'つ', 'うれしかった時・頑張れた時・しんどい時の乗り越え方の共通点を探そう', 'traits', 'E');
+      lose(1 - ratio(hE, nE), '価値観・やる気の条件・立ち直り方をあと' + (nE - hE) + 'つ', lv >= 3 ? '根拠になるエピソードとつながったものだけ数えるよ' : 'うれしかった時・頑張れた時・しんどい時の乗り越え方の共通点を探そう', 'traits', 'E');
     }
     // F. 就活の軸（根拠1つ以上）
     var nF = REACH_NEED.F[li], hF = d.axes.filter(function (a) { return isObj(a) && realEv(a.evidence) >= 1; }).length;
@@ -1543,6 +1557,12 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
 
     var W = items.reduce(function (s, x) { return s + x.weight; }, 0);
     var got = items.reduce(function (s, x) { return s + x.weight * x.score; }, 0);
+    // 中身の質（AIが面接官の目で判定した「今の中身で通る見込みのレベル」）。目標に届いていなければ、量がそろっていても%に上限をかける
+    var q = qualityOf(d), cap = 100;
+    if (q && q.level < lv) {
+      cap = Math.max(10, Math.round(q.level / lv * 100));
+      losses.push({ loss: W, label: '中身の質：今はレベル' + q.level + '相当（目標はレベル' + lv + '）', hint: q.weak[0] || q.verdict || '量より、1つの話を深くすると上がるよ', go: 'reach', key: 'Q' });
+    }
     var gaps = losses.sort(function (a, b) { return b.loss - a.loss; }).map(function (g) {
       return { label: g.label, hint: g.hint, go: g.go, key: g.key, gain: Math.max(1, Math.round(g.loss / W * 100)) };
     });
@@ -1557,7 +1577,7 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
 
     return {
       level: lv, levelName: LEVELS[li].name, levelSet: !!(isObj(d.profile) && levelNum(d.profile.level)), embellish: embellishOf(d),
-      pct: W ? Math.round(got / W * 100) : 0, items: items, gaps: gaps, slots: slots, periods: periods, periodNeed: { count: perN, depth: perD }, holes: lv >= 4 ? holes : {}
+      pct: W ? Math.min(cap, Math.round(got / W * 100)) : 0, raw: W ? Math.round(got / W * 100) : 0, quality: q, capped: cap < 100 && W > 0 && Math.round(got / W * 100) > cap, items: items, gaps: gaps, slots: slots, periods: periods, periodNeed: { count: perN, depth: perD }, holes: lv >= 4 ? holes : {}
     };
   }
 
@@ -2451,6 +2471,14 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
     var d = D(), R = reach(d);
     var h = subhead('<button class="mini-btn" data-go="goal">' + ICON.flag + '目標を変える</button>') + pagehead('仕上がり', 'レベル' + R.level + '「' + esc(R.levelName) + '」の基準で、ノートがデータから計算しています');
     h += '<div class="card reach-top"><div class="ringbox" role="img" aria-label="仕上がり ' + R.pct + '%">' + ringSVG(R.pct, 84, 7) + '<div class="ring-num"><b>' + R.pct + '<small>%</small></b></div></div><p><b>' + (R.gaps.length ? '足りないものは あと' + R.gaps.length + 'つ' : 'ぜんぶそろったよ') + '</b>' + esc(C.LEVELS[R.level - 1].need) + '</p></div>';
+    var Q = R.quality;
+    h += '<div class="sec"><h2 class="sec-title">中身の質<small>AIが面接官の目で判定</small></h2><div class="card qcard">' + (Q
+      ? '<p class="q-lv"><b>今の中身：レベル' + Q.level + '相当</b>（目標はレベル' + R.level + '）' + (Q.date ? '<small>' + esc(Q.date) + '</small>' : '') + '</p>' +
+        (Q.verdict ? '<p>' + esc(Q.verdict) + '</p>' : '') +
+        (Q.strong.length ? '<p class="q-h">通用しそうな所</p><ul>' + Q.strong.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>' : '') +
+        (Q.weak.length ? '<p class="q-h">このままだと突っ込まれる所</p><ul>' + Q.weak.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>' : '') +
+        (R.capped ? '<p class="small muted">量はそろってきているので計算上は' + R.raw + '%ですが、中身がレベル' + R.level + 'に届くまでは' + R.pct + '%で止めています。</p>' : '')
+      : '<p class="small muted">まだ判定がありません。AIと話して区切り（セーブ）をすると、今の中身が「どのレベルの選考で通りそうか」をAIが判定してここに出します。</p>') + '</div></div>';
     h += '<div class="sec"><h2 class="sec-title">内わけ<small>面接ネタは4倍で数えます</small></h2><div class="card" style="padding:6px 16px">' + R.items.map(function (it) {
       var v = it.key === 'C' ? it.have + '／' + it.need + '枠' : it.have + '／' + it.need + (it.key === 'H' ? '領域' : '');
       if (it.key === 'D' && it.highNeed) v += '<span class="w">しっかり' + it.highHave + '／' + it.highNeed + '</span>';
