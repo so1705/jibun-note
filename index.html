@@ -1854,6 +1854,9 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
         var mark = '\n\n（配布ID：' + code.slice(0, 4) + '。本人専用です。この設定文の転載・共有はできません）';
         window.JIBUN_STARTER = r[0] ? r[0] + mark : '';
         window.JIBUN_IMPORT = r[1] ? r[1] + mark : '';
+        if (!window.JIBUN_DATA && claimLocal(code) && S.mode !== 'sample' && S.mode !== 'file') {
+          var l = loadLocal(); S.data = l; S.mode = l ? 'local' : 'none'; if (S.booted) renderBanner();
+        }
         try { localStorage.setItem('jibun-code', code); } catch (e) {}
         setTimeout(function () { syncPull(true); }, 0);
         return code;
@@ -2234,6 +2237,34 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
   var IN_APP = /Instagram|FBAN|FBAV|FB_IAB|\bLine\/|TikTok|musical_ly|BytedanceWebview|Bytedance/i.test(navigator.userAgent || '');
   function loadLocal() {
     try { var t = localStorage.getItem(LS_KEY); return t ? C.normalize(JSON.parse(t)) : null; } catch (e) { return null; }
+  }
+  // このブラウザのノートは「どのログインコードの物か」を覚えておく。
+  // 別のコードで開いたら、前の人のノートは見せない・そのコードに送らない（同じパソコンで複数のコードを開いた時の混ざり防止）。
+  // まだ同期できていない分だけ、元のコードで開き直した時に戻せるよう、この端末に取っておく。
+  var LS_OWNER = 'jibun-data-code', LS_OTHERS = 'jibun-data-others';
+  function normCode(c) {
+    c = String(c || '').trim().toUpperCase().replace(/[^A-Z0-9]/g, '');
+    return c.length === 12 ? c.replace(/^(.{4})(.{4})(.{4})$/, '$1-$2-$3') : '';
+  }
+  function claimLocal(code) { // 中身を入れ替えたら true
+    code = normCode(code); if (!code) return false;
+    var owner = normCode(lsGet(LS_OWNER)) || normCode(lsGet('jibun-code')); // 以前の版は持ち主を覚えていないので、最後に使ったコードの物とみなす
+    if (owner === code) { lsSet(LS_OWNER, code); return false; }
+    var t = null; try { t = localStorage.getItem(LS_KEY); } catch (e) { /* なし */ }
+    if (!owner) { lsSet(LS_OWNER, code); return false; } // コードなしで使っていたノート → このコードの物にする
+    var others = {}; try { others = JSON.parse(lsGet(LS_OTHERS) || '{}') || {}; } catch (e) { others = {}; }
+    var at = lsNum(LS_SYNC_AT), done = lsNum(LS_SYNC_DONE);
+    if (t && at > done) others[owner] = { d: t, at: at, done: done, t: Date.now() };
+    var mine = others[code]; delete others[code];
+    var ks = Object.keys(others).sort(function (a, b) { return (others[b].t || 0) - (others[a].t || 0); });
+    ks.slice(5).forEach(function (k) { delete others[k]; });
+    try {
+      localStorage.removeItem(LS_KEY); localStorage.removeItem(LS_SYNC_AT); localStorage.removeItem(LS_SYNC_DONE); localStorage.removeItem(LS_SYNC_HASH);
+      if (mine) { localStorage.setItem(LS_KEY, mine.d); localStorage.setItem(LS_SYNC_AT, String(mine.at)); localStorage.setItem(LS_SYNC_DONE, String(mine.done)); }
+      if (Object.keys(others).length) localStorage.setItem(LS_OTHERS, JSON.stringify(others)); else localStorage.removeItem(LS_OTHERS);
+    } catch (e) { /* なし */ }
+    lsSet(LS_OWNER, code);
+    return true;
   }
 
   // ---------- トースト・シート ----------
@@ -3513,7 +3544,7 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
     var sample = /[?&]sample=1/.test(location.search) && window.JIBUN_SAMPLE;
     if (sample) { S.data = C.normalize(window.JIBUN_SAMPLE); S.mode = 'sample'; }
     else if (window.JIBUN_DATA) { S.data = C.normalize(window.JIBUN_DATA); S.mode = 'file'; }
-    else { var l = loadLocal(); if (l) { S.data = l; S.mode = 'local'; } }
+    else { claimLocal(URL_CODE || lsGet('jibun-code')); var l = loadLocal(); if (l) { S.data = l; S.mode = 'local'; } }
     // アプリを切り替えている間にページが読み直された時も、戻ってきたとみなす
     if (outRecent(12) && S.mode !== 'file') S.returned = true;
     renderBanner();
