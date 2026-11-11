@@ -1635,6 +1635,52 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
   'use strict';
   var C = window.JibunCore;
   var LS_KEY = 'jibun-note-v1';
+  // ---- ノートはログインコードごとに別々に保存する（同じブラウザで複数のコードを開いても混ざらない） ----
+  // ・保存の名前は「jibun-note-v1@ABCD-EFGH-JKLM」のようにコードつき。同期の記録も同じ。
+  // ・タブは開いた時のコードに固定（TAB_CODE）。ほかのタブで別のコードを開いても、このタブは自分のコードの分しか読まない・書かない・送らない。
+  // ・最後に使ったコードは 'jibun-last-code'（ブックマークから開いた時用）。以前の 'jibun-code' は、古い版のタブが同期を続けないよう消す。
+  var LS_LAST = 'jibun-last-code', SYNC_KEYS = ['jibun-sync-at', 'jibun-sync-done', 'jibun-sync-hash'];
+  var TAB_CODE = '';
+  function kk(base) { return TAB_CODE ? base + '@' + TAB_CODE : base; }
+  function normCode(c) {
+    c = String(c || '').trim().toUpperCase().replace(/[^A-Z0-9]/g, '');
+    return c.length === 12 ? c.replace(/^(.{4})(.{4})(.{4})$/, '$1-$2-$3') : '';
+  }
+  function hasCodedNote() {
+    try { for (var i = 0; i < localStorage.length; i++) if (String(localStorage.key(i)).indexOf(LS_KEY + '@') === 0) return true; } catch (e) { /* なし */ }
+    return false;
+  }
+  function moveNote(from, to) { // from の名前の保存（ノート＋同期の記録）を to の名前へ（to が空の時だけ）
+    try {
+      var t = localStorage.getItem(LS_KEY + from); if (t == null) return;
+      if (localStorage.getItem(LS_KEY + to) == null) {
+        localStorage.setItem(LS_KEY + to, t);
+        SYNC_KEYS.forEach(function (k) { var v = localStorage.getItem(k + from); if (v != null) localStorage.setItem(k + to, v); });
+      }
+      localStorage.removeItem(LS_KEY + from); SYNC_KEYS.forEach(function (k) { localStorage.removeItem(k + from); });
+    } catch (e) { /* なし */ }
+  }
+  (function migrateOld() { // 以前の版の保存を、持ち主のコードの名前に移す
+    try {
+      var old = normCode(localStorage.getItem('jibun-data-code')) || normCode(localStorage.getItem('jibun-code'));
+      if (old) { moveNote('', '@' + old); if (!localStorage.getItem(LS_LAST)) localStorage.setItem(LS_LAST, old); }
+      var others = JSON.parse(localStorage.getItem('jibun-data-others') || '{}') || {};
+      Object.keys(others).forEach(function (c) {
+        var o = others[c], n = normCode(c); if (!n || !o || localStorage.getItem(LS_KEY + '@' + n) != null) return;
+        localStorage.setItem(LS_KEY + '@' + n, o.d); localStorage.setItem('jibun-sync-at@' + n, String(o.at || 0)); localStorage.setItem('jibun-sync-done@' + n, String(o.done || 0));
+      });
+      ['jibun-code', 'jibun-data-code', 'jibun-data-others'].forEach(function (k) { localStorage.removeItem(k); });
+    } catch (e) { /* なし */ }
+  })();
+  // このタブのコードを決める・変える。変えたら、このタブのノートもそのコードの物に入れ替える（中身を持ち越さない）
+  function setTabCode(code) {
+    code = normCode(code); if (!code || code === TAB_CODE) return false;
+    var adopt = !TAB_CODE && !hasCodedNote(); // コードなしで作ったノートは、このブラウザで初めてのコードの時だけ、そのコードの物にする
+    if (typeof SY === 'object' && SY) { clearTimeout(SY.timer); SY.key = null; SY.code = ''; SY.lastPull = 0; }
+    TAB_CODE = code;
+    if (adopt) moveNote('', '@' + code);
+    return true;
+  }
   var HANDOFF_HEAD = 'じぶんノートの続きをお願いします。以下が今までのデータです：';
   var LS_TIP = 'jibun-note-tip-level';
   var S = { data: null, mode: 'none', stack: [], scroll: {}, copies: [], openP: {}, openI: {}, importText: '', importErr: '', goalChanged: {}, goalPreview: {}, sendShown: false, tipShown: false, tipClosed: false };
@@ -1854,10 +1900,10 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
         var mark = '\n\n（配布ID：' + code.slice(0, 4) + '。本人専用です。この設定文の転載・共有はできません）';
         window.JIBUN_STARTER = r[0] ? r[0] + mark : '';
         window.JIBUN_IMPORT = r[1] ? r[1] + mark : '';
-        if (!window.JIBUN_DATA && claimLocal(code) && S.mode !== 'sample' && S.mode !== 'file') {
+        if (!window.JIBUN_DATA && setTabCode(code) && S.mode !== 'sample') {
           var l = loadLocal(); S.data = l; S.mode = l ? 'local' : 'none'; if (S.booted) renderBanner();
         }
-        try { localStorage.setItem('jibun-code', code); } catch (e) {}
+        if (!window.JIBUN_DATA) lsSet(LS_LAST, code);
         setTimeout(function () { syncPull(true); }, 0);
         return code;
       });
@@ -1885,8 +1931,8 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
     } catch (e) { return ''; }
   })();
   (function autoUnlock() {
-    var c = null; try { c = localStorage.getItem('jibun-code'); } catch (e) {}
-    function stored() { if (c && locked()) unlockWith(c).then(function () { if (S.booted) rerender(); }, function () { try { localStorage.removeItem('jibun-code'); } catch (e) {} }); }
+    var c = null; try { c = localStorage.getItem(LS_LAST); } catch (e) {}
+    function stored() { if (c && locked()) unlockWith(c).then(function () { if (S.booted) rerender(); }, function () { try { if (localStorage.getItem(LS_LAST) === c) localStorage.removeItem(LS_LAST); } catch (e) {} }); }
     if (URL_CODE && locked()) {
       unlockWith(URL_CODE).then(function () { S.urlUnlocked = true; if (S.booted) afterUrlUnlock(); },
         function () { S.urlCodeBad = true; if (S.booted) afterUrlUnlock(); stored(); });
@@ -2115,93 +2161,98 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
   // ---------- 保存 ----------
   function save() {
     if (S.mode !== 'local') return;
-    try { localStorage.setItem(LS_KEY, JSON.stringify(S.data)); } catch (e) { toast('この端末に保存できませんでした'); }
+    try { localStorage.setItem(kk(LS_KEY), JSON.stringify(S.data)); } catch (e) { toast('この端末に保存できませんでした'); }
     try { if (!localStorage.getItem(LS_FIRST)) localStorage.setItem(LS_FIRST, String(Date.now())); } catch (e) { /* なし */ }
     persistOnce();
     syncChanged();
   }
   // ---------- 同期（同じログインコードなら、パソコンとスマホで同じノート。中身は端末で暗号化してから送る） ----------
+  // 送る・受け取るのは、いつも「このタブのコード」の分だけ。途中でタブのコードが変わったら、その回は何もしない。
   var SYNC_URL = 'https://script.google.com/macros/s/AKfycbweRTGVHGEPpv-_CD2-JmhT5ZeRZTA3Tk0W2v2p1jJ_fVV21vCQto0CEWwov2PbO9Ld0A/exec';
   var LS_SYNC_AT = 'jibun-sync-at', LS_SYNC_DONE = 'jibun-sync-done', LS_SYNC_HASH = 'jibun-sync-hash';
   var SY = { key: null, id: '', code: '', timer: 0, busy: false, lastPull: 0, ok: 0 };
-  function syncCode() {
-    var c = window.JIBUN_SYNC_CODE || lsGet('jibun-code') || '';
-    c = String(c).trim().toUpperCase().replace(/[^A-Z0-9]/g, '');
-    return c.length === 12 ? c.replace(/^(.{4})(.{4})(.{4})$/, '$1-$2-$3') : '';
-  }
+  function syncCode() { return normCode(window.JIBUN_SYNC_CODE) || TAB_CODE; }
   function syncOn() { return !!(syncCode() && window.fetch && window.crypto && window.crypto.subtle) && S.mode !== 'sample'; }
   function lsNum(k) { return +(lsGet(k) || 0) || 0; }
   function b64e(u8) { var t = ''; for (var i = 0; i < u8.length; i += 0x8000) t += String.fromCharCode.apply(null, u8.subarray(i, i + 0x8000)); return btoa(t); }
-  function syncReady() {
-    var code = syncCode(), cs = window.crypto.subtle, te = new TextEncoder();
-    if (SY.key && SY.code === code) return Promise.resolve();
+  function syncReady(code) { // code 用の鍵と保存先を用意して { key, id } を返す
+    var cs = window.crypto.subtle, te = new TextEncoder();
+    if (SY.key && SY.code === code) return Promise.resolve({ key: SY.key, id: SY.id });
+    var id;
     return cs.digest('SHA-256', te.encode('jibun-sync|' + code)).then(function (h) {
-      SY.id = Array.prototype.map.call(new Uint8Array(h), function (b) { return ('0' + b.toString(16)).slice(-2); }).join('');
+      id = Array.prototype.map.call(new Uint8Array(h), function (b) { return ('0' + b.toString(16)).slice(-2); }).join('');
       return cs.importKey('raw', te.encode(code), 'PBKDF2', false, ['deriveKey']);
     }).then(function (base) {
       return cs.deriveKey({ name: 'PBKDF2', salt: te.encode('jibun-note-sync-v1'), iterations: 150000, hash: 'SHA-256' }, base, { name: 'AES-GCM', length: 256 }, false, ['encrypt', 'decrypt']);
-    }).then(function (k) { SY.key = k; SY.code = code; });
+    }).then(function (k) { if (syncCode() === code) { SY.key = k; SY.id = id; SY.code = code; } return { key: k, id: id }; });
   }
   function syncCall(body) {
     return fetch(SYNC_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(body) })
       .then(function (r) { return r.json(); });
   }
-  function syncPush(at) {
-    var txt = JSON.stringify(S.data || null), iv = window.crypto.getRandomValues(new Uint8Array(12));
-    return syncReady().then(function () {
-      return window.crypto.subtle.encrypt({ name: 'AES-GCM', iv: iv }, SY.key, new TextEncoder().encode(txt));
-    }).then(function (ct) {
-      var all = new Uint8Array(12 + ct.byteLength); all.set(iv); all.set(new Uint8Array(ct), 12);
-      return syncCall({ op: 'put', id: SY.id, at: at, blob: b64e(all) });
+  var SAME = {}; // 「タブのコードが変わったので中止」の印
+  function syncPush(at, code) {
+    code = code || syncCode(); if (!code || code !== syncCode()) return Promise.resolve(SAME);
+    var txt = JSON.stringify(S.data || null), iv = window.crypto.getRandomValues(new Uint8Array(12)), doneKey = LS_SYNC_DONE + '@' + code;
+    return syncReady(code).then(function (k) {
+      if (code !== syncCode()) return SAME;
+      return window.crypto.subtle.encrypt({ name: 'AES-GCM', iv: iv }, k.key, new TextEncoder().encode(txt)).then(function (ct) {
+        var all = new Uint8Array(12 + ct.byteLength); all.set(iv); all.set(new Uint8Array(ct), 12);
+        return syncCall({ op: 'put', id: k.id, at: at, blob: b64e(all) });
+      });
     }).then(function (r) {
-      if (r && r.ok && !r.stale) { lsSet(LS_SYNC_DONE, String(at)); SY.ok = Date.now(); }
+      if (r && r !== SAME && r.ok && !r.stale) { lsSet(doneKey, String(at)); SY.ok = Date.now(); }
       return r;
     });
   }
-  function syncOpen(rec) {
+  function syncOpen(rec, key) {
     var all = b64d(rec.blob);
-    return window.crypto.subtle.decrypt({ name: 'AES-GCM', iv: all.slice(0, 12) }, SY.key, all.slice(12))
+    return window.crypto.subtle.decrypt({ name: 'AES-GCM', iv: all.slice(0, 12) }, key, all.slice(12))
       .then(function (b) { return JSON.parse(new TextDecoder().decode(b)); });
   }
   function hashText(t) { var h = 5381; for (var i = 0; i < t.length; i++) h = ((h << 5) + h + t.charCodeAt(i)) | 0; return String(h); }
   // この端末で変わった：少し待ってから送る
   function syncChanged() {
     if (S.mode !== 'local') return;
-    lsSet(LS_SYNC_AT, String(Date.now()));
+    lsSet(kk(LS_SYNC_AT), String(Date.now()));
     if (!syncOn()) return;
     clearTimeout(SY.timer);
-    SY.timer = setTimeout(function () { syncPush(lsNum(LS_SYNC_AT)).catch(function () {}); }, 1500);
+    var code = syncCode();
+    SY.timer = setTimeout(function () { if (code === syncCode()) syncPush(lsNum(kk(LS_SYNC_AT)), code).catch(function () {}); }, 1500);
   }
   // 開いた時・戻ってきた時：新しい方にそろえる
   function syncPull(force) {
     if (!S.booted || !syncOn() || SY.busy) return Promise.resolve();
     if (!force && Date.now() - SY.lastPull < 15000) return Promise.resolve();
     SY.busy = true; SY.lastPull = Date.now();
+    var code = syncCode(), K = null;
     var done = function () { SY.busy = false; };
-    return syncReady().then(function () { return syncCall({ op: 'get', id: SY.id }); }).then(function (r) {
-      if (!r || !r.ok) return;
-      var rec = r.rec, done0 = lsNum(LS_SYNC_DONE);
+    var still = function () { return code === syncCode(); };
+    return syncReady(code).then(function (k) { K = k; return syncCall({ op: 'get', id: k.id }); }).then(function (r) {
+      if (!r || !r.ok || !still()) return;
+      var rec = r.rec, done0 = lsNum(kk(LS_SYNC_DONE));
       if (S.mode === 'file') {
         // Claude Code版：パソコンのフォルダが本体。変わっていたら送るだけ
         var h = hashText(JSON.stringify(S.data || null));
-        if (S.data && (!rec || lsGet(LS_SYNC_HASH) !== h)) return syncPush(Date.now()).then(function (x) { if (x && x.ok) lsSet(LS_SYNC_HASH, h); });
+        if (S.data && (!rec || lsGet(kk(LS_SYNC_HASH)) !== h)) return syncPush(Date.now(), code).then(function (x) { if (x && x !== SAME && x.ok) lsSet(LS_SYNC_HASH + '@' + code, h); });
         return;
       }
-      var localAt = lsNum(LS_SYNC_AT), hasLocal = !!(S.data && C.hasContent(S.data));
+      var localAt = lsNum(kk(LS_SYNC_AT)), hasLocal = !!(S.data && C.hasContent(S.data));
       if (rec && rec.at > done0 && (rec.at >= localAt || !hasLocal)) {
-        return syncOpen(rec).then(function (d) {
+        return syncOpen(rec, K.key).then(function (d) {
+          if (!still()) return;
           if (d && C.hasContent(d)) {
             S.data = C.normalize(d); S.mode = 'local';
-            try { localStorage.setItem(LS_KEY, JSON.stringify(S.data)); } catch (e) { /* なし */ }
+            try { localStorage.setItem(kk(LS_KEY), JSON.stringify(S.data)); } catch (e) { /* なし */ }
           } else if (hasLocal) {
             S.data = null; S.mode = 'none';
-            try { localStorage.removeItem(LS_KEY); } catch (e) { /* なし */ }
-          } else { lsSet(LS_SYNC_DONE, String(rec.at)); return; }
-          lsSet(LS_SYNC_AT, String(rec.at)); lsSet(LS_SYNC_DONE, String(rec.at)); SY.ok = Date.now();
+            try { localStorage.removeItem(kk(LS_KEY)); } catch (e) { /* なし */ }
+          } else { lsSet(kk(LS_SYNC_DONE), String(rec.at)); return; }
+          lsSet(kk(LS_SYNC_AT), String(rec.at)); lsSet(kk(LS_SYNC_DONE), String(rec.at)); SY.ok = Date.now();
           renderBanner(); rerender(); toast('ほかの端末の内容に更新しました');
         });
       }
-      if (hasLocal && (!rec || localAt > done0)) return syncPush(localAt || Date.now());
+      if (hasLocal && (!rec || localAt > done0)) return syncPush(localAt || Date.now(), code);
       SY.ok = Date.now();
     }).then(done, done);
   }
@@ -2236,35 +2287,7 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
   // アプリ内ブラウザ（Instagram・LINE・TikTok・Facebook など）は、データが消えやすい
   var IN_APP = /Instagram|FBAN|FBAV|FB_IAB|\bLine\/|TikTok|musical_ly|BytedanceWebview|Bytedance/i.test(navigator.userAgent || '');
   function loadLocal() {
-    try { var t = localStorage.getItem(LS_KEY); return t ? C.normalize(JSON.parse(t)) : null; } catch (e) { return null; }
-  }
-  // このブラウザのノートは「どのログインコードの物か」を覚えておく。
-  // 別のコードで開いたら、前の人のノートは見せない・そのコードに送らない（同じパソコンで複数のコードを開いた時の混ざり防止）。
-  // まだ同期できていない分だけ、元のコードで開き直した時に戻せるよう、この端末に取っておく。
-  var LS_OWNER = 'jibun-data-code', LS_OTHERS = 'jibun-data-others';
-  function normCode(c) {
-    c = String(c || '').trim().toUpperCase().replace(/[^A-Z0-9]/g, '');
-    return c.length === 12 ? c.replace(/^(.{4})(.{4})(.{4})$/, '$1-$2-$3') : '';
-  }
-  function claimLocal(code) { // 中身を入れ替えたら true
-    code = normCode(code); if (!code) return false;
-    var owner = normCode(lsGet(LS_OWNER)) || normCode(lsGet('jibun-code')); // 以前の版は持ち主を覚えていないので、最後に使ったコードの物とみなす
-    if (owner === code) { lsSet(LS_OWNER, code); return false; }
-    var t = null; try { t = localStorage.getItem(LS_KEY); } catch (e) { /* なし */ }
-    if (!owner) { lsSet(LS_OWNER, code); return false; } // コードなしで使っていたノート → このコードの物にする
-    var others = {}; try { others = JSON.parse(lsGet(LS_OTHERS) || '{}') || {}; } catch (e) { others = {}; }
-    var at = lsNum(LS_SYNC_AT), done = lsNum(LS_SYNC_DONE);
-    if (t && at > done) others[owner] = { d: t, at: at, done: done, t: Date.now() };
-    var mine = others[code]; delete others[code];
-    var ks = Object.keys(others).sort(function (a, b) { return (others[b].t || 0) - (others[a].t || 0); });
-    ks.slice(5).forEach(function (k) { delete others[k]; });
-    try {
-      localStorage.removeItem(LS_KEY); localStorage.removeItem(LS_SYNC_AT); localStorage.removeItem(LS_SYNC_DONE); localStorage.removeItem(LS_SYNC_HASH);
-      if (mine) { localStorage.setItem(LS_KEY, mine.d); localStorage.setItem(LS_SYNC_AT, String(mine.at)); localStorage.setItem(LS_SYNC_DONE, String(mine.done)); }
-      if (Object.keys(others).length) localStorage.setItem(LS_OTHERS, JSON.stringify(others)); else localStorage.removeItem(LS_OTHERS);
-    } catch (e) { /* なし */ }
-    lsSet(LS_OWNER, code);
-    return true;
+    try { var t = localStorage.getItem(kk(LS_KEY)); return t ? C.normalize(JSON.parse(t)) : null; } catch (e) { return null; }
   }
 
   // ---------- トースト・シート ----------
@@ -3506,7 +3529,7 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
     },
     wipe: function () {
       sheet({ title: 'データを消しますか？', body: 'この端末に保存したノートがすべて消えます' + (syncOn() ? '（同じログインコードで同期しているほかの端末からも消えます）' : '') + '。元に戻せません。心配なら、先に「バックアップ」しておいてください。', actions: [{ label: 'やめる', value: 0 }, { label: '消す', cls: 'danger', value: 1 }] })
-        .then(function (v) { if (!v) return; try { localStorage.removeItem(LS_KEY); } catch (e) { /* なし */ } S.data = null; S.mode = 'none'; if (syncOn()) { var t = Date.now(); lsSet(LS_SYNC_AT, String(t)); syncPush(t).catch(function () {}); } renderBanner(); S.stack = []; go('welcome'); toast('データを消しました'); });
+        .then(function (v) { if (!v) return; try { localStorage.removeItem(kk(LS_KEY)); } catch (e) { /* なし */ } S.data = null; S.mode = 'none'; if (syncOn()) { var t = Date.now(); lsSet(kk(LS_SYNC_AT), String(t)); syncPush(t).catch(function () {}); } renderBanner(); S.stack = []; go('welcome'); toast('データを消しました'); });
     }
   };
   document.addEventListener('click', function (e) {
@@ -3543,8 +3566,8 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
   function boot() {
     var sample = /[?&]sample=1/.test(location.search) && window.JIBUN_SAMPLE;
     if (sample) { S.data = C.normalize(window.JIBUN_SAMPLE); S.mode = 'sample'; }
-    else if (window.JIBUN_DATA) { S.data = C.normalize(window.JIBUN_DATA); S.mode = 'file'; }
-    else { claimLocal(URL_CODE || lsGet('jibun-code')); var l = loadLocal(); if (l) { S.data = l; S.mode = 'local'; } }
+    else if (window.JIBUN_DATA) { setTabCode(window.JIBUN_SYNC_CODE); S.data = C.normalize(window.JIBUN_DATA); S.mode = 'file'; }
+    else { setTabCode(URL_CODE || lsGet(LS_LAST)); var l = loadLocal(); if (l) { S.data = l; S.mode = 'local'; } }
     // アプリを切り替えている間にページが読み直された時も、戻ってきたとみなす
     if (outRecent(12) && S.mode !== 'file') S.returned = true;
     renderBanner();
