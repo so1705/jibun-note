@@ -2950,7 +2950,18 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
     if (S.mode === 'sample') h += '<p class="small muted" style="margin-top:16px">※ 読み込むと、サンプルではなく「あなたのノート」として保存されます。</p>';
     return h;
   }
+  // 設定文（ChatGPTに貼る文）や、その中の「例」をセーブと間違えて読み込まない
+  function notASave(text) {
+    var t = String(text || '');
+    if (/これは「じぶんノートAI」の設定です|これは「じぶんノート」への取り込み用の指示です|（配布ID：/.test(t)) return '今コピーされているのは、ChatGPTに貼る「設定文」でした。ChatGPTのセーブ（```json の枠）の右上の「コピー」を押してから、もう一度読み込んでね。';
+    if (/居酒屋の店長の一言[\s\S]*たくおると回る|居酒屋で新人向けメモ[\s\S]*2026-11-05/.test(t)) return 'これは設定文の中の「例」で、あなたのセーブではありません。ChatGPTに「セーブして」と送って、出てきたセーブをコピーしてね。';
+    return '';
+  }
+  var LS_UNDO = 'jibun-note-undo';
+  function undoInfo() { try { var u = JSON.parse(lsGet(kk(LS_UNDO)) || 'null'); return u && u.data ? u : null; } catch (e) { return null; } }
   function doImport(text) {
+    var bad = notASave(text);
+    if (bad) { S.importErr = bad; S.importFix = ''; S.importText = ''; if ((routeParts()[0] || '') === 'import') render(); else go('import'); toast('セーブではありませんでした'); return; }
     var current = S.mode === 'local' ? S.data : null, r;
     try { r = C.prepareImport(text, current); }
     catch (e) {
@@ -2960,6 +2971,7 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
     }
     var wasEmpty = !(current && current.episodes && current.episodes.length);
     var go2 = function () {
+      if (current && C.hasContent(current)) lsSet(kk(LS_UNDO), JSON.stringify({ at: Date.now(), kind: r.kind, data: current }));
       S.data = r.data; S.mode = 'local'; S.importText = ''; S.importErr = ''; S.importFix = ''; S.returned = false;
       if (!S.data.updatedAt) S.data.updatedAt = today();
       save(); renderBanner();
@@ -3025,7 +3037,7 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
       menuItem('', ICON.print, '印刷・PDFで保存', 'ノート全体を見やすい形で', '', '', 'print') + '</div>';
     h += '<input type="file" id="fileIn" accept=".json,application/json,text/plain" hidden>';
     if (S.mode === 'sample') h += '<div class="sec"><div class="menu">' + menuItem('', ICON.left, 'サンプルを閉じる', '自分のノートを始める', '', 'w', 'exitSample') + '</div></div>';
-    else if (S.mode === 'local') h += '<div class="sec"><div class="menu">' + menuItem('', ICON.trash, 'データを消す', 'この端末に保存したノートを削除します', '', 'w', 'wipe') + '</div></div>';
+    else if (S.mode === 'local') h += '<div class="sec"><div class="menu">' + (undoInfo() ? menuItem('', ICON.left, '読み込む前に戻す', new Date(undoInfo().at).toLocaleString('ja-JP', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' }) + 'に読み込む前のノートに戻します', '', '', 'undoImport') : '') + menuItem('', ICON.trash, 'データを消す', 'この端末に保存したノートを削除します', '', 'w', 'wipe') + '</div></div>';
     else if (readonly()) h += '<p class="small muted" style="margin-top:16px">このノートはClaude Codeのフォルダにあるデータを表示しています（読み取り専用）。</p>';
     h += syncOn() ? '<p class="small muted" style="margin-top:18px"><b>同期：オン</b>。同じログインコードで開けば、パソコンでもスマホでも同じノートになります（中身は暗号化して預けています）。' + (S.mode === 'file' ? 'このパソコンのフォルダが本体で、スマホは見る用です。' : '') + '</p>' : '';
     h += '<p class="small muted" style="margin-top:18px">' + (syncOn() ? 'この端末のブラウザにも保存しています。' : 'データはこの端末のブラウザの中だけに保存されています。') + 'ブラウザの履歴を消すと消えることがあるので、ときどき「バックアップ」しておくと安心です。戻す時は「バックアップから戻す」でファイルを選ぶか、ファイルの中身を「AIの出力を貼り付け」に貼ってください。</p>';
@@ -3476,6 +3488,11 @@ details.bst-fold[open] summary::after{transform:rotate(-90deg)}
         if (!String(t || '').trim()) { toast('コピーされているものがありません。セーブをコピーしてから押してね'); return; }
         doImport(t, true);
       }, function () { S.importErr = ''; go('import'); setTimeout(function () { toast('ここに長押しで貼り付けてね'); }, 300); });
+    },
+    undoImport: function () {
+      var u = undoInfo(); if (!u) return;
+      sheet({ title: '読み込む前に戻しますか？', body: '最後に読み込む前のノートに戻します。そのあとの読み込みの分は消えます（ChatGPTのセーブを読み込み直せば、また入れられます）。', actions: [{ label: 'やめる', value: 0 }, { label: '戻す', cls: 'primary', value: 1 }] })
+        .then(function (v) { if (!v) return; S.data = C.normalize(u.data); S.mode = 'local'; try { localStorage.removeItem(kk(LS_UNDO)); } catch (e) { /* なし */ } save(); renderBanner(); S.stack = []; go('home'); toast('読み込む前のノートに戻しました'); });
     },
     clipClose: function () { S.returned = false; rerender(); },
     cardOpt: function (b) { var cs = cardState(); cs[b.getAttribute('data-k')] = b.getAttribute('data-v'); saveCardState(); rerender(); setTimeout(drawCardPreview, 0); },
